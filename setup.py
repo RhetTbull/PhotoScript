@@ -37,7 +37,7 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 
 # get version info from _version
 with open(
-    os.path.join(this_directory, "osxphotos", "_version.py"), mode="r", encoding="utf-8"
+    os.path.join(this_directory, "photoscript", "_version.py"), mode="r", encoding="utf-8"
 ) as f:
     exec(f.read(), about)
 
