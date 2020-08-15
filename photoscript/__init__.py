@@ -1,2 +1,2 @@
-from .photoscript import Photos, Album
+from .photoscript import PhotosLibrary, Album, Photo
 

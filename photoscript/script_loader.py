@@ -15,5 +15,4 @@ def load_applescript(script_name):
 SCRIPT_OBJ = load_applescript("photoscript") 
 
 def run_script(name, *args):
-    func_name = f"_{name}"
-    return SCRIPT_OBJ.call(func_name, *args)
+    return SCRIPT_OBJ.call(name, *args)
