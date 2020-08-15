@@ -1,5 +1,6 @@
 """ PhotosLibrary, Photo, Album classes """
 
+from applescript import kMissingValue
 from .script_loader import run_script
 
 
@@ -64,10 +65,11 @@ class PhotosLibrary:
 
             Args:
                 photos: list of file paths to import
-                album: optional, name of album to import into (album must exist in Photos)
+                album: optional, name of album to import into (album must exist in Photos).  May also be an Album object.
                 skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
         """
         if album is not None:
+            album = album.name if isinstance(album, Album) else album
             run_script("_import_to_album", photos, album, skip_duplicate_check)
         else:
             run_script("_import", photos, skip_duplicate_check)
@@ -138,7 +140,8 @@ class Album:
 
     @property
     def name(self):
-        return run_script("_album_name", self.id)
+        name = run_script("_album_name", self.id)
+        return name if name != kMissingValue else None
 
     @property
     def title(self):
@@ -169,7 +172,8 @@ class Photo:
 
     @property
     def name(self):
-        return run_script("_photo_name", self.id)
+        name = run_script("_photo_name", self.id)
+        return name if name != kMissingValue else None
 
     @property
     def title(self):
@@ -177,11 +181,15 @@ class Photo:
 
     @property
     def description(self):
-        return run_script("_photo_description", self.id)
+        descr = run_script("_photo_description", self.id)
+        return descr if descr != kMissingValue else None
 
     @property
     def keywords(self):
-        return run_script("_photo_keywords", self.id)
+        keywords = run_script("_photo_keywords", self.id)
+        if not isinstance(keywords, list):
+            keywords = [keywords] if keywords != kMissingValue else []
+        return keywords
 
     @property
     def date(self):
