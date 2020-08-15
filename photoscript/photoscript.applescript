@@ -201,7 +201,7 @@ on _create_album(albumName)
 		set theID to ((id of theAlbum) as text)
 		return theID
 	end tell
-end create_album
+end _create_album
 
 ---------- Album ----------
 
@@ -307,6 +307,37 @@ on _photo_date(_id)
 		return date of media item id (_id)
 	end tell
 end _photo_date
+
+on _photo_export(theUUID, thePath, original, edited, theTimeOut)
+	tell application "Photos"
+		set thePath to thePath
+		set theItem to media item id theUUID
+		set theFilename to filename of theItem
+		set itemList to {theItem}
+		
+		if original then
+			with timeout of theTimeOut seconds
+				export itemList to POSIX file thePath with using originals
+			end timeout
+		end if
+		
+		if edited then
+			with timeout of theTimeOut seconds
+				export itemList to POSIX file thePath
+			end timeout
+		end if
+		
+		return theFilename
+	end tell
+	
+end _photo_export
+
+on _photo_filename(id_)
+	tell application "Photos"
+		return filename of media item id (id_)	
+	end tell
+end _photo_filename
+
 
 #_album_by_name("People")
 #_album_exists("8245D1B5-1B26-4858-B16E-279591641EB4/L0/040")

@@ -130,6 +130,7 @@ class PhotosLibrary:
         album_id = run_script("_create_album", name)
         return Album(album_id)
 
+
 class Album:
     def __init__(self, uuid):
         valuuidalbum = run_script("_album_exists", uuid)
@@ -160,6 +161,36 @@ class Album:
 
     def __len__(self):
         return run_script("_album_len", self.id)
+
+    def import_photos(self, photos, skip_duplicate_check=False):
+        """ import photos
+
+            Args:
+                photos: list of file paths to import
+                skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
+        """
+        library = PhotosLibrary()
+        library.import_photos(
+            photos, album=self, skip_duplicate_check=skip_duplicate_check
+        )
+
+    def export(self, path, original=True, edited=True, timeout=120):
+        """ Export photos in album to path 
+
+            Args:
+                path: path to export to
+                original: if True exports original photo
+                edited: if True, exports edited version, if one exists
+                timeout: number of seconds to timeout waiting for Photos to respond
+            
+            Returns:
+                list of names of exported photos
+        """
+        photos = self.photos
+        return [
+            run_script("_photo_export", p.id, path, original, edited, timeout)
+            for p in photos
+        ]
 
 
 class Photo:
@@ -194,3 +225,21 @@ class Photo:
     @property
     def date(self):
         return run_script("_photo_date", self.id)
+
+    @property
+    def filename(self):
+        return run_script("_photo_filename", self.id)
+
+    def export(self, path, original=True, edited=True, timeout=120):
+        """ Export photo
+
+            Args:
+                path: path to export to
+                original: if True exports original photo
+                edited: if True, exports edited version, if one exists
+                timeout: number of seconds to timeout waiting for Photos to respond
+            
+            Returns:
+                name of exported photo
+        """
+        return run_script("_photo_export", self.id, path, original, edited, timeout)
