@@ -7,11 +7,17 @@
 
 PhotoScript provides a python wrapper around Apple Photos applescript interface.  With PhotoScript you can interact with Photos using python.  Runs only on MacOS.  Tested on MacOS Catalina.
 
+PhotosScript is limited by Photos' very limited AppleScript dictionary. 
+
 ## Installation
 
 PhotoScript uses setuptools, thus simply run:
 
 `python3 setup.py install`
+
+Or you can install via pip:
+
+`pip install photoscript`
 
 ## Example
 

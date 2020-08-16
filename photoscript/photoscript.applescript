@@ -75,7 +75,7 @@ on _import(filenames, skip_duplicate_check)
 	end tell
 end _import
 
-on _import_to_album(filenames, album_name, skip_duplicate_check)
+on _import_to_album(filenames, album_, skip_duplicate_check)
 	(* import files into album 
 	   Args:
 	       filenames: list of files in POSIX format to import
@@ -88,7 +88,7 @@ on _import_to_album(filenames, album_name, skip_duplicate_check)
 		copy fname to the end of file_list
 	end repeat
 	tell application "Photos"
-		import file_list into album album_name skip check duplicates skip_duplicate_check
+		import file_list into album id (album_) skip check duplicates skip_duplicate_check
 	end tell
 end _import_to_album
 

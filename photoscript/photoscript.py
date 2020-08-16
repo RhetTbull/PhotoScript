@@ -88,16 +88,14 @@ class PhotosLibrary:
 
             Args:
                 photos: list of file paths to import
-                album: optional, name of album to import into (album must exist in Photos).  May also be an Album object.
+                album: optional, Album object for album to import into
                 skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
         """
         if album is not None:
-            album = album.name if isinstance(album, Album) else album
-            run_script("_import_to_album", photo_paths, album, skip_duplicate_check)
+            run_script("_import_to_album", photo_paths, album.id, skip_duplicate_check)
         else:
             run_script("_import", photo_paths, skip_duplicate_check)
 
-    @property
     def album_names(self, top_level=False):
         """ List of album names in the Photos library
 
@@ -106,7 +104,6 @@ class PhotosLibrary:
         """
         return run_script("_album_names", top_level)
 
-    @property
     def folder_names(self, top_level=False):
         """ List of folder names in the Photos library
         
@@ -142,7 +139,6 @@ class PhotosLibrary:
         else:
             raise ValueError("Invalid name or uuid")
 
-    @property
     def albums(self, top_level=False):
         """ list of Album objects for all albums """
         album_ids = run_script("_album_ids", top_level)
