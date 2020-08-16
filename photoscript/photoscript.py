@@ -1,6 +1,7 @@
-""" PhotosLibrary, Photo, Album classes """
+""" Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
 
 from applescript import kMissingValue
+
 from .script_loader import run_script
 
 
@@ -31,6 +32,28 @@ class PhotosLibrary:
         """ True if Photos.app is front most app otherwise False """
         return run_script("_photoslibrary_frontmost")
 
+    @property
+    def selection(self):
+        """ List of Photo objects for currently selected photos or [] if no selection """
+        uuids = run_script("_get_selection")
+        if isinstance(uuids, list):
+            return [Photo(uuid) for uuid in uuids]
+        else:
+            return []
+
+    @property
+    def favorites(self):
+        """ Album object for the Favorites album """
+        fav_id = run_script("_photoslib_favorites")
+        return Album(fav_id)
+
+    # doesn't seem to be a way to do anything with the recently deleted album except count items
+    # @property
+    # def recently_deleted(self):
+    #     """ Album object for the Recently Deleted album """
+    #     del_id = run_script("_photoslib_recently_deleted")
+    #     return Album(del_id)
+
     def photos(self, search=None, uuid=None):
         """ List of Photo objects for items in the library
             Note: for a large library, calling photos() may run a *very* long time (minutes)
@@ -60,7 +83,7 @@ class PhotosLibrary:
 
         return [Photo(uuid) for uuid in photo_ids]
 
-    def import_photos(self, photos, album=None, skip_duplicate_check=False):
+    def import_photos(self, photo_paths, album=None, skip_duplicate_check=False):
         """ import photos
 
             Args:
@@ -70,10 +93,11 @@ class PhotosLibrary:
         """
         if album is not None:
             album = album.name if isinstance(album, Album) else album
-            run_script("_import_to_album", photos, album, skip_duplicate_check)
+            run_script("_import_to_album", photo_paths, album, skip_duplicate_check)
         else:
-            run_script("_import", photos, skip_duplicate_check)
+            run_script("_import", photo_paths, skip_duplicate_check)
 
+    @property
     def album_names(self, top_level=False):
         """ List of album names in the Photos library
 
@@ -82,6 +106,7 @@ class PhotosLibrary:
         """
         return run_script("_album_names", top_level)
 
+    @property
     def folder_names(self, top_level=False):
         """ List of folder names in the Photos library
         
@@ -117,6 +142,7 @@ class PhotosLibrary:
         else:
             raise ValueError("Invalid name or uuid")
 
+    @property
     def albums(self, top_level=False):
         """ list of Album objects for all albums """
         album_ids = run_script("_album_ids", top_level)
@@ -130,6 +156,14 @@ class PhotosLibrary:
         """
         album_id = run_script("_create_album", name)
         return Album(album_id)
+
+    def delete_album(self, album):
+        """ deletes album (but does not delete photos in the album)
+
+        Args:
+            album: an Album object for album to delete
+        """
+        return run_script("_photoslib_delete_album", album.id)
 
 
 class Album:
@@ -170,7 +204,16 @@ class Album:
     def __len__(self):
         return run_script("_album_len", self.id)
 
-    def import_photos(self, photos, skip_duplicate_check=False):
+    def add(self, photos):
+        """ add photos from the library to album
+
+        Args:
+            photos: list of Photo objects to add to album
+        """
+        uuids = [p.id for p in photos]
+        return run_script("_album_add", self.id, uuids)
+
+    def import_photos(self, photo_paths, skip_duplicate_check=False):
         """ import photos
 
             Args:
@@ -179,7 +222,7 @@ class Album:
         """
         library = PhotosLibrary()
         library.import_photos(
-            photos, album=self, skip_duplicate_check=skip_duplicate_check
+            photo_paths, album=self, skip_duplicate_check=skip_duplicate_check
         )
 
     def export(self, path, original=True, edited=True, timeout=120):
@@ -262,3 +305,8 @@ class Photo:
                 name of exported photo
         """
         return run_script("_photo_export", self.id, path, original, edited, timeout)
+
+    def duplicate(self):
+        """ duplicates the photo and returns Photo object for the duplicate """
+        dup_id = run_script("_photo_duplicate", self.id)
+        return Photo(dup_id)

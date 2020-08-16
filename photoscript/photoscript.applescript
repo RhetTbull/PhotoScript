@@ -1,3 +1,5 @@
+-- TODO: Variable names are not very consistent throughout this
+
 ---------- PhotoLibrary ----------
 on _activate()
 	(* activate Photos app *)
@@ -35,6 +37,7 @@ on _photoslibrary_frontmost()
 end _photoslibrary_frontmost
 
 on _photoslibrary_get_all_photos()
+	(* return all photos in the library *)
 	set ids to {}
 	tell application "Photos"
 		repeat with _item in every media item
@@ -45,6 +48,7 @@ on _photoslibrary_get_all_photos()
 end _photoslibrary_get_all_photos
 
 on _photoslibrary_search_photos(search_str)
+	(* search for photos by text string *)
 	set ids to {}
 	tell application "Photos"
 		set _items to search for search_str
@@ -150,6 +154,7 @@ on _get_albums_folders()
 end _get_albums_folders
 
 on _get_album_folder_names()
+	(* return names of albums and folders *)
 	set albums_folders to _get_albums_folders()
 	set allalbums to _albums of albums_folders
 	set allfolders to _folders of albums_folders
@@ -202,6 +207,40 @@ on _create_album(albumName)
 		return theID
 	end tell
 end _create_album
+
+on _get_selection()
+	(* return ids of selected items *)
+	set item_ids_ to {}
+	tell application "Photos"
+		set items_ to selection
+		repeat with item_ in items_
+			copy id of item_ to end of item_ids_
+		end repeat
+	end tell
+	return item_ids_
+end _get_selection
+
+on _photoslib_favorites()
+	(* return favorites album *)
+	tell application "Photos"
+		return id of favorites album
+	end tell
+end _photoslib_favorites
+
+on _photoslib_recently_deleted()
+	(* return recently deleted album *)
+	tell application "Photos"
+		return id of recently deleted album
+	end tell
+end _photoslib_recently_deleted
+
+on _photoslib_delete_album(id_)
+	(* delete album with id_ *)
+	tell application "Photos"
+		set album_ to album id (id_)
+		delete album_
+	end tell
+end _photoslib_delete_album
 
 ---------- Album ----------
 
@@ -270,6 +309,22 @@ on _album_len(id_)
 	end tell
 end _album_len
 
+on _album_add(id_, items_)
+	(* add media items to album
+	    Args:
+		id_: id of album
+	       items_: list of media item ids
+	*)
+	tell application "Photos"
+		set media_list_ to {}
+		repeat with item_ in items_
+			copy media item id (item_) to end of media_list_
+		end repeat
+		set album_ to album id (id_)
+		add media_list_ to album_
+	end tell
+end _album_add
+
 ---------- Photo ----------
 on _photo_exists(_id)
 	(* return true if media item with _id exists otherwise false *)
@@ -285,30 +340,42 @@ on _photo_exists(_id)
 end _photo_exists
 
 on _photo_name(_id)
+	(* name or title of photo *)
 	tell application "Photos"
 		return name of media item id (_id)
 	end tell
 end _photo_name
 
 on _photo_description(_id)
+	(* description of photo *)
 	tell application "Photos"
 		return description of media item id (_id)
 	end tell
 end _photo_description
 
 on _photo_keywords(_id)
+	(* keywords of photo *)
 	tell application "Photos"
 		return keywords of media item id (_id)
 	end tell
 end _photo_keywords
 
 on _photo_date(_id)
+	(* date of photo *)
 	tell application "Photos"
 		return date of media item id (_id)
 	end tell
 end _photo_date
 
 on _photo_export(theUUID, thePath, original, edited, theTimeOut)
+	(* export photo
+	   Args:
+	      theUUID: id of the photo to export
+		  thePath: path to export to as POSIX path string
+		  original: boolean, if true, exports original photo
+		  edited: boolean, if true, exports edited photo
+		  theTimeOut: how long to wait in case Photos timesout
+	*)
 	tell application "Photos"
 		set thePath to thePath
 		set theItem to media item id theUUID
@@ -333,20 +400,15 @@ on _photo_export(theUUID, thePath, original, edited, theTimeOut)
 end _photo_export
 
 on _photo_filename(id_)
+	(* original filename of the photo *)
 	tell application "Photos"
-		return filename of media item id (id_)	
+		return filename of media item id (id_)
 	end tell
 end _photo_filename
 
-
-#_album_by_name("People")
-#_album_exists("8245D1B5-1B26-4858-B16E-279591641EB4/L0/040")
-#_album_exists("FOO8245D1B5-1B26-4858-B16E-279591641EB4/L0/040")
-#_album_ids(false)
-#_album_parent("7E59016E-92D0-47FB-B71D-DCD6C6BBB1EE/L0/040")
-#_photoslibrary_version()
-#_photoslibrary_name()
-#_photoslibrary_frontmost()
-#_photoslibrary_get_all_photos()
-
-# _photoslibrary_search_photos("bride")
+on _photo_duplicate(id_)
+	tell application "Photos"
+		set _new_photo to duplicate media item id (id_)
+		return id of _new_photo
+	end tell
+end _photo_duplicate

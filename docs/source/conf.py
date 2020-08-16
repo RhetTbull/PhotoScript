@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import pathlib
 import sys
 
 import sphinx_rtd_theme
@@ -24,16 +25,25 @@ project = "PhotoScript"
 copyright = "2020, Rhet Turnbull"
 author = "Rhet Turnbull"
 
-# The full version, including alpha/beta/rc tags
-release = "0.0.1"
+# holds config info read from disk
+about = {}
+this_directory = pathlib.Path(__file__).parent
+version_file = this_directory.parent.parent / "photoscript" / "_version.py"
+# get version info from _version
+with open(
+   version_file, mode="r", encoding="utf-8"
+) as f:
+    exec(f.read(), about)
 
+# The full version, including alpha/beta/rc tags
+release = about["__version__"]
 
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.viewcode", "sphinx.ext.intersphinx", "recommonmark"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.viewcode", "sphinx.ext.intersphinx", "m2r2"] 
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -56,3 +66,5 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+source_suffix = ['.rst', '.md']
