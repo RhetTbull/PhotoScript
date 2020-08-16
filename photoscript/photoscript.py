@@ -13,26 +13,26 @@ class PhotosLibrary:
         run_script("_activate")
 
     def quit(self):
-        """ quit Photos """
+        """ quit Photos.app """
         run_script("_quit")
 
     @property
     def name(self):
-        """ name of Photos app """
+        """ name of Photos.app """
         return run_script("_photoslibrary_name")
 
     @property
     def version(self):
-        """ version of Photos app """
+        """ version of Photos.app """
         return run_script("_photoslibrary_version")
 
     @property
     def frontmost(self):
-        """ returns True if Photos app is frontmost app otherwise False """
+        """ True if Photos.app is front most app otherwise False """
         return run_script("_photoslibrary_frontmost")
 
     def photos(self, search=None, uuid=None):
-        """ Return list of Photo objects for items in the library
+        """ List of Photo objects for items in the library
             Note: for a large library, calling photos() may run a *very* long time (minutes)
 
             Args:
@@ -75,14 +75,15 @@ class PhotosLibrary:
             run_script("_import", photos, skip_duplicate_check)
 
     def album_names(self, top_level=False):
-        """ Return list of album names in the Photos library 
+        """ List of album names in the Photos library
+
             Args:
                 top_level: if True, returns only top-level albums otherwise also returns albums in sub-folders; default is False
         """
         return run_script("_album_names", top_level)
 
     def folder_names(self, top_level=False):
-        """ Return list of folder names in the Photos library
+        """ List of folder names in the Photos library
         
             Args:
                 top_level: if True, returns only top-level folders otherwise also returns sub-folders; default is False
@@ -90,17 +91,17 @@ class PhotosLibrary:
         return run_script("_folder_names", top_level)
 
     def album(self, *name, uuid=None):
-        """ Return Album instance by name or id
+        """ Album instance by name or id
 
             Args:
                 name: name of album
                 uuid: id of album
-                Must pass only name or id but not both
             
             Returns:
                 Album object or None if album could not be found
 
-            Raises: ValueError if both name and id passed
+            Raises: ValueError if both name and id passed. 
+            Must pass only name or id but not both.
         """
         if (not name and uuid is None) or (name and uuid is not None):
             raise ValueError("Must pass only name or uuid but not both")
@@ -117,7 +118,7 @@ class PhotosLibrary:
             raise ValueError("Invalid name or uuid")
 
     def albums(self, top_level=False):
-        """ return list of Album objects for all albums """
+        """ list of Album objects for all albums """
         album_ids = run_script("_album_ids", top_level)
         return [Album(uuid) for uuid in album_ids]
 
@@ -135,27 +136,34 @@ class Album:
     def __init__(self, uuid):
         valuuidalbum = run_script("_album_exists", uuid)
         if valuuidalbum:
-            self.id = self.uuid = uuid
+            self.id = uuid
         else:
             raise ValueError(f"Invalid album id: {uuid}")
 
     @property
+    def uuid(self):
+        """ UUID of Album """
+        return self.id
+
+    @property
     def name(self):
+        """ name of album """
         name = run_script("_album_name", self.id)
         return name if name != kMissingValue else None
 
     @property
     def title(self):
+        """ title of album (alias for Album.name) """
         return self.name
 
     @property
     def parent_id(self):
-        """ return parent container id """
+        """ parent container id """
         return run_script("_album_parent", self.id)
 
     @property
     def photos(self):
-        """ return list of Photo objects for photos contained in album """
+        """ list of Photo objects for photos contained in album """
         photo_ids = run_script("_album_photos", self.id)
         return [Photo(uuid) for uuid in photo_ids]
 
@@ -197,26 +205,35 @@ class Photo:
     def __init__(self, uuid):
         valid = run_script("_photo_exists", uuid)
         if valid:
-            self.id = self.uuid = uuid
+            self.id = uuid
         else:
             raise ValueError(f"Invalid photo id: {uuid}")
 
     @property
+    def uuid(self):
+        """ UUID of Photo """
+        return self.id
+
+    @property
     def name(self):
+        """ name of photo """
         name = run_script("_photo_name", self.id)
         return name if name != kMissingValue else None
 
     @property
     def title(self):
+        """ title of photo (alias for name) """
         return self.name
 
     @property
     def description(self):
+        """ description of photo """
         descr = run_script("_photo_description", self.id)
         return descr if descr != kMissingValue else None
 
     @property
     def keywords(self):
+        """ list of keywords for photo """
         keywords = run_script("_photo_keywords", self.id)
         if not isinstance(keywords, list):
             keywords = [keywords] if keywords != kMissingValue else []
@@ -224,10 +241,12 @@ class Photo:
 
     @property
     def date(self):
+        """ date of photo as timezone-naive datetime.datetime object """
         return run_script("_photo_date", self.id)
 
     @property
     def filename(self):
+        """ filename of photo """
         return run_script("_photo_filename", self.id)
 
     def export(self, path, original=True, edited=True, timeout=120):
