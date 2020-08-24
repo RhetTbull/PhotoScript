@@ -11,11 +11,11 @@ class PhotosLibrary:
 
     def activate(self):
         """ activate Photos.app """
-        run_script("_activate")
+        run_script("_photoslibrary_activate")
 
     def quit(self):
         """ quit Photos.app """
-        run_script("_quit")
+        run_script("_photoslibrary_quit")
 
     @property
     def name(self):
@@ -35,7 +35,7 @@ class PhotosLibrary:
     @property
     def selection(self):
         """ List of Photo objects for currently selected photos or [] if no selection """
-        uuids = run_script("_get_selection")
+        uuids = run_script("_photoslibrary_get_selection")
         if isinstance(uuids, list):
             return [Photo(uuid) for uuid in uuids]
         else:
@@ -44,14 +44,14 @@ class PhotosLibrary:
     @property
     def favorites(self):
         """ Album object for the Favorites album """
-        fav_id = run_script("_photoslib_favorites")
+        fav_id = run_script("_photoslibrary_favorites")
         return Album(fav_id)
 
     # doesn't seem to be a way to do anything with the recently deleted album except count items
     # @property
     # def recently_deleted(self):
     #     """ Album object for the Recently Deleted album """
-    #     del_id = run_script("_photoslib_recently_deleted")
+    #     del_id = run_script("_photoslibrary_recently_deleted")
     #     return Album(del_id)
 
     def photos(self, search=None, uuid=None):
@@ -92,9 +92,14 @@ class PhotosLibrary:
                 skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
         """
         if album is not None:
-            run_script("_import_to_album", photo_paths, album.id, skip_duplicate_check)
+            run_script(
+                "_photoslibrary_import_to_album",
+                photo_paths,
+                album.id,
+                skip_duplicate_check,
+            )
         else:
-            run_script("_import", photo_paths, skip_duplicate_check)
+            run_script("_photoslibrary_import", photo_paths, skip_duplicate_check)
 
     def album_names(self, top_level=False):
         """ List of album names in the Photos library
@@ -102,7 +107,7 @@ class PhotosLibrary:
             Args:
                 top_level: if True, returns only top-level albums otherwise also returns albums in sub-folders; default is False
         """
-        return run_script("_album_names", top_level)
+        return run_script("_photoslibrary_album_names", top_level)
 
     def folder_names(self, top_level=False):
         """ List of folder names in the Photos library
@@ -110,7 +115,7 @@ class PhotosLibrary:
             Args:
                 top_level: if True, returns only top-level folders otherwise also returns sub-folders; default is False
         """
-        return run_script("_folder_names", top_level)
+        return run_script("_photoslibrary_folder_names", top_level)
 
     def album(self, *name, uuid=None):
         """ Album instance by name or id
@@ -141,7 +146,7 @@ class PhotosLibrary:
 
     def albums(self, top_level=False):
         """ list of Album objects for all albums """
-        album_ids = run_script("_album_ids", top_level)
+        album_ids = run_script("_photoslibrary_album_ids", top_level)
         return [Album(uuid) for uuid in album_ids]
 
     def create_album(self, name):
@@ -150,7 +155,7 @@ class PhotosLibrary:
             Returns:
                 Album object for newly created album
         """
-        album_id = run_script("_create_album", name)
+        album_id = run_script("_photoslibrary_create_album", name)
         return Album(album_id)
 
     def delete_album(self, album):
@@ -159,7 +164,7 @@ class PhotosLibrary:
         Args:
             album: an Album object for album to delete
         """
-        return run_script("_photoslib_delete_album", album.id)
+        return run_script("_photoslibrary_delete_album", album.id)
 
 
 class Album:
@@ -259,16 +264,34 @@ class Photo:
         name = run_script("_photo_name", self.id)
         return name if name != kMissingValue else None
 
+    @name.setter
+    def name(self, name):
+        """ set name of photo """
+        name = "" if name is None else name
+        return run_script("_photo_set_name", self.id, name)
+
     @property
     def title(self):
         """ title of photo (alias for name) """
         return self.name
+
+    @title.setter
+    def title(self, title):
+        """ set title of photo (alias for name) """
+        name = "" if title is None else title
+        return run_script("_photo_set_name", self.id, name)
 
     @property
     def description(self):
         """ description of photo """
         descr = run_script("_photo_description", self.id)
         return descr if descr != kMissingValue else None
+
+    @description.setter
+    def description(self, descr):
+        """ set description of photo """
+        descr = "" if descr is None else descr
+        return run_script("_photo_set_description", self.id, descr)
 
     @property
     def keywords(self):
@@ -277,6 +300,73 @@ class Photo:
         if not isinstance(keywords, list):
             keywords = [keywords] if keywords != kMissingValue else []
         return keywords
+
+    @keywords.setter
+    def keywords(self, keywords):
+        """ set keywords to list """
+        if not isinstance(keywords, list):
+            keywords = [keywords] if keywords is not None else []
+        return run_script("_photo_set_keywords", self.id, keywords)
+
+    @property
+    def favorite(self):
+        """ return favorite status (boolean) """
+        return run_script("_photo_favorite", self.id)
+
+    @favorite.setter
+    def favorite(self, favorite):
+        """ set favorite status (boolean) """
+        favorite = True if favorite else False
+        return run_script("_photo_set_favorite", self.id, favorite)
+
+    @property
+    def height(self):
+        """ height of photo in pixels """
+        return run_script("_photo_height", self.id)
+
+    @property
+    def width(self):
+        """ width of photo in pixels """
+        return run_script("_photo_width", self.id)
+
+    @property
+    def altitude(self):
+        """ GPS altitude of photo in meters """
+        return run_script("_photo_altitude", self.id)
+
+    @property
+    def location(self):
+        """ The GPS latitude and longitude, in a tuple of 2 numbers or None. 
+            Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.
+        """
+        location = run_script("_photo_location", self.id)
+        location[0] = None if location[0] == kMissingValue else location[0]
+        location[1] = None if location[1] == kMissingValue else location[1]
+        return tuple(location)
+
+    @location.setter
+    def location(self, location):
+        """ Set GPS latitude and longitude, in a tuple of 2 numbers or None. 
+            Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.
+        """
+
+        if not isinstance(location, tuple) and location is not None:
+            raise ValueError("location must be a tuple of (latitude, longitude)")
+
+        location = (None, None) if location is None else location
+
+        if location[0] is not None and not -90.0 <= location[0] <= 90.0:
+            raise ValueError("latitude must be in range -90.0 to 90.0")
+
+        if location[1] is not None and not -180.0 <= location[1] <= 180.0:
+            raise ValueError("longitude must be in range -180.0 to 180.0")
+
+        location = (
+            kMissingValue if location[0] is None else location[0],
+            kMissingValue if location[1] is None else location[1],
+        )
+
+        return run_script("_photo_set_location", self.id, location)
 
     @property
     def date(self):
