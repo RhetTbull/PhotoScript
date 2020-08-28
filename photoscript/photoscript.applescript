@@ -3,6 +3,29 @@
 -- Naming scheme is _classname_methodname
 
 ---------- PhotoLibrary ----------
+on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
+	if running of application "Photos" is false then
+		tell application "Photos" to launch
+		tell current application
+			set currentTimeInSeconds to (time of (current date))
+			repeat until (time of (current date)) is greater than (currentTimeInSeconds + timeoutDurationInSeconds)
+				try
+					tell application "Photos"
+						set mediaItemCount to (count of media items)
+					end tell
+					if mediaItemCount is not 0 then
+						return true
+					else
+						delay 1
+					end if
+				end try
+			end repeat
+		end tell
+		error number -128
+	end if
+	return true
+end _photoslibrary_waitforphotos
+
 on _photoslibrary_activate()
 	(* activate Photos app *)
 	tell application "Photos"
@@ -42,7 +65,8 @@ on _photoslibrary_get_all_photos()
 	(* return all photos in the library *)
 	set ids to {}
 	tell application "Photos"
-		repeat with _item in every media item
+		set mediaItems to media items
+		repeat with _item in mediaItems
 			copy id of _item to end of ids
 		end repeat
 	end tell
@@ -60,6 +84,14 @@ on _photoslibrary_search_photos(search_str)
 	end tell
 	return ids
 end _photoslibrary_search_photos
+
+on _photoslibrary_count()
+	(* return count of photos in the library *)
+	tell application "Photos"
+		set mediaItemCount to (count of media items)
+		return mediaItemCount
+	end tell
+end _photoslibrary_count
 
 on _photoslibrary_import(filenames, skip_duplicate_check)
 	(* import files
@@ -326,6 +358,13 @@ on _album_add(id_, items_)
 		add media_list_ to album_
 	end tell
 end _album_add
+
+on _album_set_name(_id, _title)
+	(* set name or title of album *)
+	tell application "Photos"
+		set name of album id (_id) to _title
+	end tell
+end _album_set_name
 
 ---------- Photo ----------
 on _photo_exists(_id)

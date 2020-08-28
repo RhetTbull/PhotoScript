@@ -1,13 +1,17 @@
 """ Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
 
+import datetime
+import random
+import string
+
 from applescript import kMissingValue
 
 from .script_loader import run_script
 
-
 class PhotosLibrary:
     def __init__(self):
-        pass
+        """ create new PhotosLibrary object and launch Photos """
+        run_script("_photoslibrary_waitforphotos", 300)
 
     def activate(self):
         """ activate Photos.app """
@@ -46,6 +50,18 @@ class PhotosLibrary:
         """ Album object for the Favorites album """
         fav_id = run_script("_photoslibrary_favorites")
         return Album(fav_id)
+
+    def _temp_album_name(self):
+        """ get a temporary album name that doesn't clash with album in the library """
+        temp_name = self._temp_name()
+        while self.album(temp_name) is not None:
+            temp_name = self._temp_name()
+        return temp_name
+    
+    def _temp_name(self):
+        ds = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        random_str = "".join(random.choice(string.ascii_lowercase + string.ascii_uppercase) for i in range(10))
+        return f"photoscript_{ds}_{random_str}"
 
     # doesn't seem to be a way to do anything with the recently deleted album except count items
     # @property
@@ -166,6 +182,8 @@ class PhotosLibrary:
         """
         return run_script("_photoslibrary_delete_album", album.id)
 
+    def __len__(self):
+        return run_script("_photoslibrary_count")
 
 class Album:
     def __init__(self, uuid):
@@ -185,11 +203,23 @@ class Album:
         """ name of album """
         name = run_script("_album_name", self.id)
         return name if name != kMissingValue else None
+    
+    @name.setter
+    def name(self, name):
+        """ set name of photo """
+        name = "" if name is None else name
+        return run_script("_album_set_name", self.id, name)
 
     @property
     def title(self):
         """ title of album (alias for Album.name) """
         return self.name
+
+    @title.setter
+    def title(self, title):
+        """ set title of photo (alias for name) """
+        name = "" if title is None else title
+        return run_script("_album_set_name", self.id, name)
 
     @property
     def parent_id(self):
@@ -244,6 +274,48 @@ class Album:
             for p in photos
         ]
 
+    # TODO: new album created at top level -- need to create new album at some path as old album
+    def remove_by_id(self, photo_ids):
+        """ Remove photos from album. 
+            Note: Photos does not provide a way to remove photos from an album via AppleScript. 
+            This method actually creates a new Album with the same name as the original album and
+            copies all photos from original album with exception of those to remove to the new album
+            then deletes the old album.  
+
+        Args:
+            photo_ids: list of photo ids to remove
+        
+        Returns:
+            new Album object for the new album with photos removed.
+        """
+        photoslib = PhotosLibrary()
+        new_album = photoslib.create_album(photoslib._temp_album_name())
+        old_photos = self.photos
+        new_photo_uuids = [photo.id for photo in old_photos if photo.id not in photo_ids]
+        new_photos = [Photo(uuid) for uuid in new_photo_uuids]
+        if new_photos:
+            new_album.add(new_photos)
+        name = self.name
+        photoslib.delete_album(self)
+        new_album.name = name
+        self.id = new_album.id
+        return new_album
+                
+    def remove(self, photos):
+        """ Remove photos from album. 
+            Note: Photos does not provide a way to remove photos from an album via AppleScript. 
+            This method actually creates a new Album with the same name as the original album and
+            copies all photos from original album with exception of those to remove to the new album
+            then deletes the old album.  
+
+        Args:
+            photos: list of Photo objects to remove
+        
+        Returns:
+            new Album object for the new album with photos removed.
+        """
+        photo_uuids = [photo.id for photo in photos]
+        return self.remove_by_id(photo_uuids)
 
 class Photo:
     def __init__(self, uuid):
