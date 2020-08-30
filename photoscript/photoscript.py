@@ -10,7 +10,6 @@ from .script_loader import run_script
 
 
 class PhotosLibrary:
-    
     def __init__(self):
         """ create new PhotosLibrary object and launch Photos """
         run_script("_photoslibrary_waitforphotos", 300)
@@ -185,13 +184,13 @@ class PhotosLibrary:
         """
         return run_script("_photoslibrary_delete_album", album.id)
 
-    def folder(self, *name, uuid=None, top_level=False):
-        """Folder instance by name or id
+    def folder(self, *name, uuid=None, top_level=True):
+        """Folder instance by name or uuid
 
         Args:
             name: name of folder
             uuid: id of folder
-            top_level: search only top_level folders; default = False 
+            top_level: if True, only searches top level folders by name; default is True
 
         Returns:
             Folder object or None if folder could not be found
@@ -214,6 +213,26 @@ class PhotosLibrary:
         else:
             raise ValueError("Invalid name or uuid")
 
+    def folder_by_path(self, folder_path):
+        """ Return folder in the library by path
+
+        Args:
+            folder_path: list of folder names, e.g. ["Folder", "SubFolder1", "SubFolder2"]
+
+        Returns: 
+            Folder object for folder at folder_path or None if not found
+        """
+        folder_id = run_script("_folder_by_path", folder_path)
+        if folder_id != 0:
+            return Folder(folder_id)
+        else:
+            return None
+
+    def folders(self, top_level=True):
+        """ list of Folder objects for all folders """
+        folder_ids = run_script("_photoslibrary_folder_ids", top_level)
+        return [Folder(uuid) for uuid in folder_ids]
+
     def create_folder(self, name, folder=None):
         """creates a folder
 
@@ -235,12 +254,13 @@ class PhotosLibrary:
         return Folder(folder_id)
 
     def delete_folder(self, folder):
-        """deletes folder
+        """deletes folder (Not yet implemented)
 
         Args:
             folder: a Folder object for folder to delete
         """
-        return run_script("_photoslibrary_delete_folder", folder.id)
+        raise NotImplementedError("delete_folder not yet implemented")
+        # return run_script("_photoslibrary_delete_folder", folder.id)
 
     def __len__(self):
         return run_script("_photoslibrary_count")
@@ -390,7 +410,9 @@ class Album:
             new Album object for the new album with photos removed.
         """
         photoslib = PhotosLibrary()
-        new_album = photoslib.create_album(photoslib._temp_album_name())
+        new_album = photoslib.create_album(
+            photoslib._temp_album_name(), folder=self.parent
+        )
         old_photos = self.photos
         new_photo_uuids = [
             photo.id for photo in old_photos if photo.id not in photo_ids

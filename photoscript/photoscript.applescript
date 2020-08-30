@@ -1,8 +1,11 @@
--- TODO: Variable names are not very consistent throughout this
+-- TODO: Variable names are not very consistent throughout this, some use leading _ some trailing_ 
+-- underscore is used because some variable names (like folder) would clash with AppleScript nouns
+-- but this won't be maintainable if naming scheme isn't consistent
 
 -- Naming scheme is _classname_methodname
 
 ---------- PhotoLibrary ----------
+
 on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
 	if running of application "Photos" is false then
 		tell application "Photos" to launch
@@ -128,28 +131,14 @@ end _photoslibrary_import_to_album
 
 on _photoslibrary_album_names(top_level)
 	(* return list of album names found in Photos *)
-	if top_level then
-		
-		tell application "Photos"
-			return name of every album
-		end tell
-	else
-		set albums_folders to _photoslibrary_get_album_folder_names()
-		return album_names of albums_folders
-	end if
+	set albums_folders to _photoslibrary_get_album_folder_names(top_level)
+	return album_names of albums_folders
 end _photoslibrary_album_names
 
 on _photoslibrary_folder_names(top_level)
 	(* return list of folder names found in Photos *)
-	if top_level then
-		tell application "Photos"
-			return name of every folder
-		end tell
-	else
-		set albums_folders to _photoslibrary_get_album_folder_names()
-		return folder_names of albums_folders
-	end if
-	
+	set albums_folders to _photoslibrary_get_album_folder_names(top_level)
+	return folder_names of albums_folders
 end _photoslibrary_folder_names
 
 on _photoslibrary_get_albums_folders()
@@ -186,6 +175,7 @@ on _photoslibrary_get_albums_folders()
 	set albums_folders to {_albums:allalbums, _folders:allfolders}
 	return albums_folders
 end _photoslibrary_get_albums_folders
+
 
 on _photoslibrary_get_top_level_albums_folders()
 	(* return record containing album names and folder names in the library
@@ -224,9 +214,13 @@ on _photoslibrary_get_top_level_albums_folders()
 	return albums_folders
 end _photoslibrary_get_top_level_albums_folders
 
-on _photoslibrary_get_album_folder_names()
+on _photoslibrary_get_album_folder_names(top_level)
 	(* return names of albums and folders *)
-	set albums_folders to _photoslibrary_get_albums_folders()
+	if top_level then
+		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	else
+		set albums_folders to _photoslibrary_get_albums_folders()
+	end if
 	set allalbums to _albums of albums_folders
 	set allfolders to _folders of albums_folders
 	set allalbumnames to {}
@@ -266,6 +260,54 @@ on _photoslibrary_album_ids(top_level)
 	end if
 end _photoslibrary_album_ids
 
+
+on _photoslibrary_folder_ids(top_level)
+	(* return list of folder ids found in Photos 
+	  Args:
+	      top_level: boolean; if true returns only top-level folders otherwise all folders
+	*)
+	if top_level then
+		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	else
+		set albums_folders to _photoslibrary_get_albums_folders()
+	end if
+	set _folders to _folders of albums_folders
+	set _ids to {}
+	repeat with _f in _folders
+		copy id of _f to end of _ids
+	end repeat
+	return _ids
+end _photoslibrary_folder_ids
+
+
+on _photoslibrary_folder_id_lists(top_level)
+	(* return list of folder ids found in Photos as list of ids
+	  Args:
+	      top_level: boolean; if true returns only top-level folders otherwise all folders
+	*)
+	if top_level then
+		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	else
+		set albums_folders to _photoslibrary_get_albums_folders()
+	end if
+	set _folders to _folders of albums_folders
+	set _id_list to {}
+	repeat with _f in _folders
+		set folder_ids_ to {id of _f}
+		try
+			repeat
+				set parent_id_ to id of parent of _f
+				copy parent_id_ to end of folder_ids_
+				set _f to parent of _f
+			end repeat
+		on error
+			copy folder_ids_ to end of _id_list
+		end try
+	end repeat
+	return _id_list
+end _photoslibrary_folder_id_lists
+
+
 on _photoslibrary_create_album(albumName)
 	(*  creates album named albumName
 	     does not check for duplicate album
@@ -285,8 +327,9 @@ on _photoslibrary_create_album_at_folder(albumName, folder_id_)
            Returns:
 		    UUID of newly created album 
 	*)
+	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
-		set theAlbum to make new album named albumName at folder id (folder_id_)
+		set theAlbum to make new album named albumName at folder_
 		set theID to ((id of theAlbum) as text)
 		return theID
 	end tell
@@ -345,20 +388,39 @@ on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
            Returns:
 		    UUID of newly created folder 
 	*)
+	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
-		set theFolder to make new folder named folderName at folder id (folder_id_)
+		set theFolder to make new folder named folderName at folder_
 		set theID to ((id of theFolder) as text)
 		return theID
 	end tell
 end _photoslibrary_create_folder_at_folder
 
-on _photoslibrary_delete_folder(id_)
+on _photoslibrary_delete_folder_old(id_)
 	(* delete folder with id_ *)
+	set folder_ to _folder_get_folder_for_id(id_)
 	tell application "Photos"
-		set folder_ to folder id (id_)
 		delete folder_
 	end tell
+end _photoslibrary_delete_folder_old
+
+
+on _photoslibrary_delete_folder(_id)
+	--TODO: doesn't currently work 
+	(* return folder for _id *)
+	_photoslibrary_waitforphotos(300)
+	set _folder_ids to _photoslibrary_internal_path_ids_to_album_folder(_folder_get_folder_for_id(_id))
+	tell application "Photos"
+		set folder_ to folder id (item 1 of _folder_ids)
+		set _folder_ids to rest of _folder_ids
+		repeat with _folder_id in _folder_ids
+			set folder_ to folder id (_folder_id) of folder_
+		end repeat
+		say (name of folder_ as text)
+		delete (folder_ as folder)
+	end tell
 end _photoslibrary_delete_folder
+
 
 on _photoslibrary_internal_path_to_album_folder(targetObject, pathItemDelimiter)
 	_photoslibrary_waitforphotos(300)
@@ -373,29 +435,21 @@ on _photoslibrary_internal_path_to_album_folder(targetObject, pathItemDelimiter)
 		else
 			error "The indicated item must be a folder or album."
 		end if
-		
 		set pathToObject to targetObjectName
-		
-		repeat
-			try
-				if class of parent of targetObject is folder then
-					set folderName to the name of parent of targetObject
-					set pathToObject to folderName & pathItemDelimiter & pathToObject
-					set thisID to id of parent of targetObject
-					set targetObject to folder id thisID
-				else if class of parent of targetObject is album then
-					set albumName to the name of parent of targetObject
-					set pathToObject to albumName & pathItemDelimiter & pathToObject
-					set thisID to id of parent of targetObject
-					set targetObject to album id thisID
-				end if
-			on error
-				return pathToObject
-			end try
-		end repeat
-		
 	end tell
+	repeat
+		try
+			set folderName to name of parent of targetObject
+			set parentID to id of parent of targetObject
+			set pathToObject to folderName & pathItemDelimiter & pathToObject
+			set targetObject to _folder_get_folder_for_id(parentID)
+		on error
+			return pathToObject
+		end try
+		
+	end repeat
 end _photoslibrary_internal_path_to_album_folder
+
 
 on _photoslibrary_internal_path_ids_to_album_folder(targetObject)
 	_photoslibrary_waitforphotos(300)
@@ -410,30 +464,20 @@ on _photoslibrary_internal_path_ids_to_album_folder(targetObject)
 		else
 			error "The indicated item must be a folder or album."
 		end if
-		
 		set pathToObject to {}
-		
-		repeat
-			try
-				if class of parent of targetObject is folder then
-					set folderID to the id of parent of targetObject
-					copy folderID to beginning of pathToObject
-					set thisID to id of parent of targetObject
-					set targetObject to folder id thisID
-				else if class of parent of targetObject is album then
-					set albumID to the id of parent of targetObject
-					copy albumID to beginning of pathToObject
-					set thisID to id of parent of targetObject
-					set targetObject to album id thisID
-				end if
-			on error
-				return pathToObject
-			end try
-		end repeat
-		
 	end tell
+	repeat
+		try
+			set folderID to id of parent of targetObject
+			set parentID to id of parent of targetObject
+			copy folderID to beginning of pathToObject
+			set targetObject to _folder_get_folder_for_id(parentID)
+		on error
+			return pathToObject
+		end try
+		
+	end repeat
 end _photoslibrary_internal_path_ids_to_album_folder
-
 
 ---------- Album ----------
 
@@ -546,39 +590,70 @@ end _album_get_path
 
 
 ---------- Folder ----------
+
+on _folder_get_folder_for_id(_id)
+	(* return folder for _id *)
+	_photoslibrary_waitforphotos(300)
+	set albums_folders to _photoslibrary_get_albums_folders()
+	set _folders to _folders of albums_folders
+	tell application "Photos"
+		repeat with _folder in _folders
+			set _folder_id to id of _folder
+			if _folder_id = _id then
+				return _folder
+			end if
+		end repeat
+		return missing value
+	end tell
+end _folder_get_folder_for_id
+
 on _folder_exists(_id)
 	(* return true if folder with _id exists otherwise false *)
 	_photoslibrary_waitforphotos(300)
-	tell application "Photos"
+	set version_ to _photoslibrary_version() as number
+	if version_ < 5 then
+		tell application "Photos"
+			try
+				set _exist to folder id (_id)
+			on error
+				return false
+			end try
+			
+			return true
+		end tell
+	else
 		try
-			set _exist to folder id (_id)
+			set _exist to _folder_get_folder_for_id(_id)
 		on error
 			return false
 		end try
 		
 		return true
-	end tell
+	end if
 end _folder_exists
 
 on _folder_name(_id)
 	(* return name of folder with id _id *)
+	set folder_ to _folder_get_folder_for_id(_id)
 	tell application "Photos"
-		return name of folder id (_id)
+		return name of folder_
 	end tell
 end _folder_name
 
 on _folder_set_name(_id, _title)
 	(* set name or title of folder *)
+	set folder_ to _folder_get_folder_for_id(_id)
 	tell application "Photos"
-		set name of folder id (_id) to _title
+		set name of folder_ to _title
 	end tell
 end _folder_set_name
 
 on _folder_parent(_id)
 	(* returns parent folder id of folder or 0 if no parent *)
 	try
+		set folder_ to _folder_get_folder_for_id(_id)
 		tell application "Photos"
-			return id of parent of folder id (_id)
+			return id of parent of folder_
 		end tell
 	on error
 		return 0
@@ -586,10 +661,10 @@ on _folder_parent(_id)
 end _folder_parent
 
 on _folder_albums(id_)
-	(* return list of ids for albums in folder _id *)
+	(* return list of ids for albums in folder id_ *)
 	set ids to {}
+	set _folder to _folder_get_folder_for_id(id_)
 	tell application "Photos"
-		set _folder to folder id (id_)
 		set _albums to albums of _folder
 		repeat with _album in _albums
 			copy id of _album to end of ids
@@ -599,10 +674,10 @@ on _folder_albums(id_)
 end _folder_albums
 
 on _folder_folders(id_)
-	(* return list of ids for folders in folder _id *)
+	(* return list of ids for folders in folder id_ *)
 	set ids to {}
+	set _folder to _folder_get_folder_for_id(id_)
 	tell application "Photos"
-		set _folder to folder id (id_)
 		set _folders to folders of _folder
 		repeat with _f in _folders
 			copy id of _f to end of ids
@@ -613,9 +688,10 @@ end _folder_folders
 
 on _folder_len(id_)
 	(* return count of items (albums and folders) in folder id_*)
+	set folder_ to _folder_get_folder_for_id(id_)
 	tell application "Photos"
-		set _albums_count to (count of albums in folder id (id_))
-		set _folders_count to (count of folders in folder id (id_))
+		set _albums_count to (count of albums in folder_)
+		set _folders_count to (count of folders in folder_)
 		set _len to _albums_count + _folders_count
 		return _len
 	end tell
@@ -640,11 +716,42 @@ on _folder_by_name(name_, top_level_)
 	return 0
 end _folder_by_name
 
+on _folder_by_path(folder_path_)
+	(* return folder id for folder by path
+	Args:
+		folder_path_: list of folder names, e.g. {"Folder","SubFolder", "SubSubFolder"}
+		
+	Returns: 
+		folder id or 0 if not found
+	*)
+	set top_level_folders to _folders of _photoslibrary_get_top_level_albums_folders()
+	set folder_ to missing value
+	repeat with f_ in top_level_folders
+		if name of f_ = item 1 of folder_path_ then
+			set folder_ to f_
+		end if
+	end repeat
+	if folder_ = missing value then
+		return 0
+	end if
+	set folder_path_ to rest of folder_path_
+	tell application "Photos"
+		try
+			repeat with folder_name_ in folder_path_
+				set subfolder_ to get folder folder_name_ of folder_
+				set subfolder_id_ to id of subfolder_
+				set folder_ to folder id (subfolder_id_) of folder_
+			end repeat
+		on error
+			return 0
+		end try
+	end tell
+	return id of folder_
+end _folder_by_path
+
 on _folder_get_path(id_, path_delimiter_)
 	(* return path to folder as a string *)
-	tell application "Photos"
-		set folder_ to folder id (id_)
-	end tell
+	set folder_ to _folder_get_folder_for_id(id_)
 	try
 		set path_ to _photoslibrary_internal_path_to_album_folder(folder_, path_delimiter_)
 	on error
@@ -655,9 +762,7 @@ end _folder_get_path
 
 on _folder_path_ids(id_)
 	(* return path to folder as a string *)
-	tell application "Photos"
-		set folder_ to folder id (id_)
-	end tell
+	set folder_ to _folder_get_folder_for_id(id_)
 	try
 		set path_ids_ to _photoslibrary_internal_path_ids_to_album_folder(folder_)
 	on error
@@ -817,6 +922,7 @@ on _photo_filename(id_)
 end _photo_filename
 
 on _photo_duplicate(id_)
+	(* duplicate photo *)
 	tell application "Photos"
 		set _new_photo to duplicate media item id (id_)
 		return id of _new_photo
@@ -824,7 +930,13 @@ on _photo_duplicate(id_)
 end _photo_duplicate
 
 --------- Test ----------
-
+(* tell application "Photos"
+	set folder_ to folder id ("65E8932D-5746-465A-8B64-EE1FA2EB0B4A/L0/020") of folder id ("216F08FA-5F50-4944-99DA-042C1AEDFAEC/L0/020")
+	--set folder_ to folder id ("216F08FA-5F50-4944-99DA-042C1AEDFAEC/L0/020")
+end tell *)
+--_photoslibrary_get_albums_folders()
+--_folder_get_folder_for_id("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
+--_folder_exists("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
 --------- Code from Photos Utilities ---------
 -- see: http://photosautomation.com/scripting/script-library.html 
 
