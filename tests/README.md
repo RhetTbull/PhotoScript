@@ -4,7 +4,7 @@ The tests use pytest so:
 
 `python3 -m pip install pytest`
 
-`python -m pytest`
+`python3 -m pytest`
 
 In order to properly test PhotoScript, the test suite must obviously interact with Photos using AppleScript.  This requires some user input so the test suite **must** be run with user interaction; it cannot be run in "headless" manner.
 
