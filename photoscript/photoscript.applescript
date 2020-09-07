@@ -418,7 +418,7 @@ on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
            Returns:
 		    UUID of newly created folder 
 	*)
-	_photoslibrary_waitforphotos(300)	
+	_photoslibrary_waitforphotos(300)
 	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
 		set count_ to 0

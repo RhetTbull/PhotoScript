@@ -158,6 +158,6 @@ def test_photoslibrary_selection(photoslib, suspend_capture):
 
     sel = photoslib.selection
     assert len(sel) == 2
-    uuids = [photo.uuid for photo in sel]
-    assert sorted(uuids) == sorted(SELECTION_UUIDS)
+    ids = [photo.id for photo in sel]
+    assert sorted(ids) == sorted(SELECTION_UUIDS)
 

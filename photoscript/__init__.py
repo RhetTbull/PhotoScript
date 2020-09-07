@@ -303,13 +303,14 @@ class Album:
         valuuidalbum = run_script("_album_exists", uuid)
         if valuuidalbum:
             self.id = uuid
+            self._uuid = uuid.split("/")[0]
         else:
             raise ValueError(f"Invalid album id: {uuid}")
 
     @property
     def uuid(self):
         """ UUID of Album """
-        return self.id
+        return self._uuid
 
     @property
     def name(self):
@@ -465,13 +466,14 @@ class Folder:
         valid_folder = run_script("_folder_exists", uuid)
         if valid_folder:
             self.id = uuid
+            self._uuid = uuid.split("/")[0]
         else:
             raise ValueError(f"Invalid folder id: {uuid}")
 
     @property
     def uuid(self):
         """ UUID of folder"""
-        return self.id
+        return self._uuid
 
     @property
     def name(self):
@@ -593,13 +595,14 @@ class Photo:
         valid = run_script("_photo_exists", uuid)
         if valid:
             self.id = uuid
+            self._uuid = uuid.split("/")[0]
         else:
             raise ValueError(f"Invalid photo id: {uuid}")
 
     @property
     def uuid(self):
         """ UUID of Photo """
-        return self.id
+        return self._uuid
 
     @property
     def name(self):
