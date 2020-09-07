@@ -254,6 +254,9 @@ class PhotosLibrary:
 
         Returns:
             Folder object for newly created folder
+
+        Raises:
+            AppleScriptError if folder cannot be created
         """
         if folder is None:
             folder_id = run_script("_photoslibrary_create_folder", name)
@@ -262,7 +265,10 @@ class PhotosLibrary:
                 "_photoslibrary_create_folder_at_folder", name, folder.id
             )
 
-        return Folder(folder_id)
+        if folder_id != 0:
+            return Folder(folder_id)
+        else:
+            raise AppleScriptError(f"Could not create folder {name}")
 
     def delete_folder(self, folder):
         """deletes folder (Not yet implemented)

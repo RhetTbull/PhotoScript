@@ -4,6 +4,9 @@
 
 -- Naming scheme is _classname_methodname
 
+(* max number of times to retry in case of error *)
+property MAX_RETRY : 5
+
 ---------- PhotoLibrary ----------
 
 on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
@@ -312,12 +315,12 @@ on _photoslibrary_create_album(albumName)
 	(*  creates album named albumName
 	     does not check for duplicate album
            Returns:
-		    UUID of newly created album 
+		    UUID of newly created album or 0 if error
 	*)
 	_photoslibrary_waitforphotos(300)
 	tell application "Photos"
 		set count_ to 0
-		repeat while count_ < 5
+		repeat while count_ < MAX_RETRY
 			try
 				set theAlbum to make new album named albumName
 				set theID to ((id of theAlbum) as text)
@@ -334,13 +337,13 @@ on _photoslibrary_create_album_at_folder(albumName, folder_id_)
 	(*  creates album named albumName inside folder folder_id_
 	     does not check for duplicate album
            Returns:
-		    UUID of newly created album 
+		    UUID of newly created album or 0 if error
 	*)
 	_photoslibrary_waitforphotos(300)
 	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
 		set count_ to 0
-		repeat while count_ < 5
+		repeat while count_ < MAX_RETRY
 			try
 				set theAlbum to make new album named albumName at folder_
 				set theID to ((id of theAlbum) as text)
@@ -391,12 +394,21 @@ on _photoslibrary_create_folder(folderName)
 	(*  creates folder named folderName
 	     does not check for duplicate folder
            Returns:
-		    UUID of newly created folder 
+		    UUID of newly created folder or 0 if error
 	*)
+	_photoslibrary_waitforphotos(300)
 	tell application "Photos"
-		set theFolder to make new folder named folderName
-		set theID to ((id of theFolder) as text)
-		return theID
+		set count_ to 0
+		repeat while count_ < MAX_RETRY
+			try
+				set theFolder to make new folder named folderName
+				set theID to ((id of theFolder) as text)
+				return theID
+			on error
+				set count_ to count_ + 1
+			end try
+		end repeat
+		return 0
 	end tell
 end _photoslibrary_create_folder
 
@@ -406,11 +418,20 @@ on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
            Returns:
 		    UUID of newly created folder 
 	*)
+	_photoslibrary_waitforphotos(300)	
 	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
-		set theFolder to make new folder named folderName at folder_
-		set theID to ((id of theFolder) as text)
-		return theID
+		set count_ to 0
+		repeat while count_ < MAX_RETRY
+			try
+				set theFolder to make new folder named folderName at folder_
+				set theID to ((id of theFolder) as text)
+				return theID
+			on error
+				set count_ to count_ + 1
+			end try
+		end repeat
+		return 0
 	end tell
 end _photoslibrary_create_folder_at_folder
 

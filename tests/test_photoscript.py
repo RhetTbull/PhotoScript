@@ -118,6 +118,28 @@ def test_photoslibrary_create_album_at_folder(photoslib):
     
     assert album.parent.name == "Folder1"
 
+def test_photoslibrary_create_folder(photoslib):
+    import photoscript
+
+    folder = photoslib.create_folder("New Folder")
+    assert isinstance(folder, photoscript.Folder)
+
+    folders = photoslib.folder_names()
+    assert "New Folder" in folders
+
+def test_photoslibrary_create_folder_at_folder(photoslib):
+    import photoscript
+
+    folder = photoslib.create_folder("New SubFolder", folder=photoslib.folder("Folder1"))
+    assert isinstance(folder, photoscript.Folder)
+
+    folders = photoslib.folder_names(top_level=True)
+    assert "New SubFolder" not in folders
+
+    folders = photoslib.folder_names()
+    assert "New SubFolder" in folders
+
+    assert folder.parent.name == "Folder1"
 
 def test_photoslibrary_selection(photoslib, suspend_capture):
     """ Test selection. NOTE: this test requires user interaction """
