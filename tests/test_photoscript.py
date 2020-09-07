@@ -1,4 +1,4 @@
-from tests.conftest import photo_library, suspend_capture
+from tests.conftest import photoslib, suspend_capture
 import pytest
 
 ALBUM_1_NAME = "San Juan Capistrano"
@@ -13,19 +13,17 @@ FOLDER_NAMES_ALL = ["Travel", "Folder1", "SubFolder1"]
 FOLDER_NAMES_TOP = ["Travel", "Folder1"]
 
 
-def test_photoslibrary_activate(photo_library):
+def test_photoslibrary_activate(photoslib):
     import photoscript
 
-    photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
     assert photoslib.frontmost
 
 
-def test_photoslibrary_quit(photo_library):
+def test_photoslibrary_quit(photoslib):
     import photoscript
     from applescript import AppleScript
 
-    photoslib = photoscript.PhotosLibrary()
     photoslib.quit()
     script = AppleScript(
         """
@@ -37,11 +35,10 @@ def test_photoslibrary_quit(photo_library):
     assert not script.call("is_running", "Photos")
 
 
-def test_photoslibrary_frontmost(photo_library):
+def test_photoslibrary_frontmost(photoslib):
     import photoscript
     from applescript import AppleScript
 
-    photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
     assert photoslib.frontmost
 
@@ -55,68 +52,66 @@ def test_photoslibrary_frontmost(photo_library):
     assert not photoslib.frontmost
 
 
-def test_photoslibrary_album_by_name(photo_library):
+def test_photoslibrary_album_by_name(photoslib):
     import photoscript
-
-    photoslib = photoscript.PhotosLibrary()
 
     album = photoslib.album(ALBUM_1_NAME)
     assert album is not None
     assert isinstance(album, photoscript.Album)
 
 
-def test_photoslibrary_album_by_uuid(photo_library):
+def test_photoslibrary_album_by_uuid(photoslib):
     import photoscript
-
-    photoslib = photoscript.PhotosLibrary()
 
     album = photoslib.album(uuid=ALBUM_1_UUID)
     assert album is not None
     assert isinstance(album, photoscript.Album)
 
 
-def test_photoslibrary_album_bad_name(photo_library):
+def test_photoslibrary_album_bad_name(photoslib):
     import photoscript
 
-    photoslib = photoscript.PhotosLibrary()
 
     album = photoslib.album("BAD_NAME")
     assert album is None
 
 
-def test_photoslibrary_album_bad_uuid(photo_library):
+def test_photoslibrary_album_bad_uuid(photoslib):
     import photoscript
-
-    photoslib = photoscript.PhotosLibrary()
 
     with pytest.raises(ValueError):
         photoslib.album(uuid="BAD_UUID")
 
 
-def test_photoslibrary_album_names(photo_library):
+def test_photoslibrary_album_names(photoslib):
     import photoscript
 
-    photoslib = photoscript.PhotosLibrary()
 
     albums = photoslib.album_names()
     assert sorted(albums) == sorted(ALBUM_NAMES_ALL)
 
 
-def test_photoslibrary_album_names_top(photo_library):
+def test_photoslibrary_album_names_top(photoslib):
     import photoscript
 
-    photoslib = photoscript.PhotosLibrary()
 
     albums = photoslib.album_names(top_level=True)
     assert sorted(albums) == sorted(ALBUM_NAMES_TOP)
 
+# def test_photoslibrary_create_album(photoslib):
+#     import photoscript
+    
+#     album = photoslib.create_album("New Album")
+#     assert isinstance(album, photoscript.Album)
 
-def test_photoslibrary_selection(photo_library, suspend_capture):
+#     albums = photoslib.album_names()
+#     assert sorted(albums) == sorted(ALBUM_NAMES_ALL+["New Album"])
+
+
+def test_photoslibrary_selection(photoslib, suspend_capture):
     """ Test selection. NOTE: this test requires user interaction """
     import os
     import photoscript
-
-    photoslib = photoscript.PhotosLibrary()
 
     with suspend_capture:
         photoslib.activate
