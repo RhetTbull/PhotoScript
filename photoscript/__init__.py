@@ -76,7 +76,8 @@ class PhotosLibrary:
         Returns:
             List of Photo objects or [] if no photos found
 
-        Raises: ValueError if both search and uuid are passed
+        Raises: 
+            ValueError if both search and uuid are passed
         """
         if search is not None and uuid:
             raise ValueError("Cannot pass both search and uuid")
@@ -138,7 +139,9 @@ class PhotosLibrary:
         Returns:
             Album object or None if album could not be found
 
-        Raises: ValueError if both name and id passed.
+        Raises: 
+            ValueError if both name and id passed.
+
         Must pass only name or id but not both.
         If more than one album with same name, returns the first one found.
         """
@@ -206,7 +209,9 @@ class PhotosLibrary:
         Returns:
             Folder object or None if folder could not be found
 
-        Raises: ValueError if both name and id passed.
+        Raises: 
+            ValueError if both name and id passed.
+            
         Must pass only name or id but not both.
         If more than one folder with same name, returns first one found.
         """
@@ -228,7 +233,7 @@ class PhotosLibrary:
         """ Return folder in the library by path
 
         Args:
-            folder_path: list of folder names, e.g. ["Folder", "SubFolder1", "SubFolder2"]
+            folder_path: list of folder names in descending path order, e.g. ["Folder", "SubFolder1", "SubFolder2"]
 
         Returns: 
             Folder object for folder at folder_path or None if not found
@@ -270,8 +275,39 @@ class PhotosLibrary:
         else:
             raise AppleScriptError(f"Could not create folder {name}")
 
+    def make_folders(self, folder_path):
+        """Recursively makes folders and subfolders.  Works similar to os.makedirs_.  
+        If any component of folder_path already exists, does not raise error.
+
+        .. _os.makedirs: https://docs.python.org/3/library/os.html#os.makedirs
+
+        Args:
+            folder_path: list of folder names in descending path order, e.g. ["Folder", "SubFolder1", "SubFolder2"]
+
+        Returns:
+            Folder object for the final sub folder
+
+        Raises:
+            ValueError if folder_path is empty
+            TypeError if folder_path is not a list
+        """
+        if not isinstance(folder_path, list):
+            raise TypeError("list expected for folder_path")
+        if not folder_path:
+            raise ValueError("no values in folder_path")
+
+        folder = self.folder(folder_path[0], top_level=True)
+        if folder is None:
+            folder = self.create_folder(folder_path[0])
+        for subfolder_name in folder_path[1:]:
+            subfolder = folder.folder(subfolder_name)
+            if subfolder is None:
+                subfolder = folder.create_folder(subfolder_name)
+            folder = subfolder
+        return folder
+
     def delete_folder(self, folder):
-        """deletes folder (Not yet implemented)
+        """Deletes folder (Not yet implemented)
 
         Args:
             folder: a Folder object for folder to delete
