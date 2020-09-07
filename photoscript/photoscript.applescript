@@ -314,10 +314,19 @@ on _photoslibrary_create_album(albumName)
            Returns:
 		    UUID of newly created album 
 	*)
+	_photoslibrary_waitforphotos(300)
 	tell application "Photos"
-		set theAlbum to make new album named albumName
-		set theID to ((id of theAlbum) as text)
-		return theID
+		set count_ to 0
+		repeat while count_ < 5
+			try
+				set theAlbum to make new album named albumName
+				set theID to ((id of theAlbum) as text)
+				return theID
+			on error
+				set count_ to count_ + 1
+			end try
+		end repeat
+		return 0
 	end tell
 end _photoslibrary_create_album
 
@@ -327,11 +336,20 @@ on _photoslibrary_create_album_at_folder(albumName, folder_id_)
            Returns:
 		    UUID of newly created album 
 	*)
+	_photoslibrary_waitforphotos(300)
 	set folder_ to _folder_get_folder_for_id(folder_id_)
 	tell application "Photos"
-		set theAlbum to make new album named albumName at folder_
-		set theID to ((id of theAlbum) as text)
-		return theID
+		set count_ to 0
+		repeat while count_ < 5
+			try
+				set theAlbum to make new album named albumName at folder_
+				set theID to ((id of theAlbum) as text)
+				return theID
+			on error
+				set count_ to count_ + 1
+			end try
+		end repeat
+		return 0
 	end tell
 end _photoslibrary_create_album_at_folder
 

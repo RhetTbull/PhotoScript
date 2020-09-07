@@ -1,2 +1,2 @@
-from .photoscript import PhotosLibrary, Album, Folder, Photo
+from .photoscript import PhotosLibrary, Album, Folder, Photo, AppleScriptError
 

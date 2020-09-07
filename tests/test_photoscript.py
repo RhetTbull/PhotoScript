@@ -98,14 +98,25 @@ def test_photoslibrary_album_names_top(photoslib):
     albums = photoslib.album_names(top_level=True)
     assert sorted(albums) == sorted(ALBUM_NAMES_TOP)
 
-# def test_photoslibrary_create_album(photoslib):
-#     import photoscript
-    
-#     album = photoslib.create_album("New Album")
-#     assert isinstance(album, photoscript.Album)
+def test_photoslibrary_create_album(photoslib):
+    import photoscript
 
-#     albums = photoslib.album_names()
-#     assert sorted(albums) == sorted(ALBUM_NAMES_ALL+["New Album"])
+    album = photoslib.create_album("New Album")
+    assert isinstance(album, photoscript.Album)
+
+    albums = photoslib.album_names()
+    assert "New Album" in albums
+
+def test_photoslibrary_create_album_at_folder(photoslib):
+    import photoscript
+
+    album = photoslib.create_album("New Album In Folder", folder=photoslib.folder("Folder1",top_level=True))
+    assert isinstance(album, photoscript.Album)
+
+    albums = photoslib.album_names()
+    assert "New Album In Folder" in albums
+    
+    assert album.parent.name == "Folder1"
 
 
 def test_photoslibrary_selection(photoslib, suspend_capture):

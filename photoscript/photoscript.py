@@ -9,6 +9,11 @@ from applescript import kMissingValue
 from .script_loader import run_script
 
 
+class AppleScriptError(Exception):
+    def __init__(self, *message):
+        super().__init__(*message)
+
+
 class PhotosLibrary:
     def __init__(self):
         """ create new PhotosLibrary object and launch Photos """
@@ -166,6 +171,9 @@ class PhotosLibrary:
 
         Returns:
             Album object for newly created album
+
+        Raises:
+            AppleScriptError if error creating the album
         """
         if folder is None:
             album_id = run_script("_photoslibrary_create_album", name)
@@ -174,7 +182,10 @@ class PhotosLibrary:
                 "_photoslibrary_create_album_at_folder", name, folder.id
             )
 
-        return Album(album_id)
+        if album_id != 0:
+            return Album(album_id)
+        else:
+            raise AppleScriptError(f"Could not create album {name}")
 
     def delete_album(self, album):
         """deletes album (but does not delete photos in the album)
