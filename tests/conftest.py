@@ -3,10 +3,12 @@ import pytest
 import shutil
 from applescript import AppleScript
 import os
+import sys
 import pathlib
 
-TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
+from regex.regex import T
 
+TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
 
 @pytest.fixture(scope="session")
 def photo_library():
@@ -20,7 +22,11 @@ def photo_library():
     )
     script.run()
     src = pathlib.Path(os.getcwd()) / f"tests/test_libraries/{TEST_LIBRARY}"
-    dest = os.path.expanduser(f"~/Pictures")
+    picture_folder = pathlib.Path(os.environ["PHOTOSCRIPT_PICTURES_FOLDER"]) if "PHOTOSCRIPT_PICTURES_FOLDER" in os.environ else pathlib.Path("~/Pictures")
+    picture_folder = picture_folder.expanduser()
+    if not picture_folder.is_dir():
+        pytest.exit(f"Invalid picture folder: '{picture_folder}'")
+    dest = picture_folder / TEST_LIBRARY
     library = shutil.copytree(src, dest, dirs_exist_ok=True)
     script = AppleScript(
         f"""

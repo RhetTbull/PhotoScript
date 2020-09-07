@@ -122,7 +122,7 @@ def test_photoslibrary_selection(photo_library, suspend_capture):
         photoslib.activate
         prompt = (
             "In Photos, select the photo of the peppers "
-            "and the photo with a face in Photos then press Enter "
+            "and the photo with a face, then press Enter "
             "in this window."
         )
         os.system(f'say "{prompt}"')
