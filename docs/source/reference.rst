@@ -1,17 +1,17 @@
 photoscript package
 ===================
 
-photoscript.photoscript module
+photoscript module
 ------------------------------
 
-.. autoclass:: photoscript.photoscript.PhotosLibrary
+.. autoclass:: photoscript.PhotosLibrary
    :members:
    :undoc-members:
 
-.. autoclass:: photoscript.photoscript.Album
+.. autoclass:: photoscript.Album
    :members:
    :undoc-members:
 
-.. autoclass:: photoscript.photoscript.Photo
+.. autoclass:: photoscript.Photo
    :members:
    :undoc-members:
