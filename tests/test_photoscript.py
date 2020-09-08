@@ -13,9 +13,41 @@ FOLDER_NAMES_ALL = ["Travel", "Folder1", "SubFolder1"]
 FOLDER_NAMES_TOP = ["Travel", "Folder1"]
 
 PHOTOS_FAVORITES = ["IMG_2510.JPG", "IMG_2768.JPG"]
-
+PHOTOS_FILENAMES = [
+    "IMG_2242.JPG",
+    "IMG_2510.JPG",
+    "IMG_2768.JPG",
+    "IMG_2774.JPG",
+    "IMG_0096.jpeg",
+]
+PHOTOS_UUID = [
+    "B6DB996D-8A0A-4983-AFBD-D206B7D38A23/L0/001",
+    "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001",
+]
+PHOTOS_UUID_FILENAMES = ["IMG_2510.JPG", "IMG_2768.JPG"]
+PHOTOS_PLANTS = ["IMG_2242.JPG"]
 FOLDER_UUID = "3205FEEF-B22D-43D6-8D31-9A4D112B67E3/L0/020"  # Travel
 FOLDER_NAME = "Travel"
+
+
+def get_os_version():
+    import platform
+
+    # returns tuple containing OS version
+    # e.g. 10.13.6 = (10, 13, 6)
+    version = platform.mac_ver()[0].split(".")
+    if len(version) == 2:
+        (ver, major) = version
+        minor = "0"
+    elif len(version) == 3:
+        (ver, major, minor) = version
+    else:
+        raise (
+            ValueError(
+                f"Could not parse version string: {platform.mac_ver()} {version}"
+            )
+        )
+    return (ver, major, minor)
 
 
 def test_photoslibrary_activate(photoslib):
@@ -40,6 +72,30 @@ def test_photoslibrary_quit(photoslib):
     assert not script.call("is_running", "Photos")
 
 
+def test_photoslibrary_name(photoslib):
+    assert photoslib.name == "Photos"
+
+
+def test_photoslibrary_version(photoslib):
+    import platform
+
+    os_ver = get_os_version()[1]
+    photo_ver = photoslib.version
+
+    if os_ver == "12":
+        assert photo_ver == "2.0"
+    elif os_ver == "13":
+        assert photo_ver == "3.0"
+    elif os_ver == "14":
+        assert photo_ver == "4.0"
+    elif os_ver == "15":
+        assert photo_ver == "5.0"
+    elif os_ver == "16":
+        assert photo_ver == "6.0"
+    else:
+        assert False
+
+
 def test_photoslibrary_frontmost(photoslib):
     import photoscript
     from applescript import AppleScript
@@ -55,6 +111,39 @@ def test_photoslibrary_frontmost(photoslib):
     )
     script.run()
     assert not photoslib.frontmost
+
+
+def test_photoslibrary_favorites(photoslib):
+    import photoscript
+
+    favorites = photoslib.favorites
+    assert len(favorites) == len(PHOTOS_FAVORITES)
+    fav_names = [photo.filename for photo in favorites.photos]
+    assert sorted(fav_names) == sorted(PHOTOS_FAVORITES)
+
+
+def test_photoslibrary_photos_no_args(photoslib):
+    photos = photoslib.photos()
+    assert len(photos) == 5
+    filenames = [photo.filename for photo in photos]
+    assert sorted(filenames) == sorted(PHOTOS_FILENAMES)
+
+
+def test_photoslibrary_photos_search(photoslib):
+    photos = photoslib.photos(search="plants")
+    assert len(photos) == len(PHOTOS_PLANTS)
+    filenames = [photo.filename for photo in photos]
+    assert sorted(filenames) == sorted(PHOTOS_PLANTS)
+
+
+def test_photoslibrary_photos_uuid(photoslib):
+    photos = photoslib.photos(uuid=PHOTOS_UUID)
+    assert len(photos) == len(PHOTOS_UUID)
+    filenames = [photo.filename for photo in photos]
+    assert sorted(filenames) == sorted(PHOTOS_UUID_FILENAMES)
+
+
+# ZZZ
 
 
 def test_photoslibrary_album_by_name(photoslib):
@@ -204,15 +293,6 @@ def test_photoslibrary_delete_album(photoslib):
     album = photoslib.album("Farmers Market")
     photoslib.delete_album(album)
     assert "Farmers Market" not in photoslib.album_names()
-
-
-def test_photoslibrary_favorites(photoslib):
-    import photoscript
-
-    favorites = photoslib.favorites
-    assert len(favorites) == len(PHOTOS_FAVORITES)
-    fav_names = [photo.filename for photo in favorites.photos]
-    assert sorted(fav_names) == sorted(PHOTOS_FAVORITES)
 
 
 def test_photoslibrary_selection(photoslib, suspend_capture):

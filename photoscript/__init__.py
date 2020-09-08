@@ -34,8 +34,8 @@ class PhotosLibrary:
 
     @property
     def version(self):
-        """ version of Photos.app """
-        return run_script("_photoslibrary_version")
+        """ version of Photos.app as str """
+        return str(run_script("_photoslibrary_version"))
 
     @property
     def frontmost(self):
