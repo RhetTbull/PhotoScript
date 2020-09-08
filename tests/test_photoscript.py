@@ -12,6 +12,11 @@ ALBUM_NAMES_TOP = ["Empty Album", "Farmers Market"]
 FOLDER_NAMES_ALL = ["Travel", "Folder1", "SubFolder1"]
 FOLDER_NAMES_TOP = ["Travel", "Folder1"]
 
+PHOTOS_FAVORITES = ["IMG_2510.JPG", "IMG_2768.JPG"]
+
+FOLDER_UUID = "3205FEEF-B22D-43D6-8D31-9A4D112B67E3/L0/020"  # Travel
+FOLDER_NAME = "Travel"
+
 
 def test_photoslibrary_activate(photoslib):
     import photoscript
@@ -71,7 +76,6 @@ def test_photoslibrary_album_by_uuid(photoslib):
 def test_photoslibrary_album_bad_name(photoslib):
     import photoscript
 
-
     album = photoslib.album("BAD_NAME")
     assert album is None
 
@@ -83,9 +87,22 @@ def test_photoslibrary_album_bad_uuid(photoslib):
         photoslib.album(uuid="BAD_UUID")
 
 
+def test_photoslibrary_albums(photoslib):
+    albums = photoslib.albums()
+    assert len(albums) == len(ALBUM_NAMES_ALL)
+    album_names = [album.name for album in albums]
+    assert sorted(album_names) == sorted(ALBUM_NAMES_ALL)
+
+
+def test_photoslibrary_albums_top(photoslib):
+    albums = photoslib.albums(top_level=True)
+    assert len(albums) == len(ALBUM_NAMES_TOP)
+    album_names = [album.name for album in albums]
+    assert sorted(album_names) == sorted(ALBUM_NAMES_TOP)
+
+
 def test_photoslibrary_album_names(photoslib):
     import photoscript
-
 
     albums = photoslib.album_names()
     assert sorted(albums) == sorted(ALBUM_NAMES_ALL)
@@ -94,9 +111,9 @@ def test_photoslibrary_album_names(photoslib):
 def test_photoslibrary_album_names_top(photoslib):
     import photoscript
 
-
     albums = photoslib.album_names(top_level=True)
     assert sorted(albums) == sorted(ALBUM_NAMES_TOP)
+
 
 def test_photoslibrary_create_album(photoslib):
     import photoscript
@@ -107,16 +124,20 @@ def test_photoslibrary_create_album(photoslib):
     albums = photoslib.album_names()
     assert "New Album" in albums
 
+
 def test_photoslibrary_create_album_at_folder(photoslib):
     import photoscript
 
-    album = photoslib.create_album("New Album In Folder", folder=photoslib.folder("Folder1",top_level=True))
+    album = photoslib.create_album(
+        "New Album In Folder", folder=photoslib.folder("Folder1", top_level=True)
+    )
     assert isinstance(album, photoscript.Album)
 
     albums = photoslib.album_names()
     assert "New Album In Folder" in albums
-    
+
     assert album.parent.name == "Folder1"
+
 
 def test_photoslibrary_create_folder(photoslib):
     import photoscript
@@ -127,10 +148,11 @@ def test_photoslibrary_create_folder(photoslib):
     folders = photoslib.folder_names()
     assert "New Folder" in folders
 
+
 def test_photoslibrary_create_folder_at_folder(photoslib):
     import photoscript
 
-    folder = photoslib.create_folder("New SubFolder", folder=photoslib.folder("Folder1"))
+    folder = photoslib.create_folder("New SubFolder", folder=photoslib.folder("Travel"))
     assert isinstance(folder, photoscript.Folder)
 
     folders = photoslib.folder_names(top_level=True)
@@ -139,7 +161,59 @@ def test_photoslibrary_create_folder_at_folder(photoslib):
     folders = photoslib.folder_names()
     assert "New SubFolder" in folders
 
-    assert folder.parent.name == "Folder1"
+    assert folder.parent.name == "Travel"
+
+
+def test_photoslibrary_folder(photoslib):
+    import photoscript
+
+    folder = photoslib.folder("Folder1")
+    assert isinstance(folder, photoscript.Folder)
+    subfolders = folder.folders
+    assert len(subfolders) == 1
+    assert subfolders[0].name == "SubFolder1"
+
+
+def test_photoscript_folder_top_level(photoslib):
+    import photoscript
+
+    folder = photoslib.folder("SubFolder1", top_level=True)
+    assert folder is None
+
+
+def test_photoscript_folder_exception(photoslib):
+    """ test exceptions in folder() """
+    import photoscript
+
+    with pytest.raises(ValueError):
+        folder = photoslib.folder("Travel", uuid=FOLDER_UUID)
+
+
+def test_photoscript_folder_by_uuid(photoslib):
+    """ test getting folder by UUID """
+    import photoscript
+
+    folder = photoslib.folder(uuid=FOLDER_UUID)
+    assert isinstance(folder, photoscript.Folder)
+    assert folder.name == FOLDER_NAME
+
+
+def test_photoslibrary_delete_album(photoslib):
+    import photoscript
+
+    album = photoslib.album("Farmers Market")
+    photoslib.delete_album(album)
+    assert "Farmers Market" not in photoslib.album_names()
+
+
+def test_photoslibrary_favorites(photoslib):
+    import photoscript
+
+    favorites = photoslib.favorites
+    assert len(favorites) == len(PHOTOS_FAVORITES)
+    fav_names = [photo.filename for photo in favorites.photos]
+    assert sorted(fav_names) == sorted(PHOTOS_FAVORITES)
+
 
 def test_photoslibrary_selection(photoslib, suspend_capture):
     """ Test selection. NOTE: this test requires user interaction """
