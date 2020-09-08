@@ -306,6 +306,36 @@ class PhotosLibrary:
             folder = subfolder
         return folder
 
+    def make_album_folders(self, album_name, folder_path):
+        """Make album in a folder path.  If either the album or any component of the
+           folder path doesn't exist, it will be created.  If album or folder path 
+           does exist, no duplicate is created.  Folder path is created recursively
+           if needed.
+
+        Args:
+            album_name: name of album to create.  If album already exists, returns existing album.
+            folder_path: list of folder names in descending path order, e.g. ["Folder", "SubFolder1", "SubFolder2"].
+
+        Returns:
+            Album object.
+        
+        Raises:
+            ValueError if folder_path is empty or album_name is None.
+            TypeError if folder_path is not a list.
+        """
+        if album_name is None or not len(album_name):
+            raise ValueError("album_name must not be None")
+        if not isinstance(folder_path, list):
+            raise TypeError("list expected for folder_path")
+        if not folder_path:
+            raise ValueError("no values in folder_path")
+
+        folder = self.make_folders(folder_path)
+        album = folder.album(album_name)
+        if album is None:
+            album = folder.create_album(album_name)
+        return album
+
     def delete_folder(self, folder):
         """Deletes folder (Not yet implemented)
 
