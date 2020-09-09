@@ -42,6 +42,10 @@ photoslib.import_photos(["/Users/rhet/Downloads/test.jpeg"], album=new_album)
 
 photoslib.quit()
 ```
+## Documentation
+Full documentation [here](https://github.com/RhetTbull/PhotoScript/blob/master/photoscript.pdf).
+
+Additional documentation about Photos and AppleScript available on the [wiki](https://github.com/RhetTbull/PhotoScript/wiki/Welcome-to-the-PhotoScript-Wiki).
 
 ## Limitations
 Photos' AppleScript interface is very limited.  For example, it cannot access information on faces in photos nor can it delete a photo.  PhotoScript is thus limited.  PhotoScript works by executing AppleScript through an Objective-C bridge from python.  Every method call has to do a python->Objective C->AppleScript round trip; this makes the interface much slower than native python code.  This is particularly noticeable when dealing with Folders which requires significant work arounds.

@@ -362,10 +362,10 @@ def test_photoscript_folder_by_uuid(photoslib):
     assert isinstance(folder, photoscript.Folder)
     assert folder.name == FOLDER_NAME
 
+
 # TODO: this test fails
 # def test_photoscript_folder_bad_uuid(photoslib):
 #     """ test getting folder by invalid UUID """
-    
 #     with pytest.raises(ValueError):
 #         photoslib.folder(uuid="BAD_UUID")
 
