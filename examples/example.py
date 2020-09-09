@@ -8,7 +8,7 @@ photoslib.activate()
 print(f"Running Photos version: {photoslib.version}")
 
 album = photoslib.album("Album1")
-photos = album.photos
+photos = album.photos()
 
 for photo in photos:
     print(f"{photo.title}, {photo.description}, {photo.keywords}")
