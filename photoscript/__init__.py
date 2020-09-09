@@ -98,9 +98,11 @@ class PhotosLibrary:
         """import photos
 
         Args:
-            photos: list of file paths to import
+            photo_paths: list of file paths to import
             album: optional, Album object for album to import into
-            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
+            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. 
+            NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, 
+            Photos will block with drop-down sheet until the user clicks "Cancel, Import, or Don't Import."
         """
         if album is not None:
             run_script(
@@ -431,7 +433,6 @@ class Album:
 
         return run_script("_album_get_path", self.id, delim)
 
-    @property
     def photos(self):
         """ list of Photo objects for photos contained in album """
         photo_ids = run_script("_album_photos", self.id)

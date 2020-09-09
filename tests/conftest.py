@@ -1,19 +1,42 @@
 import os
 import pathlib
 import shutil
+import subprocess
 import sys
 
 import pytest
 from applescript import AppleScript
-from regex.regex import T
 
 import photoscript
 
 TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
 
 
-@pytest.fixture(scope="session")
-def photoslib():
+def ditto(src, dest, norsrc=False):
+    """ Copies a file or directory tree from src path to dest path 
+        src: source path as string 
+        dest: destination path as string
+        norsrc: (bool) if True, uses --norsrc flag with ditto so it will not copy
+                resource fork or extended attributes.  May be useful on volumes that
+                don't work with extended attributes (likely only certain SMB mounts)
+                default is False
+        Uses ditto to perform copy; will silently overwrite dest if it exists
+        Raises exception if copy fails or either path is None """
+
+    if src is None or dest is None:
+        raise ValueError("src and dest must not be None", src, dest)
+
+    if norsrc:
+        command = ["/usr/bin/ditto", "--norsrc", src, dest]
+    else:
+        command = ["/usr/bin/ditto", src, dest]
+
+    # if error on copy, subprocess will raise CalledProcessError
+    result = subprocess.run(command, check=True, stderr=subprocess.PIPE)
+
+    return result.returncode
+
+def copy_photos_library(delay=0):
     """ copy the test library and open Photos """
     script = AppleScript(
         """
@@ -33,7 +56,7 @@ def photoslib():
     if not picture_folder.is_dir():
         pytest.exit(f"Invalid picture folder: '{picture_folder}'")
     dest = picture_folder / TEST_LIBRARY
-    library = shutil.copytree(src, dest, dirs_exist_ok=True)
+    ditto(src, dest)
     script = AppleScript(
         f"""
             set tries to 0
@@ -41,8 +64,9 @@ def photoslib():
                 try
                     tell application "Photos"
                         activate
-                        delay 5
-                        open POSIX file "{library}"
+                        delay 3 
+                        open POSIX file "{dest}"
+                        delay {delay}
                     end tell
                     set tries to 5
                 on error
@@ -53,6 +77,14 @@ def photoslib():
     )
     script.run()
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_photos():
+    copy_photos_library(delay=10)
+
+# @pytest.fixture(scope="session")
+@pytest.fixture
+def photoslib():
+    copy_photos_library()
     return photoscript.PhotosLibrary() 
 
 

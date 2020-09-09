@@ -1,5 +1,7 @@
-from tests.conftest import photoslib, suspend_capture
 import pytest
+
+from tests.conftest import photoslib, suspend_capture
+from applescript import AppleScript
 
 ALBUM_1_NAME = "San Juan Capistrano"
 ALBUM_1_UUID = "01F18AB8-B0D7-4414-96A8-28D94AFE86BF/L0/040"
@@ -13,6 +15,12 @@ FOLDER_NAMES_ALL = ["Travel", "Folder1", "SubFolder1"]
 FOLDER_NAMES_TOP = ["Travel", "Folder1"]
 
 PHOTOS_FAVORITES = ["IMG_2510.JPG", "IMG_2768.JPG"]
+PHOTOS_FAVORITES_SET = ["IMG_2242.JPG", "IMG_2510.JPG"]
+PHOTO_FAVORITES_SET_UUID = "1CD1B172-C94B-4093-A303-EE24FE7EEF60/L0/001"
+PHOTO_FAVORITES_UNSET_UUID = "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001"
+
+NUM_PHOTOS = 5  # total number of photos in test library
+
 PHOTOS_FILENAMES = [
     "IMG_2242.JPG",
     "IMG_2510.JPG",
@@ -28,6 +36,9 @@ PHOTOS_UUID_FILENAMES = ["IMG_2510.JPG", "IMG_2768.JPG"]
 PHOTOS_PLANTS = ["IMG_2242.JPG"]
 FOLDER_UUID = "3205FEEF-B22D-43D6-8D31-9A4D112B67E3/L0/020"  # Travel
 FOLDER_NAME = "Travel"
+
+IMPORT_PATHS = ["tests/test_images/IMG_2608.JPG"]
+IMPORT_PHOTOS = ["IMG_2608.JPG"]
 
 
 def get_os_version():
@@ -98,7 +109,6 @@ def test_photoslibrary_version(photoslib):
 
 def test_photoslibrary_frontmost(photoslib):
     import photoscript
-    from applescript import AppleScript
 
     photoslib.activate()
     assert photoslib.frontmost
@@ -117,9 +127,18 @@ def test_photoslibrary_favorites(photoslib):
     import photoscript
 
     favorites = photoslib.favorites
-    assert len(favorites) == len(PHOTOS_FAVORITES)
-    fav_names = [photo.filename for photo in favorites.photos]
+    fav_names = [photo.filename for photo in favorites.photos()]
     assert sorted(fav_names) == sorted(PHOTOS_FAVORITES)
+
+    # set/unset favorites and check again
+    photo = photoslib.photos(uuid=[PHOTO_FAVORITES_SET_UUID])[0]
+    photo.favorite = True
+    photo = photoslib.photos(uuid=[PHOTO_FAVORITES_UNSET_UUID])[0]
+    photo.favorite = False
+
+    favorites = photoslib.favorites
+    fav_names = [photo.filename for photo in favorites.photos()]
+    assert sorted(fav_names) == sorted(PHOTOS_FAVORITES_SET)
 
 
 def test_photoslibrary_photos_no_args(photoslib):
@@ -143,7 +162,95 @@ def test_photoslibrary_photos_uuid(photoslib):
     assert sorted(filenames) == sorted(PHOTOS_UUID_FILENAMES)
 
 
-# ZZZ
+def test_photoslibrary_import_photos(photoslib):
+    import os
+    import pathlib
+
+    cwd = os.getcwd()
+    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
+    photoslib.import_photos(photo_paths)
+    photos = photoslib.photos()
+    filenames = [photo.filename for photo in photos]
+    for filename in IMPORT_PHOTOS:
+        assert filename in filenames
+
+
+def test_photoslibrary_import_photos_dup_check(photoslib):
+    """ Attempt to import a duplicate photo with skip_duplicate_check = False
+        This will cause Photos to display dialog box prompting user what to do """
+    import os
+    import pathlib
+
+    cwd = os.getcwd()
+    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
+    photoslib.import_photos(photo_paths)
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 1
+
+    # Photos will block waiting for user to act on dialog box
+    prompt = "Click Don't Import in Photos after the drop down sheet appears."
+    os.system(f'say "{prompt}"')
+    photoslib.import_photos(photo_paths)
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 1
+
+
+def test_photoslibrary_import_photos_skip_dup_check(photoslib):
+    """ Attempt to import a duplicate photo with skip_duplicate_check = True
+        This will cause a duplicate photo to be imported """
+    import os
+    import pathlib
+
+    cwd = os.getcwd()
+    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
+    photoslib.import_photos(photo_paths)
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 1
+    photoslib.import_photos(photo_paths, skip_duplicate_check=True)
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 2
+
+
+def test_photoslibrary_import_photos_album(photoslib):
+    import os
+    import pathlib
+
+    album = photoslib.create_album("New Album")
+    cwd = os.getcwd()
+    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
+    photoslib.import_photos(photo_paths, album=album)
+    photos = album.photos()
+    filenames = [photo.filename for photo in photos]
+    for filename in IMPORT_PHOTOS:
+        assert filename in filenames
+
+
+def test_photoslibrary_album_names(photoslib):
+    import photoscript
+
+    albums = photoslib.album_names()
+    assert sorted(albums) == sorted(ALBUM_NAMES_ALL)
+
+
+def test_photoslibrary_album_names_top(photoslib):
+    import photoscript
+
+    albums = photoslib.album_names(top_level=True)
+    assert sorted(albums) == sorted(ALBUM_NAMES_TOP)
+
+
+def test_photoslibrary_folder_names(photoslib):
+    import photoscript
+
+    folders = photoslib.folder_names()
+    assert sorted(folders) == sorted(FOLDER_NAMES_ALL)
+
+
+def test_photoslibrary_folder_names_top(photoslib):
+    import photoscript
+
+    folders = photoslib.folder_names(top_level=True)
+    assert sorted(folders) == sorted(FOLDER_NAMES_TOP)
 
 
 def test_photoslibrary_album_by_name(photoslib):
@@ -190,20 +297,6 @@ def test_photoslibrary_albums_top(photoslib):
     assert sorted(album_names) == sorted(ALBUM_NAMES_TOP)
 
 
-def test_photoslibrary_album_names(photoslib):
-    import photoscript
-
-    albums = photoslib.album_names()
-    assert sorted(albums) == sorted(ALBUM_NAMES_ALL)
-
-
-def test_photoslibrary_album_names_top(photoslib):
-    import photoscript
-
-    albums = photoslib.album_names(top_level=True)
-    assert sorted(albums) == sorted(ALBUM_NAMES_TOP)
-
-
 def test_photoslibrary_create_album(photoslib):
     import photoscript
 
@@ -228,29 +321,12 @@ def test_photoslibrary_create_album_at_folder(photoslib):
     assert album.parent.name == "Folder1"
 
 
-def test_photoslibrary_create_folder(photoslib):
+def test_photoslibrary_delete_album(photoslib):
     import photoscript
 
-    folder = photoslib.create_folder("New Folder")
-    assert isinstance(folder, photoscript.Folder)
-
-    folders = photoslib.folder_names()
-    assert "New Folder" in folders
-
-
-def test_photoslibrary_create_folder_at_folder(photoslib):
-    import photoscript
-
-    folder = photoslib.create_folder("New SubFolder", folder=photoslib.folder("Travel"))
-    assert isinstance(folder, photoscript.Folder)
-
-    folders = photoslib.folder_names(top_level=True)
-    assert "New SubFolder" not in folders
-
-    folders = photoslib.folder_names()
-    assert "New SubFolder" in folders
-
-    assert folder.parent.name == "Travel"
+    album = photoslib.album("Farmers Market")
+    photoslib.delete_album(album)
+    assert "Farmers Market" not in photoslib.album_names()
 
 
 def test_photoslibrary_folder(photoslib):
@@ -286,13 +362,37 @@ def test_photoscript_folder_by_uuid(photoslib):
     assert isinstance(folder, photoscript.Folder)
     assert folder.name == FOLDER_NAME
 
+# TODO: this test fails
+# def test_photoscript_folder_bad_uuid(photoslib):
+#     """ test getting folder by invalid UUID """
+    
+#     with pytest.raises(ValueError):
+#         photoslib.folder(uuid="BAD_UUID")
 
-def test_photoslibrary_delete_album(photoslib):
+
+def test_photoslibrary_create_folder(photoslib):
     import photoscript
 
-    album = photoslib.album("Farmers Market")
-    photoslib.delete_album(album)
-    assert "Farmers Market" not in photoslib.album_names()
+    folder = photoslib.create_folder("New Folder")
+    assert isinstance(folder, photoscript.Folder)
+
+    folders = photoslib.folder_names()
+    assert "New Folder" in folders
+
+
+def test_photoslibrary_create_folder_at_folder(photoslib):
+    import photoscript
+
+    folder = photoslib.create_folder("New SubFolder", folder=photoslib.folder("Travel"))
+    assert isinstance(folder, photoscript.Folder)
+
+    folders = photoslib.folder_names(top_level=True)
+    assert "New SubFolder" not in folders
+
+    folders = photoslib.folder_names()
+    assert "New SubFolder" in folders
+
+    assert folder.parent.name == "Travel"
 
 
 def test_photoslibrary_selection(photoslib, suspend_capture):
