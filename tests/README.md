@@ -6,6 +6,7 @@ The tests use pytest so:
 
 `python3 -m pytest`
 
+**NOTE**:  The test suite is currently designed only to be run on MacOS Catalina/10.15.6.  Running on any other version of MacOS is likely to cause errors.  I will eventually add support for running the test suite on at least Catalina and Big Sur and possibly Mojave.
 
 In order to properly test PhotoScript, the test suite must obviously interact with Photos using AppleScript.  This requires some user input so the test suite **must** be run with user interaction; it cannot be run in "headless" manner.
 
