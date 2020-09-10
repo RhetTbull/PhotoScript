@@ -54,3 +54,7 @@ Where possible, PhotoScript attempts to provide work-arounds to Photos' limitati
 
 ## Related Projects
 - [osxphotos](https://github.com/RhetTbull/osxphotos): Python package that provides read-only access to the Photos library including all associated metadata. 
+
+## Dependencies
+- [py-applescript](https://github.com/rdhyee/py-applescript)
+- [PyObjC](https://github.com/ronaldoussoren/pyobjc)
