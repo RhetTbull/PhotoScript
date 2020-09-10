@@ -104,6 +104,8 @@ on _photoslibrary_import(filenames, skip_duplicate_check)
 	   Args:
 	       filenames: list of files in POSIX format to import
 		skip_duplicate_check: boolean, if True, skips checking for duplicates
+	  Returns:
+	  	list of item IDs for imported items
 	*)
 	set file_list to {}
 	repeat with f in filenames
@@ -111,7 +113,15 @@ on _photoslibrary_import(filenames, skip_duplicate_check)
 		copy fname to the end of file_list
 	end repeat
 	tell application "Photos"
-		import file_list skip check duplicates skip_duplicate_check
+		set items_ to import file_list skip check duplicates skip_duplicate_check
+		if items_ = missing value then
+			return {}
+		end if
+		set item_list_ to {}
+		repeat with item_ in items_
+			copy id of item_ to end of item_list_
+		end repeat
+		return item_list_
 	end tell
 end _photoslibrary_import
 
@@ -121,6 +131,8 @@ on _photoslibrary_import_to_album(filenames, album_, skip_duplicate_check)
 	       filenames: list of files in POSIX format to import
 	       album_name: name of album to import to
 		skip_duplicate_check: boolean, if True, skips checking for duplicates
+	  Returns:
+	  	list of item IDs for imported items
 	*)
 	set file_list to {}
 	repeat with f in filenames
@@ -128,7 +140,15 @@ on _photoslibrary_import_to_album(filenames, album_, skip_duplicate_check)
 		copy fname to the end of file_list
 	end repeat
 	tell application "Photos"
-		import file_list into album id (album_) skip check duplicates skip_duplicate_check
+		set items_ to import file_list into album id (album_) skip check duplicates skip_duplicate_check
+		if items_ = missing value then
+			return {}
+		end if
+		set item_list_ to {}
+		repeat with item_ in items_
+			copy id of item_ to end of item_list_
+		end repeat
+		return item_list_
 	end tell
 end _photoslibrary_import_to_album
 

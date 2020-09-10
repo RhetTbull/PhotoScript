@@ -166,13 +166,14 @@ def test_photoslibrary_import_photos(photoslib):
     import os
     import pathlib
 
+    import photoscript
+
     cwd = os.getcwd()
     photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
-    photoslib.import_photos(photo_paths)
-    photos = photoslib.photos()
+    photos = photoslib.import_photos(photo_paths)
+    assert isinstance(photos[0], photoscript.Photo)
     filenames = [photo.filename for photo in photos]
-    for filename in IMPORT_PHOTOS:
-        assert filename in filenames
+    assert filenames == IMPORT_PHOTOS
 
 
 def test_photoslibrary_import_photos_dup_check(photoslib):
@@ -190,7 +191,8 @@ def test_photoslibrary_import_photos_dup_check(photoslib):
     # Photos will block waiting for user to act on dialog box
     prompt = "Click Don't Import in Photos after the drop down sheet appears."
     os.system(f'say "{prompt}"')
-    photoslib.import_photos(photo_paths)
+    photos = photoslib.import_photos(photo_paths)
+    assert not photos
     photos = photoslib.photos()
     assert len(photos) == NUM_PHOTOS + 1
 

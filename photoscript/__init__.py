@@ -98,21 +98,28 @@ class PhotosLibrary:
         """import photos
 
         Args:
-            photo_paths: list of file paths to import
+            photo_paths: list of file paths to import as str or pathlib.Path
             album: optional, Album object for album to import into
             skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. 
             NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, 
             Photos will block with drop-down sheet until the user clicks "Cancel, Import, or Don't Import."
+
+        Returns:
+            list of Photo objects for impoted photos
         """
+        # stringify paths in case pathlib.Path paths are passed
+        photo_paths = [str(photo_path) for photo_path in photo_paths]
         if album is not None:
-            run_script(
+            photo_ids = run_script(
                 "_photoslibrary_import_to_album",
                 photo_paths,
                 album.id,
                 skip_duplicate_check,
             )
         else:
-            run_script("_photoslibrary_import", photo_paths, skip_duplicate_check)
+            photo_ids = run_script("_photoslibrary_import", photo_paths, skip_duplicate_check)
+
+        return [Photo(photo) for photo in photo_ids]
 
     def album_names(self, top_level=False):
         """List of album names in the Photos library
@@ -456,9 +463,12 @@ class Album:
         Args:
             photos: list of file paths to import
             skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
+
+        Returns:
+            list of Photo objects for impoted photos
         """
         library = PhotosLibrary()
-        library.import_photos(
+        return library.import_photos(
             photo_paths, album=self, skip_duplicate_check=skip_duplicate_check
         )
 
