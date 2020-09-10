@@ -272,14 +272,12 @@ def test_photoslibrary_album_by_uuid(photoslib):
 
 
 def test_photoslibrary_album_bad_name(photoslib):
-    import photoscript
 
     album = photoslib.album("BAD_NAME")
     assert album is None
 
 
 def test_photoslibrary_album_bad_uuid(photoslib):
-    import photoscript
 
     with pytest.raises(ValueError):
         photoslib.album(uuid="BAD_UUID")
@@ -341,14 +339,14 @@ def test_photoslibrary_folder(photoslib):
     assert subfolders[0].name == "SubFolder1"
 
 
-def test_photoscript_folder_top_level(photoslib):
+def test_photoslibrary_folder_top_level(photoslib):
     import photoscript
 
     folder = photoslib.folder("SubFolder1", top_level=True)
     assert folder is None
 
 
-def test_photoscript_folder_exception(photoslib):
+def test_photoslibrary_folder_exception(photoslib):
     """ test exceptions in folder() """
     import photoscript
 
@@ -356,7 +354,7 @@ def test_photoscript_folder_exception(photoslib):
         folder = photoslib.folder("Travel", uuid=FOLDER_UUID)
 
 
-def test_photoscript_folder_by_uuid(photoslib):
+def test_photoslibrary_folder_by_uuid(photoslib):
     """ test getting folder by UUID """
     import photoscript
 
@@ -370,6 +368,39 @@ def test_photoscript_folder_by_uuid(photoslib):
 #     """ test getting folder by invalid UUID """
 #     with pytest.raises(ValueError):
 #         photoslib.folder(uuid="BAD_UUID")
+
+
+def test_photoslibrary_folder_by_path_1(photoslib):
+    import photoscript
+
+    folder = photoslib.folder_by_path(["Travel"])
+    assert isinstance(folder, photoscript.Folder)
+
+
+def test_photoslibrary_folder_by_path_2(photoslib):
+    import photoscript
+
+    folder = photoslib.folder_by_path(["Folder1", "SubFolder1"])
+    assert isinstance(folder, photoscript.Folder)
+
+
+def test_photoslibrary_folder_by_path_bad_path(photoslib):
+    import photoscript
+
+    folder = photoslib.folder_by_path(["Folder1", "SubFolder1", "I Don't Exist"])
+    assert folder is None
+
+
+def test_photoslibrary_folders_top_level(photoslib):
+    folders = photoslib.folders()
+    folder_names = [folder.name for folder in folders]
+    assert sorted(folder_names) == sorted(FOLDER_NAMES_TOP)
+
+
+def test_photoslibrary_folders_all(photoslib):
+    folders = photoslib.folders(top_level=False)
+    folder_names = [folder.name for folder in folders]
+    assert sorted(folder_names) == sorted(FOLDER_NAMES_ALL)
 
 
 def test_photoslibrary_create_folder(photoslib):
