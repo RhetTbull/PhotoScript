@@ -12,6 +12,10 @@ photoscript module
    :members:
    :undoc-members:
 
+.. autoclass:: photoscript.Folder
+   :members:
+   :undoc-members:
+
 .. autoclass:: photoscript.Photo
    :members:
    :undoc-members:

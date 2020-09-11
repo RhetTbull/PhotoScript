@@ -118,7 +118,9 @@ class PhotosLibrary:
                 skip_duplicate_check,
             )
         else:
-            photo_ids = run_script("_photoslibrary_import", photo_paths, skip_duplicate_check)
+            photo_ids = run_script(
+                "_photoslibrary_import", photo_paths, skip_duplicate_check
+            )
 
         return [Photo(photo) for photo in photo_ids]
 
@@ -581,7 +583,7 @@ class Folder:
         """ parent container id """
         return run_script("_folder_parent", self.id)
 
-    # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums
+    # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums?
     @property
     def parent(self):
         """ Return parent Folder object """
@@ -631,22 +633,27 @@ class Folder:
         return None
 
     @property
-    def folders(self):
-        """ list of Folder objects for folders contained in folder """
+    def subfolders(self):
+        """ list of Folder objects for immediate sub-folders contained in folder """
         folder_ids = run_script("_folder_folders", self.id)
         return [Folder(uuid) for uuid in folder_ids]
 
     def folder(self, name):
-        """Return Folder object for subfolder folder named name
-        or None if no matching subfolder
+        """Folder object for first subfolder folder named name.
+
+        Args:
+            name: name of folder to to return
+
+        Returns:
+            Folder object for first subfolder who's name matches name or None if not found
         """
-        for folder in self.folders:
+        for folder in self.subfolders:
             if folder.name == name:
                 return folder
         return None
 
     def create_album(self, name):
-        """creates an album in this folder
+        """Creates an album in this folder
 
         Args:
             name: name of new album

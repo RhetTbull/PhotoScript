@@ -334,7 +334,7 @@ def test_photoslibrary_folder(photoslib):
 
     folder = photoslib.folder("Folder1")
     assert isinstance(folder, photoscript.Folder)
-    subfolders = folder.folders
+    subfolders = folder.subfolders
     assert len(subfolders) == 1
     assert subfolders[0].name == "SubFolder1"
 
@@ -427,6 +427,46 @@ def test_photoslibrary_create_folder_at_folder(photoslib):
 
     assert folder.parent.name == "Travel"
 
+
+def test_photoslibrary_make_folders_exist(photoslib):
+    """ test make_folders with path that exists """
+    import photoscript
+
+    subfolder = photoslib.folder("SubFolder1", top_level=False)
+    folder = photoslib.make_folders(["Folder1", "SubFolder1"])
+    assert isinstance(folder, photoscript.Folder)
+    assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL)
+    assert subfolder.id == folder.id
+
+
+def test_photoslibrary_make_folders_new(photoslib):
+    """ test make_folders with entirely new path """
+    import photoscript
+
+    folder = photoslib.make_folders(["Folder2", "SubFolder2"])
+    assert isinstance(folder, photoscript.Folder)
+    assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL) + 2
+
+
+def test_photoslibrary_make_folders_new_exist(photoslib):
+    """ test make_folders with new path inside existing path"""
+    import photoscript
+
+    subfolder = photoslib.folder("SubFolder1", top_level=False)
+    folder = photoslib.make_folders(["Folder1", "SubFolder1", "New Sub Folder"])
+    assert isinstance(folder, photoscript.Folder)
+    assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL) + 1
+    assert folder.parent_id == subfolder.id
+
+def test_photoslibrary_make_folders_bad_type(photoslib):
+    """ test make_folders with non-list value for folders """
+    with pytest.raises(TypeError):
+        photoslib.make_folders("Folder1")
+
+def test_photoslibrary_make_folders_bad_value(photoslib):
+    """ test make_folders with empty value for folders """
+    with pytest.raises(ValueError):
+        photoslib.make_folders([])
 
 def test_photoslibrary_selection(photoslib, suspend_capture):
     """ Test selection. NOTE: this test requires user interaction """
