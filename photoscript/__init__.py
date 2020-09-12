@@ -46,10 +46,7 @@ class PhotosLibrary:
     def selection(self):
         """ List of Photo objects for currently selected photos or [] if no selection """
         uuids = run_script("_photoslibrary_get_selection")
-        if isinstance(uuids, list):
-            return [Photo(uuid) for uuid in uuids]
-        else:
-            return []
+        return [Photo(uuid) for uuid in uuids]
 
     @property
     def favorites(self):
