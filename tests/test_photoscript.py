@@ -644,6 +644,29 @@ def test_temp_album_name(photoslib):
     assert temp_name not in photoslib.album_names(top_level=False)
 
 
+def test_temp_album_name_2(photoslib):
+    """ test _temp_album_name when album name exists """
+
+    def make_temp_name_func():
+        count = 0
+
+        def temp_name(*args):
+            nonlocal count
+            count += 1
+            return f"New Album {count}"
+
+        return temp_name
+
+    old_temp_name = photoslib._temp_name
+    photoslib._temp_name = make_temp_name_func()
+    photoslib.create_album(
+        "New Album 1"
+    )  # will cause conflict with redefined _temp_name
+    temp_name = photoslib._temp_album_name()
+    assert temp_name not in photoslib.album_names(top_level=False)
+    photoslib._temp_name = old_temp_name
+
+
 def test_temp_name(photoslib):
     temp_name = photoslib._temp_name()
     assert temp_name.startswith("photoscript_20")
