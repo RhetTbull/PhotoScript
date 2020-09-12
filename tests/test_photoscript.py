@@ -1,44 +1,6 @@
 import pytest
-
-from tests.conftest import photoslib, suspend_capture
 from applescript import AppleScript
-
-ALBUM_1_NAME = "San Juan Capistrano"
-ALBUM_1_UUID = "01F18AB8-B0D7-4414-96A8-28D94AFE86BF/L0/040"
-SELECTION_UUIDS = [
-    "3A71DE26-EDEF-41D3-86C1-E8328DFC9FA0/L0/001",
-    "B6DB996D-8A0A-4983-AFBD-D206B7D38A23/L0/001",
-]
-ALBUM_NAMES_ALL = ["Empty Album", "Farmers Market", "San Juan Capistrano"]
-ALBUM_NAMES_TOP = ["Empty Album", "Farmers Market"]
-FOLDER_NAMES_ALL = ["Travel", "Folder1", "SubFolder1"]
-FOLDER_NAMES_TOP = ["Travel", "Folder1"]
-
-PHOTOS_FAVORITES = ["IMG_2510.JPG", "IMG_2768.JPG"]
-PHOTOS_FAVORITES_SET = ["IMG_2242.JPG", "IMG_2510.JPG"]
-PHOTO_FAVORITES_SET_UUID = "1CD1B172-C94B-4093-A303-EE24FE7EEF60/L0/001"
-PHOTO_FAVORITES_UNSET_UUID = "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001"
-
-NUM_PHOTOS = 5  # total number of photos in test library
-
-PHOTOS_FILENAMES = [
-    "IMG_2242.JPG",
-    "IMG_2510.JPG",
-    "IMG_2768.JPG",
-    "IMG_2774.JPG",
-    "IMG_0096.jpeg",
-]
-PHOTOS_UUID = [
-    "B6DB996D-8A0A-4983-AFBD-D206B7D38A23/L0/001",
-    "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001",
-]
-PHOTOS_UUID_FILENAMES = ["IMG_2510.JPG", "IMG_2768.JPG"]
-PHOTOS_PLANTS = ["IMG_2242.JPG"]
-FOLDER_UUID = "3205FEEF-B22D-43D6-8D31-9A4D112B67E3/L0/020"  # Travel
-FOLDER_NAME = "Travel"
-
-IMPORT_PATHS = ["tests/test_images/IMG_2608.JPG"]
-IMPORT_PHOTOS = ["IMG_2608.JPG"]
+from tests.conftest import photoslib, suspend_capture
 
 
 def get_os_version():
@@ -60,6 +22,33 @@ def get_os_version():
         )
     return (ver, major, minor)
 
+
+OS_VER = get_os_version()[1]
+if OS_VER == "15":
+    from photoscript_config_catalina import (
+        ALBUM_1_NAME,
+        ALBUM_1_UUID,
+        ALBUM_NAMES_ALL,
+        ALBUM_NAMES_TOP,
+        FOLDER_NAME,
+        FOLDER_NAMES_ALL,
+        FOLDER_NAMES_TOP,
+        FOLDER_UUID,
+        IMPORT_PATHS,
+        IMPORT_PHOTOS,
+        NUM_PHOTOS,
+        PHOTO_FAVORITES_SET_UUID,
+        PHOTO_FAVORITES_UNSET_UUID,
+        PHOTOS_FAVORITES,
+        PHOTOS_FAVORITES_SET,
+        PHOTOS_FILENAMES,
+        PHOTOS_PLANTS,
+        PHOTOS_UUID,
+        PHOTOS_UUID_FILENAMES,
+        SELECTION_UUIDS,
+    )
+else:
+    pytest.exit("This test suite currently only runs on MacOS Catalina ")
 
 ########## Interactive tests run first ##########
 
@@ -354,14 +343,15 @@ def test_photoslibrary_create_album_error(photoslib):
     import pathlib
     import photoscript
 
-    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    script_obj = photoscript.script_loader.SCRIPT_OBJ
     mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
     photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
         mock_script
     )
     with pytest.raises(photoscript.AppleScriptError):
         photoslib.create_album("New Album")
-    photoscript.script_loader.SCRIPT_OBJ = script_obj 
+    photoscript.script_loader.SCRIPT_OBJ = script_obj
+
 
 def test_photoslibrary_create_album_at_folder(photoslib):
     import photoscript
@@ -382,7 +372,6 @@ def test_photoslibrary_create_album_at_folder_error(photoslib):
     import pathlib
     import photoscript
 
-
     script_obj = photoscript.script_loader.SCRIPT_OBJ
     folder = photoslib.folder("Folder1")
     mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
@@ -392,6 +381,7 @@ def test_photoslibrary_create_album_at_folder_error(photoslib):
     with pytest.raises(photoscript.AppleScriptError):
         photoslib.create_album("New Album", folder=folder)
     photoscript.script_loader.SCRIPT_OBJ = script_obj
+
 
 def test_photoslibrary_delete_album(photoslib):
     import photoscript
@@ -497,7 +487,7 @@ def test_photoslibrary_create_folder_error(photoslib):
     import pathlib
     import photoscript
 
-    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    script_obj = photoscript.script_loader.SCRIPT_OBJ
     mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
     photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
         mock_script
@@ -505,6 +495,7 @@ def test_photoslibrary_create_folder_error(photoslib):
     with pytest.raises(photoscript.AppleScriptError):
         photoslib.create_folder("New Folder")
     photoscript.script_loader.SCRIPT_OBJ = script_obj
+
 
 def test_photoslibrary_create_folder_at_folder(photoslib):
     import photoscript
@@ -528,14 +519,15 @@ def test_photoslibrary_create_folder_at_folder_error(photoslib):
 
     folder = photoslib.folder("Travel")
 
-    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    script_obj = photoscript.script_loader.SCRIPT_OBJ
     mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
     photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
         mock_script
     )
     with pytest.raises(photoscript.AppleScriptError):
         photoslib.create_folder("New Folder", folder=folder)
-    photoscript.script_loader.SCRIPT_OBJ = script_obj 
+    photoscript.script_loader.SCRIPT_OBJ = script_obj
+
 
 def test_photoslibrary_make_folders_exist(photoslib):
     """ test make_folders with path that exists """
