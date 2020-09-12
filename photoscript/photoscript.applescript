@@ -455,31 +455,31 @@ on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
 	end tell
 end _photoslibrary_create_folder_at_folder
 
-on _photoslibrary_delete_folder_old(id_)
+on _photoslibrary_delete_folder(id_)
 	(* delete folder with id_ *)
 	set folder_ to _folder_get_folder_for_id(id_)
 	tell application "Photos"
 		delete folder_
 	end tell
-end _photoslibrary_delete_folder_old
+end _photoslibrary_delete_folder
 
-
+(*
 on _photoslibrary_delete_folder(_id)
 	--TODO: doesn't currently work 
-	(* return folder for _id *)
 	_photoslibrary_waitforphotos(300)
 	set _folder_ids to _photoslibrary_internal_path_ids_to_album_folder(_folder_get_folder_for_id(_id))
 	tell application "Photos"
 		set folder_ to folder id (item 1 of _folder_ids)
 		set _folder_ids to rest of _folder_ids
 		repeat with _folder_id in _folder_ids
-			set folder_ to folder id (_folder_id) of folder_
+			set folder_ to _folder_get_folder_for_id(_folder_id)
 		end repeat
 		say (name of folder_ as text)
-		delete (folder_ as folder)
+		delete (folder_)
+		
 	end tell
 end _photoslibrary_delete_folder
-
+*)
 
 on _photoslibrary_internal_path_to_album_folder(targetObject, pathItemDelimiter)
 	_photoslibrary_waitforphotos(300)
@@ -681,13 +681,12 @@ on _folder_exists(_id)
 			return true
 		end tell
 	else
-		try
-			set _exist to _folder_get_folder_for_id(_id)
-		on error
+		set _exist to _folder_get_folder_for_id(_id)
+		if _exist is not missing value then
+			return true
+		else
 			return false
-		end try
-		
-		return true
+		end if
 	end if
 end _folder_exists
 

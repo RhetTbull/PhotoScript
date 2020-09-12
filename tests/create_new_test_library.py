@@ -76,12 +76,12 @@ for photo in PHOTOS:
 
 print("Done!")
 print("Folders:")
-folders = photoslib.folders()
+folders = photoslib.folders(top_level=False)
 for folder in folders:
     print(f"{folder.path_str()}: {folder.id}")
 
 print("Albums:")
-albums = photoslib.albums()
+albums = photoslib.albums(top_level=False)
 for album in albums:
     print(f"{album.path_str()}: {album.id}")
 

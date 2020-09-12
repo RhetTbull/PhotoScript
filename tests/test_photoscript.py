@@ -61,6 +61,54 @@ def get_os_version():
     return (ver, major, minor)
 
 
+########## Interactive tests run first ##########
+
+
+def test_photoslibrary_import_photos_dup_check(photoslib):
+    """ Attempt to import a duplicate photo with skip_duplicate_check = False
+        This will cause Photos to display dialog box prompting user what to do """
+    import os
+    import pathlib
+
+    cwd = os.getcwd()
+    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
+    photoslib.import_photos(photo_paths)
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 1
+
+    # Photos will block waiting for user to act on dialog box
+    prompt = "Click Don't Import in Photos after the drop down sheet appears."
+    os.system(f'say "{prompt}"')
+    photos = photoslib.import_photos(photo_paths)
+    assert not photos
+    photos = photoslib.photos()
+    assert len(photos) == NUM_PHOTOS + 1
+
+
+def test_photoslibrary_selection(photoslib, suspend_capture):
+    """ Test selection. NOTE: this test requires user interaction """
+    import os
+    import photoscript
+
+    with suspend_capture:
+        photoslib.activate
+        prompt = (
+            "In Photos, select the photo of the peppers "
+            "and the photo with a face, then press Enter "
+            "in this window."
+        )
+        os.system(f'say "{prompt}"')
+        input(f"\n{prompt}")
+
+    sel = photoslib.selection
+    assert len(sel) == 2
+    ids = [photo.id for photo in sel]
+    assert sorted(ids) == sorted(SELECTION_UUIDS)
+
+
+########## Non-interactive tests ##########
+
+
 def test_photoslibrary_activate(photoslib):
     import photoscript
 
@@ -162,6 +210,11 @@ def test_photoslibrary_photos_uuid(photoslib):
     assert sorted(filenames) == sorted(PHOTOS_UUID_FILENAMES)
 
 
+def test_photoslibrary_photos_exception(photoslib):
+    with pytest.raises(ValueError):
+        photoslib.photos(uuid=PHOTOS_UUID, search="plants")
+
+
 def test_photoslibrary_import_photos(photoslib):
     import os
     import pathlib
@@ -174,27 +227,6 @@ def test_photoslibrary_import_photos(photoslib):
     assert isinstance(photos[0], photoscript.Photo)
     filenames = [photo.filename for photo in photos]
     assert filenames == IMPORT_PHOTOS
-
-
-def test_photoslibrary_import_photos_dup_check(photoslib):
-    """ Attempt to import a duplicate photo with skip_duplicate_check = False
-        This will cause Photos to display dialog box prompting user what to do """
-    import os
-    import pathlib
-
-    cwd = os.getcwd()
-    photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
-    photoslib.import_photos(photo_paths)
-    photos = photoslib.photos()
-    assert len(photos) == NUM_PHOTOS + 1
-
-    # Photos will block waiting for user to act on dialog box
-    prompt = "Click Don't Import in Photos after the drop down sheet appears."
-    os.system(f'say "{prompt}"')
-    photos = photoslib.import_photos(photo_paths)
-    assert not photos
-    photos = photoslib.photos()
-    assert len(photos) == NUM_PHOTOS + 1
 
 
 def test_photoslibrary_import_photos_skip_dup_check(photoslib):
@@ -283,6 +315,16 @@ def test_photoslibrary_album_bad_uuid(photoslib):
         photoslib.album(uuid="BAD_UUID")
 
 
+def test_photoslibrary_album_exception_1(photoslib):
+    with pytest.raises(ValueError):
+        photoslib.album()
+
+
+def test_photoslibrary_album_exception_2(photoslib):
+    with pytest.raises(ValueError):
+        photoslib.album(ALBUM_1_NAME, uuid=ALBUM_1_UUID)
+
+
 def test_photoslibrary_albums(photoslib):
     albums = photoslib.albums()
     assert len(albums) == len(ALBUM_NAMES_ALL)
@@ -307,6 +349,20 @@ def test_photoslibrary_create_album(photoslib):
     assert "New Album" in albums
 
 
+def test_photoslibrary_create_album_error(photoslib):
+    import os
+    import pathlib
+    import photoscript
+
+    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
+    photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
+        mock_script
+    )
+    with pytest.raises(photoscript.AppleScriptError):
+        photoslib.create_album("New Album")
+    photoscript.script_loader.SCRIPT_OBJ = script_obj 
+
 def test_photoslibrary_create_album_at_folder(photoslib):
     import photoscript
 
@@ -320,6 +376,22 @@ def test_photoslibrary_create_album_at_folder(photoslib):
 
     assert album.parent.name == "Folder1"
 
+
+def test_photoslibrary_create_album_at_folder_error(photoslib):
+    import os
+    import pathlib
+    import photoscript
+
+
+    script_obj = photoscript.script_loader.SCRIPT_OBJ
+    folder = photoslib.folder("Folder1")
+    mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
+    photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
+        mock_script
+    )
+    with pytest.raises(photoscript.AppleScriptError):
+        photoslib.create_album("New Album", folder=folder)
+    photoscript.script_loader.SCRIPT_OBJ = script_obj
 
 def test_photoslibrary_delete_album(photoslib):
     import photoscript
@@ -346,7 +418,15 @@ def test_photoslibrary_folder_top_level(photoslib):
     assert folder is None
 
 
-def test_photoslibrary_folder_exception(photoslib):
+def test_photoslibrary_folder_exception_1(photoslib):
+    """ test exceptions in folder() """
+    import photoscript
+
+    with pytest.raises(ValueError):
+        folder = photoslib.folder()
+
+
+def test_photoslibrary_folder_exception_2(photoslib):
     """ test exceptions in folder() """
     import photoscript
 
@@ -363,11 +443,10 @@ def test_photoslibrary_folder_by_uuid(photoslib):
     assert folder.name == FOLDER_NAME
 
 
-# TODO: this test fails
-# def test_photoscript_folder_bad_uuid(photoslib):
-#     """ test getting folder by invalid UUID """
-#     with pytest.raises(ValueError):
-#         photoslib.folder(uuid="BAD_UUID")
+def test_photoslibrary_folder_bad_uuid(photoslib):
+    """ test getting folder by invalid UUID """
+    with pytest.raises(ValueError):
+        photoslib.folder(uuid="BAD_UUID")
 
 
 def test_photoslibrary_folder_by_path_1(photoslib):
@@ -413,6 +492,20 @@ def test_photoslibrary_create_folder(photoslib):
     assert "New Folder" in folders
 
 
+def test_photoslibrary_create_folder_error(photoslib):
+    import os
+    import pathlib
+    import photoscript
+
+    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
+    photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
+        mock_script
+    )
+    with pytest.raises(photoscript.AppleScriptError):
+        photoslib.create_folder("New Folder")
+    photoscript.script_loader.SCRIPT_OBJ = script_obj
+
 def test_photoslibrary_create_folder_at_folder(photoslib):
     import photoscript
 
@@ -427,6 +520,22 @@ def test_photoslibrary_create_folder_at_folder(photoslib):
 
     assert folder.parent.name == "Travel"
 
+
+def test_photoslibrary_create_folder_at_folder_error(photoslib):
+    import os
+    import pathlib
+    import photoscript
+
+    folder = photoslib.folder("Travel")
+
+    script_obj = photoscript.script_loader.SCRIPT_OBJ 
+    mock_script = pathlib.Path(os.getcwd()) / "tests" / "mock_photoscript"
+    photoscript.script_loader.SCRIPT_OBJ = photoscript.script_loader.load_applescript(
+        mock_script
+    )
+    with pytest.raises(photoscript.AppleScriptError):
+        photoslib.create_folder("New Folder", folder=folder)
+    photoscript.script_loader.SCRIPT_OBJ = script_obj 
 
 def test_photoslibrary_make_folders_exist(photoslib):
     """ test make_folders with path that exists """
@@ -458,33 +567,113 @@ def test_photoslibrary_make_folders_new_exist(photoslib):
     assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL) + 1
     assert folder.parent_id == subfolder.id
 
+
 def test_photoslibrary_make_folders_bad_type(photoslib):
     """ test make_folders with non-list value for folders """
     with pytest.raises(TypeError):
         photoslib.make_folders("Folder1")
+
 
 def test_photoslibrary_make_folders_bad_value(photoslib):
     """ test make_folders with empty value for folders """
     with pytest.raises(ValueError):
         photoslib.make_folders([])
 
-def test_photoslibrary_selection(photoslib, suspend_capture):
-    """ Test selection. NOTE: this test requires user interaction """
-    import os
+
+def test_photoslibrary_make_album_folders_new_path(photoslib):
+    """ test make_album_folders with new path """
     import photoscript
 
-    with suspend_capture:
-        photoslib.activate
-        prompt = (
-            "In Photos, select the photo of the peppers "
-            "and the photo with a face, then press Enter "
-            "in this window."
-        )
-        os.system(f'say "{prompt}"')
-        input(f"\n{prompt}")
+    album = photoslib.make_album_folders("New Album", ["Folder2", "SubFolder2"])
+    assert isinstance(album, photoscript.Album)
+    assert "New Album" in photoslib.album_names(top_level=False)
 
+
+def test_photoslibrary_make_album_folders_new_album(photoslib):
+    """ test make_album_folders with new album in existing folder """
+    import photoscript
+
+    album = photoslib.make_album_folders("New Album", ["Folder1", "SubFolder1"])
+    assert isinstance(album, photoscript.Album)
+    assert "New Album" in photoslib.album_names(top_level=False)
+
+
+def test_photoslibrary_make_album_folders_existing_album(photoslib):
+    """ test make_album_folders with new album in existing folder """
+    import photoscript
+
+    album = photoslib.album("San Juan Capistrano")
+    new_album = photoslib.make_album_folders("San Juan Capistrano", ["Travel"])
+    assert isinstance(album, photoscript.Album)
+    assert album.id == new_album.id
+
+
+def test_photoslibrary_make_album_folders_bad_album(photoslib):
+    """ test make_album_folders with missing album name """
+    with pytest.raises(ValueError):
+        assert photoslib.make_album_folders(None, ["Folder1"])
+
+
+def test_photoslibrary_make_album_folders_bad_folder_path(photoslib):
+    """ test make_album_folders with bad folder path """
+    with pytest.raises(TypeError):
+        assert photoslib.make_album_folders("New Album", "Folder1")
+
+    with pytest.raises(ValueError):
+        assert photoslib.make_album_folders("New Album", [])
+
+
+def test_photoslibrary_delete_folder(photoslib):
+    """ test delete folder """
+    photoslib.delete_folder(photoslib.folder("Travel"))
+    assert "Travel" not in photoslib.folder_names(top_level=False)
+
+
+def test_photoslibrary_delete_folder_tree(photoslib):
+    """ test delete folder tree """
+    photoslib.delete_folder(photoslib.folder("Folder1"))
+    folders = photoslib.folder_names(top_level=False)
+    assert "Folder1" not in folders
+    assert "SubFolder1" not in folders
+
+
+def test_photoslibrary_selection_none(photoslib):
+    """ test .selection() with no selection """
     sel = photoslib.selection
-    assert len(sel) == 2
-    ids = [photo.id for photo in sel]
-    assert sorted(ids) == sorted(SELECTION_UUIDS)
+    assert sel == []
 
+
+def test_photoslibrary_len(photoslib):
+    assert len(photoslib) == NUM_PHOTOS
+
+
+def test_temp_album_name(photoslib):
+    temp_name = photoslib._temp_album_name()
+    assert temp_name not in photoslib.album_names(top_level=False)
+
+
+def test_temp_name(photoslib):
+    temp_name = photoslib._temp_name()
+    assert temp_name.startswith("photoscript_20")
+
+
+def test_version():
+    """ test photoscript/_version.py """
+    from photoscript._version import __version__
+
+    assert __version__
+
+
+def test_script_loader_load_applescript():
+    import photoscript
+    from applescript import AppleScript
+
+    script = photoscript.script_loader.load_applescript("photoscript")
+    assert isinstance(script, AppleScript)
+
+
+def test_script_loader_load_applescript_bad_script():
+    import photoscript
+
+    with pytest.raises(ValueError):
+        photoscript.script_loader.load_applescript("BAD_SCRIPT")

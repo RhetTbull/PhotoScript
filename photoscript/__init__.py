@@ -152,7 +152,7 @@ class PhotosLibrary:
             Album object or None if album could not be found
 
         Raises: 
-            ValueError if both name and id passed.
+            ValueError if both name and id passed or neither passed.
 
         Must pass only name or id but not both.
         If more than one album with same name, returns the first one found.
@@ -166,10 +166,8 @@ class PhotosLibrary:
                 return Album(uuid)
             else:
                 return None
-        elif uuid:
-            return Album(uuid)
         else:
-            raise ValueError("Invalid name or uuid")
+            return Album(uuid)
 
     def albums(self, top_level=False):
         """ list of Album objects for all albums """
@@ -222,7 +220,7 @@ class PhotosLibrary:
             Folder object or None if folder could not be found
 
         Raises: 
-            ValueError if both name and id passed.
+            ValueError if both name and id passed or neither passed.
             
         Must pass only name or id but not both.
         If more than one folder with same name, returns first one found.
@@ -236,10 +234,8 @@ class PhotosLibrary:
                 return Folder(uuid)
             else:
                 return None
-        elif uuid:
-            return Folder(uuid)
         else:
-            raise ValueError("Invalid name or uuid")
+            return Folder(uuid)
 
     def folder_by_path(self, folder_path):
         """ Return folder in the library by path
@@ -349,13 +345,12 @@ class PhotosLibrary:
         return album
 
     def delete_folder(self, folder):
-        """Deletes folder (Not yet implemented)
+        """Deletes folder
 
         Args:
             folder: a Folder object for folder to delete
         """
-        raise NotImplementedError("delete_folder not yet implemented")
-        # return run_script("_photoslibrary_delete_folder", folder.id)
+        return run_script("_photoslibrary_delete_folder", folder.id)
 
     def __len__(self):
         return run_script("_photoslibrary_count")
