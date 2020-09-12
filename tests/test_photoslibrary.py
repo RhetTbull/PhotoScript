@@ -1,31 +1,12 @@
+""" Test PhotosLibrary class """
+
 import pytest
 from applescript import AppleScript
-from tests.conftest import photoslib, suspend_capture
-
-
-def get_os_version():
-    import platform
-
-    # returns tuple containing OS version
-    # e.g. 10.13.6 = (10, 13, 6)
-    version = platform.mac_ver()[0].split(".")
-    if len(version) == 2:
-        (ver, major) = version
-        minor = "0"
-    elif len(version) == 3:
-        (ver, major, minor) = version
-    else:
-        raise (
-            ValueError(
-                f"Could not parse version string: {platform.mac_ver()} {version}"
-            )
-        )
-    return (ver, major, minor)
-
+from tests.conftest import photoslib, suspend_capture, get_os_version
 
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
-    from photoscript_config_catalina import (
+    from tests.photoscript_config_catalina import (
         ALBUM_1_NAME,
         ALBUM_1_UUID,
         ALBUM_NAMES_ALL,
@@ -118,6 +99,29 @@ def test_photoslibrary_quit(photoslib):
         """
     )
     assert not script.call("is_running", "Photos")
+
+
+def test_photoslibrary_running(photoslib):
+    import time
+
+    assert photoslib.running
+    photoslib.quit()
+    time.sleep(3)  # give photos time to quit
+    assert not photoslib.running
+
+
+def test_photoslibrary_hide(photoslib):
+    photoslib.activate()
+    assert photoslib.frontmost
+    photoslib.hide()
+    assert not photoslib.frontmost
+
+
+def test_photoslibrary_hidden(photoslib):
+    photoslib.activate()
+    assert not photoslib.hidden
+    photoslib.hide()
+    assert photoslib.hidden
 
 
 def test_photoslibrary_name(photoslib):

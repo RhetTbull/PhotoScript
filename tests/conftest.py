@@ -12,6 +12,26 @@ import photoscript
 TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
 
 
+def get_os_version():
+    import platform
+
+    # returns tuple containing OS version
+    # e.g. 10.13.6 = (10, 13, 6)
+    version = platform.mac_ver()[0].split(".")
+    if len(version) == 2:
+        (ver, major) = version
+        minor = "0"
+    elif len(version) == 3:
+        (ver, major, minor) = version
+    else:
+        raise (
+            ValueError(
+                f"Could not parse version string: {platform.mac_ver()} {version}"
+            )
+        )
+    return (ver, major, minor)
+
+
 def ditto(src, dest, norsrc=False):
     """ Copies a file or directory tree from src path to dest path 
         src: source path as string 
@@ -35,6 +55,7 @@ def ditto(src, dest, norsrc=False):
     result = subprocess.run(command, check=True, stderr=subprocess.PIPE)
 
     return result.returncode
+
 
 def copy_photos_library(delay=0):
     """ copy the test library and open Photos """
@@ -77,15 +98,17 @@ def copy_photos_library(delay=0):
     )
     script.run()
 
+
 @pytest.fixture(scope="session", autouse=True)
 def setup_photos():
     copy_photos_library(delay=10)
+
 
 # @pytest.fixture(scope="session")
 @pytest.fixture
 def photoslib():
     copy_photos_library()
-    return photoscript.PhotosLibrary() 
+    return photoscript.PhotosLibrary()
 
 
 @pytest.fixture

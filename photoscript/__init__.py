@@ -8,6 +8,13 @@ from applescript import kMissingValue
 
 from .script_loader import run_script
 
+""" In Catalina / Photos 5+, UUIDs in AppleScript have suffix that doesn't 
+    appear in actual database value.  These need to be dropped to be compatible
+    with osxphotos """
+UUID_SUFFIX_PHOTO = "/L0/001"
+UUID_SUFFIX_ALBUM = "/L0/040"
+UUID_SUFFIX_FOLDER = "/L0/020"
+
 
 class AppleScriptError(Exception):
     def __init__(self, *message):
@@ -18,6 +25,7 @@ class PhotosLibrary:
     def __init__(self):
         """ create new PhotosLibrary object and launch Photos """
         run_script("_photoslibrary_waitforphotos", 300)
+        self._version = str(run_script("_photoslibrary_version"))
 
     def activate(self):
         """ activate Photos.app """
@@ -28,6 +36,20 @@ class PhotosLibrary:
         run_script("_photoslibrary_quit")
 
     @property
+    def running(self):
+        """ True if Photos is running, otherwise False """
+        return run_script("_photoslibrary_isrunning")
+
+    def hide(self):
+        """ Tell Photos to hide it's window """
+        run_script("_photoslibrary_hide")
+
+    @property
+    def hidden(self):
+        """ True if Photos is hidden (or not running), False if Photos is visible """
+        return run_script("_photoslibrary_hidden")
+
+    @property
     def name(self):
         """ name of Photos.app """
         return run_script("_photoslibrary_name")
@@ -35,7 +57,7 @@ class PhotosLibrary:
     @property
     def version(self):
         """ version of Photos.app as str """
-        return str(run_script("_photoslibrary_version"))
+        return self._version
 
     @property
     def frontmost(self):
@@ -379,12 +401,12 @@ class Album:
 
     @property
     def uuid(self):
-        """ UUID of Album """
+        """ UUID of Album (read only)"""
         return self._uuid
 
     @property
     def name(self):
-        """ name of album """
+        """ name of album (read/write) """
         name = run_script("_album_name", self.id)
         return name if name != kMissingValue else None
 
