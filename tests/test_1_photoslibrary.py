@@ -1,5 +1,6 @@
 """ Test PhotosLibrary class """
 
+from tests.photoscript_config_catalina import PHOTO_EXPORT_FILENAME_ORIGINAL
 import pytest
 from applescript import AppleScript
 from tests.conftest import photoslib, suspend_capture, get_os_version
@@ -18,6 +19,11 @@ if OS_VER == "15":
         IMPORT_PATHS,
         IMPORT_PHOTOS,
         NUM_PHOTOS,
+        PHOTO_EXPORT_UUID,
+        PHOTO_EXPORT_FILENAME,
+        PHOTO_EXPORT_2_FILENAMES_ORIGINAL,
+        PHOTO_EXPORT_2_FILENAMES,
+        PHOTO_EXPORT_2_FILENAMES_ORIGINAL,
         PHOTO_FAVORITES_SET_UUID,
         PHOTO_FAVORITES_UNSET_UUID,
         PHOTOS_FAVORITES,
@@ -111,13 +117,31 @@ def test_photoslibrary_running(photoslib):
 
 
 def test_photoslibrary_hide(photoslib):
+    """ Test hide() """
+    import time
+
+    import photoscript
+
+    # due to pytest weirdness, need to create a new photoslib object 
+    # to get hide and hidden to work as they would in a real script
+    photoslib.quit()
+    photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
-    assert photoslib.frontmost
+    time.sleep(1)
     photoslib.hide()
+    time.sleep(1)
     assert not photoslib.frontmost
+    assert photoslib.hidden
 
 
 def test_photoslibrary_hidden(photoslib):
+    """ Test hidden """
+    import photoscript
+
+    # due to pytest weirdness, need to create a new photoslib object 
+    # to get hide and hidden to work as they would in a real script
+    photoslib.quit()
+    photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
     assert not photoslib.hidden
     photoslib.hide()
@@ -674,6 +698,118 @@ def test_temp_album_name_2(photoslib):
 def test_temp_name(photoslib):
     temp_name = photoslib._temp_name()
     assert temp_name.startswith("photoscript_20")
+
+
+def test_export_photo_basic(photoslib):
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported = photoslib._export_photo(photo, tmpdir.name)
+    exported = [pathlib.Path(filename).name for filename in exported]
+    assert exported == PHOTO_EXPORT_FILENAME
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_FILENAME
+
+
+def test_export_photo_duplicate(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames """
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported1 = photoslib._export_photo(photo, tmpdir.name)
+    exported2 = photoslib._export_photo(photo, tmpdir.name)
+    exported = [pathlib.Path(filename).name for filename in exported1 + exported2]
+    assert exported == PHOTO_EXPORT_2_FILENAMES
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_2_FILENAMES
+
+
+def test_export_photo_duplicate_overwrite(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames but use overwrite = true"""
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported1 = photoslib._export_photo(photo, tmpdir.name)
+    exported2 = photoslib._export_photo(photo, tmpdir.name, overwrite=True)
+    exported = list({pathlib.Path(filename).name for filename in exported1 + exported2})
+
+    assert exported == PHOTO_EXPORT_FILENAME
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_FILENAME
+
+
+def test_export_photo_original_basic(photoslib):
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported = photoslib._export_photo(photo, tmpdir.name, original=True)
+    exported = [pathlib.Path(filename).name for filename in exported]
+    assert exported == PHOTO_EXPORT_FILENAME_ORIGINAL
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_FILENAME_ORIGINAL
+
+
+def test_export_photo_original_duplicate(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames """
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported1 = photoslib._export_photo(photo, tmpdir.name, original=True)
+    exported2 = photoslib._export_photo(photo, tmpdir.name, original=True)
+    exported = [pathlib.Path(filename).name for filename in exported1 + exported2]
+    assert exported == PHOTO_EXPORT_2_FILENAMES_ORIGINAL
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_2_FILENAMES_ORIGINAL
+
+
+def test_export_photo_original_duplicate_overwrite(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames but use overwrite = true"""
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    exported1 = photoslib._export_photo(photo, tmpdir.name, original=True)
+    exported2 = photoslib._export_photo(
+        photo, tmpdir.name, original=True, overwrite=True
+    )
+    exported = list({pathlib.Path(filename).name for filename in exported1 + exported2})
+
+    assert exported == PHOTO_EXPORT_FILENAME_ORIGINAL
+    files = os.listdir(tmpdir.name)
+    assert files == PHOTO_EXPORT_FILENAME_ORIGINAL
 
 
 def test_version():

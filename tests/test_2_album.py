@@ -14,6 +14,7 @@ if OS_VER == "15":
         ALBUM_1_PATH_STR,
         ALBUM_1_PATH_STR_COLON,
         ALBUM_1_PHOTO_UUIDS,
+        ALBUM_1_PHOTO_EXPORT_FILENAMES,
         ALBUM_NAMES_ALL,
         ALBUM_NAMES_TOP,
         EMPTY_ALBUM_NAME,
@@ -190,3 +191,17 @@ def test_album_import_photos_skip_dup_check(photoslib):
     imported = album.import_photos(photo_paths, skip_duplicate_check=True)
     assert len(imported) == len(IMPORT_PATHS)
     assert len(album) == 2 * len(IMPORT_PATHS)
+
+def test_album_export_photos_basic(photoslib):
+    import os
+    import pathlib
+    import tempfile
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+    album = photoslib.album(ALBUM_1_NAME)
+    exported = album.export(tmpdir.name)
+    exported = [pathlib.Path(filename).name for filename in exported]
+    assert sorted(exported) == ALBUM_1_PHOTO_EXPORT_FILENAMES
+    files = os.listdir(tmpdir.name)
+    assert sorted(files) == sorted(ALBUM_1_PHOTO_EXPORT_FILENAMES)
+    

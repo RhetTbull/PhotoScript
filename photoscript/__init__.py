@@ -1,8 +1,13 @@
 """ Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
 
 import datetime
+import glob
+import os
+import pathlib
+from photoscript.utils import ditto, findfiles
 import random
 import string
+import tempfile
 
 from applescript import kMissingValue
 
@@ -389,6 +394,77 @@ class PhotosLibrary:
         )
         return f"photoscript_{ds}_{random_str}"
 
+    def _export_photo(
+        self, photo, export_path, original=False, overwrite=False, timeout=120
+    ):
+        """ Export photo to export_path
+
+        Args:
+            photo: Photo object to export
+            export_path: path to export to
+            original: if True, export original image, otherwise export current image; default = False
+            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
+            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+        
+        Returns:
+            full paths of exported photos.  There may be more than one photo exported due 
+            to live images and burst images.
+        
+        Raises:
+            ValueError if export_path is not a valid directory
+
+        Note: Photos always exports as high-quality JPEG unless original=True. 
+        If original=True, will export all burst images for burst photos and 
+        live movie for live photos.  If original=False, only the primary image from a 
+        burst set will be exported for burst photos and the live movie component of a 
+        live image will not be exported, only the JPEG component. 
+        """
+
+        dest = pathlib.Path(export_path)
+        if not dest.is_dir:
+            raise ValueError(f"export_path {export_path} must be a directory")
+
+        edited = not original
+
+        tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_")
+
+        # export original
+        filename = run_script(
+            "_photo_export", photo.id, tmpdir.name, original, edited, timeout
+        )
+
+        if filename is not None:
+            # need to find actual filename as sometimes Photos renames JPG to jpeg on export
+            # may be more than one file exported (e.g. if Live Photo, Photos exports both .jpeg and .mov)
+            # TemporaryDirectory will cleanup on return
+            files = glob.glob(os.path.join(tmpdir.name, "*"))
+            exported_paths = []
+            seen_files = {}
+            for fname in files:
+                path = pathlib.Path(fname)
+                dest_new = dest / path.name
+                if not overwrite:
+                    # ensure there are no name collisions on export
+                    try:
+                        dest_update = seen_files[path.stem]
+                    except KeyError:
+                        count = 1
+                        dest_files = findfiles(
+                            f"{dest_new.stem}*", str(dest_new.parent)
+                        )
+                        dest_files = [pathlib.Path(f).stem.lower() for f in dest_files]
+                        dest_update = dest_new.stem
+                        while dest_update.lower() in dest_files:
+                            dest_update = f"{dest_new.stem} ({count})"
+                            count += 1
+                        seen_files[path.stem] = dest_update
+                    dest_new = dest_new.parent / f"{dest_update}{dest_new.suffix}"
+                ditto(str(path), str(dest_new))
+                exported_paths.append(str(dest_new))
+            return exported_paths
+        else:
+            return []
+
 
 class Album:
     def __init__(self, uuid):
@@ -499,26 +575,37 @@ class Album:
             photo_paths, album=self, skip_duplicate_check=skip_duplicate_check
         )
 
-    def export(self, path, original=True, edited=True, timeout=120):
+    def export(self, export_path, original=False, overwrite=False, timeout=120):
         """Export photos in album to path
 
         Args:
-            path: path to export to
-            original: if True exports original photo
-            edited: if True, exports edited version, if one exists
-            timeout: number of seconds to timeout waiting for Photos to respond
-
+            photo: Photo object to export
+            export_path: path to export to
+            original: if True, export original image, otherwise export current image; default = False
+            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
+            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+        
         Returns:
-            list of names of exported photos
+            full paths of exported photos.  There may be more than one photo exported due 
+            to live images and burst images.
+        
+        Raises:
+            ValueError if export_path is not a valid directory
 
-        Note: if exporting large photos that are not yet downloaded from iCloud you may need 
-              to increase value of timeout.
+        Note: Photos always exports as high-quality JPEG unless original=True. 
+        If original=True, will export all burst images for burst photos and 
+        live movie for live photos.  If original=False, only the primary image from a 
+        burst set will be exported for burst photos and the live movie component of a 
+        live image will not be exported, only the JPEG component. 
         """
-        photos = self.photos
-        return [
-            run_script("_photo_export", p.id, path, original, edited, timeout)
-            for p in photos
-        ]
+        exported_photos = []
+        for photo in self.photos():
+            exported_photos.extend(
+                photo.export(
+                    export_path=export_path, original=original, overwrite=overwrite, timeout=timeout
+                )
+            )
+        return exported_photos
 
     def remove_by_id(self, photo_ids):
         """Remove photos from album.
@@ -838,19 +925,36 @@ class Photo:
         """ filename of photo """
         return run_script("_photo_filename", self.id)
 
-    def export(self, path, original=True, edited=True, timeout=120):
+    def export(self, export_path, original=False, overwrite=False, timeout=120):
         """Export photo
 
         Args:
-            path: path to export to
-            original: if True exports original photo
-            edited: if True, exports edited version, if one exists
-            timeout: number of seconds to timeout waiting for Photos to respond
-
+            photo: Photo object to export
+            export_path: path to export to
+            original: if True, export original image, otherwise export current image; default = False
+            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
+            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+        
         Returns:
-            name of exported photo
+            full paths of exported photos.  There may be more than one photo exported due 
+            to live images and burst images.
+        
+        Raises:
+            ValueError if export_path is not a valid directory
+
+        Note: Photos always exports as high-quality JPEG unless original=True. 
+        If original=True, will export all burst images for burst photos and 
+        live movie for live photos.  If original=False, only the primary image from a 
+        burst set will be exported for burst photos and the live movie component of a 
+        live image will not be exported, only the JPEG component. 
         """
-        return run_script("_photo_export", self.id, path, original, edited, timeout)
+        return PhotosLibrary()._export_photo(
+            self,
+            export_path=export_path,
+            original=original,
+            overwrite=overwrite,
+            timeout=timeout,
+        )
 
     def duplicate(self):
         """ duplicates the photo and returns Photo object for the duplicate """

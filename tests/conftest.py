@@ -1,13 +1,11 @@
 import os
 import pathlib
-import shutil
-import subprocess
-import sys
 
 import pytest
 from applescript import AppleScript
 
 import photoscript
+from photoscript.utils import ditto
 
 TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
 
@@ -30,31 +28,6 @@ def get_os_version():
             )
         )
     return (ver, major, minor)
-
-
-def ditto(src, dest, norsrc=False):
-    """ Copies a file or directory tree from src path to dest path 
-        src: source path as string 
-        dest: destination path as string
-        norsrc: (bool) if True, uses --norsrc flag with ditto so it will not copy
-                resource fork or extended attributes.  May be useful on volumes that
-                don't work with extended attributes (likely only certain SMB mounts)
-                default is False
-        Uses ditto to perform copy; will silently overwrite dest if it exists
-        Raises exception if copy fails or either path is None """
-
-    if src is None or dest is None:
-        raise ValueError("src and dest must not be None", src, dest)
-
-    if norsrc:
-        command = ["/usr/bin/ditto", "--norsrc", src, dest]
-    else:
-        command = ["/usr/bin/ditto", src, dest]
-
-    # if error on copy, subprocess will raise CalledProcessError
-    result = subprocess.run(command, check=True, stderr=subprocess.PIPE)
-
-    return result.returncode
 
 
 def copy_photos_library(delay=0):

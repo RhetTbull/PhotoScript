@@ -49,23 +49,23 @@ end _photoslibrary_isrunning
 on _photoslibrary_hide()
 	(* tell Photos to hide if it's running; if not running, do nothing  *)
 	set app_name_ to "Photos"
-	if _photoslibrary_isrunning() then
+	try
 		tell application "System Events"
 			set visible of application process app_name_ to false
 		end tell
-	end if
+	end try
 end _photoslibrary_hide
 
 on _photoslibrary_hidden()
 	(* return true if hidden or not running, otherwise false *)
 	set app_name_ to "Photos"
-	if _photoslibrary_isrunning() then
+	try
 		tell application "System Events"
-			not visible of application process app_name_
+			return not visible of application process app_name_
 		end tell
-	else
+	on error
 		return true
-	end if
+	end try
 end _photoslibrary_hidden
 
 on _photoslibrary_activate()
