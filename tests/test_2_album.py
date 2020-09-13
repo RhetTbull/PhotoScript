@@ -15,6 +15,8 @@ if OS_VER == "15":
         ALBUM_1_PATH_STR_COLON,
         ALBUM_1_PHOTO_UUIDS,
         ALBUM_1_PHOTO_EXPORT_FILENAMES,
+        ALBUM_1_REMOVE_UUIDS,
+        ALBUM_1_POST_REMOVE_UUIDS,
         ALBUM_NAMES_ALL,
         ALBUM_NAMES_TOP,
         EMPTY_ALBUM_NAME,
@@ -192,6 +194,7 @@ def test_album_import_photos_skip_dup_check(photoslib):
     assert len(imported) == len(IMPORT_PATHS)
     assert len(album) == 2 * len(IMPORT_PATHS)
 
+
 def test_album_export_photos_basic(photoslib):
     import os
     import pathlib
@@ -204,4 +207,56 @@ def test_album_export_photos_basic(photoslib):
     assert sorted(exported) == ALBUM_1_PHOTO_EXPORT_FILENAMES
     files = os.listdir(tmpdir.name)
     assert sorted(files) == sorted(ALBUM_1_PHOTO_EXPORT_FILENAMES)
-    
+
+
+def test_album_export_photos_duplicate_overwrite(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames but use overwrite = true"""
+    import os
+    import pathlib
+    import tempfile
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+    album = photoslib.album(ALBUM_1_NAME)
+    exported1 = album.export(tmpdir.name, overwrite=True, original=True)
+    exported2 = album.export(tmpdir.name, overwrite=True, original=True)
+    exported = list({pathlib.Path(filename).name for filename in exported1 + exported2})
+
+    assert sorted(exported) == ALBUM_1_PHOTO_EXPORT_FILENAMES
+    files = os.listdir(tmpdir.name)
+    assert sorted(files) == sorted(ALBUM_1_PHOTO_EXPORT_FILENAMES)
+
+
+def test_album_remove_by_id(photoslib):
+    """ Test album.remove_by_id """
+    import photoscript
+
+    album = photoslib.album(ALBUM_1_NAME)
+    parent_id = album.parent.id
+    new_album = album.remove_by_id(ALBUM_1_REMOVE_UUIDS)
+    assert isinstance(new_album, photoscript.Album)
+    uuids = [photo.id for photo in new_album.photos()]
+    assert sorted(uuids) == sorted(ALBUM_1_POST_REMOVE_UUIDS)
+    assert new_album.title == ALBUM_1_NAME
+    assert new_album.id == album.id
+    assert new_album.parent.id == parent_id
+
+
+def test_album_remove(photoslib):
+    """ Test album.remove """
+    import photoscript
+
+    album = photoslib.album(ALBUM_1_NAME)
+    photos = [photoscript.Photo(uuid) for uuid in ALBUM_1_REMOVE_UUIDS]
+    new_album = album.remove(photos)
+    assert isinstance(new_album, photoscript.Album)
+    uuids = [photo.id for photo in new_album.photos()]
+    assert sorted(uuids) == sorted(ALBUM_1_POST_REMOVE_UUIDS)
+    assert new_album.title == ALBUM_1_NAME
+    assert new_album.id == album.id
+
+
+def test_len(photoslib):
+    """ test Album.__len__ """
+    album = photoslib.album(ALBUM_1_NAME)
+    assert len(album) == len(ALBUM_1_PHOTO_UUIDS)

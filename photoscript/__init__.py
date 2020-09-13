@@ -622,7 +622,7 @@ class Album:
         new_album = photoslib.create_album(
             photoslib._temp_album_name(), folder=self.parent
         )
-        old_photos = self.photos
+        old_photos = self.photos()
         new_photo_uuids = [
             photo.id for photo in old_photos if photo.id not in photo_ids
         ]
