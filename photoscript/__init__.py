@@ -392,10 +392,19 @@ class PhotosLibrary:
 
 class Album:
     def __init__(self, uuid):
+        id_ = uuid
+        # check to see if we need to add UUID suffix
+        if float(PhotosLibrary().version) >= 5.0:
+            if len(uuid.split("/")) == 1:
+                # osxphotos style UUID without the suffix
+                id_ = f"{uuid}{UUID_SUFFIX_ALBUM}"
+            else:
+                uuid = uuid.split("/")[0]
+
         valuuidalbum = run_script("_album_exists", uuid)
         if valuuidalbum:
-            self.id = uuid
-            self._uuid = uuid.split("/")[0]
+            self.id = id_
+            self._uuid = uuid
         else:
             raise ValueError(f"Invalid album id: {uuid}")
 
@@ -412,7 +421,7 @@ class Album:
 
     @name.setter
     def name(self, name):
-        """ set name of photo """
+        """ set name of album """
         name = "" if name is None else name
         return run_script("_album_set_name", self.id, name)
 
@@ -462,17 +471,18 @@ class Album:
         photo_ids = run_script("_album_photos", self.id)
         return [Photo(uuid) for uuid in photo_ids]
 
-    def __len__(self):
-        return run_script("_album_len", self.id)
-
     def add(self, photos):
         """add photos from the library to album
 
         Args:
             photos: list of Photo objects to add to album
+
+        Returns:
+            list of Photo objects for added photos
         """
         uuids = [p.id for p in photos]
-        return run_script("_album_add", self.id, uuids)
+        added_ids = run_script("_album_add", self.id, uuids)
+        return [Photo(uuid) for uuid in added_ids]
 
     def import_photos(self, photo_paths, skip_duplicate_check=False):
         """import photos
@@ -500,6 +510,9 @@ class Album:
 
         Returns:
             list of names of exported photos
+
+        Note: if exporting large photos that are not yet downloaded from iCloud you may need 
+              to increase value of timeout.
         """
         photos = self.photos
         return [
@@ -507,7 +520,6 @@ class Album:
             for p in photos
         ]
 
-    # TODO: new album created at top level -- need to create new album at some path as old album
     def remove_by_id(self, photo_ids):
         """Remove photos from album.
             Note: Photos does not provide a way to remove photos from an album via AppleScript.
@@ -553,6 +565,9 @@ class Album:
         """
         photo_uuids = [photo.id for photo in photos]
         return self.remove_by_id(photo_uuids)
+
+    def __len__(self):
+        return run_script("_album_len", self.id)
 
 
 class Folder:
