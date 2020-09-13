@@ -421,7 +421,7 @@ class PhotosLibrary:
         """
 
         dest = pathlib.Path(export_path)
-        if not dest.is_dir:
+        if not dest.is_dir():
             raise ValueError(f"export_path {export_path} must be a directory")
 
         edited = not original

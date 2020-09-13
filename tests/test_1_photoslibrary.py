@@ -122,7 +122,7 @@ def test_photoslibrary_hide(photoslib):
 
     import photoscript
 
-    # due to pytest weirdness, need to create a new photoslib object 
+    # due to pytest weirdness, need to create a new photoslib object
     # to get hide and hidden to work as they would in a real script
     photoslib.quit()
     photoslib = photoscript.PhotosLibrary()
@@ -140,7 +140,7 @@ def test_photoslibrary_hidden(photoslib):
 
     import photoscript
 
-    # due to pytest weirdness, need to create a new photoslib object 
+    # due to pytest weirdness, need to create a new photoslib object
     # to get hide and hidden to work as they would in a real script
     photoslib.quit()
     photoslib = photoscript.PhotosLibrary()
@@ -718,6 +718,14 @@ def test_export_photo_basic(photoslib):
     assert exported == PHOTO_EXPORT_FILENAME
     files = os.listdir(tmpdir.name)
     assert files == PHOTO_EXPORT_FILENAME
+
+
+def test_export_photo_bad_path(photoslib):
+    import photoscript
+
+    photo = photoscript.Photo(PHOTO_EXPORT_UUID)
+    with pytest.raises(ValueError):
+        photoslib._export_photo(photo, photoslib._temp_name())
 
 
 def test_export_photo_duplicate(photoslib):
