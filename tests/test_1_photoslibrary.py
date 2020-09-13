@@ -136,6 +136,8 @@ def test_photoslibrary_hide(photoslib):
 
 def test_photoslibrary_hidden(photoslib):
     """ Test hidden """
+    import time
+
     import photoscript
 
     # due to pytest weirdness, need to create a new photoslib object 
@@ -143,8 +145,10 @@ def test_photoslibrary_hidden(photoslib):
     photoslib.quit()
     photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
+    time.sleep(1)
     assert not photoslib.hidden
     photoslib.hide()
+    time.sleep(1)
     assert photoslib.hidden
 
 

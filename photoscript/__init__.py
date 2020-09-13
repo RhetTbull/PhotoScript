@@ -433,12 +433,12 @@ class PhotosLibrary:
             "_photo_export", photo.id, tmpdir.name, original, edited, timeout
         )
 
+        exported_paths = []
         if filename is not None:
             # need to find actual filename as sometimes Photos renames JPG to jpeg on export
             # may be more than one file exported (e.g. if Live Photo, Photos exports both .jpeg and .mov)
             # TemporaryDirectory will cleanup on return
             files = glob.glob(os.path.join(tmpdir.name, "*"))
-            exported_paths = []
             seen_files = {}
             for fname in files:
                 path = pathlib.Path(fname)
@@ -461,9 +461,7 @@ class PhotosLibrary:
                     dest_new = dest_new.parent / f"{dest_update}{dest_new.suffix}"
                 ditto(str(path), str(dest_new))
                 exported_paths.append(str(dest_new))
-            return exported_paths
-        else:
-            return []
+        return exported_paths
 
 
 class Album:
