@@ -46,7 +46,7 @@ class PhotosLibrary:
         return run_script("_photoslibrary_isrunning")
 
     def hide(self):
-        """ Tell Photos to hide it's window """
+        """ Tell Photos to hide its window """
         run_script("_photoslibrary_hide")
 
     @property
@@ -407,7 +407,7 @@ class PhotosLibrary:
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
         
         Returns:
-            full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due 
             to live images and burst images.
         
         Raises:
@@ -581,10 +581,10 @@ class Album:
             export_path: path to export to
             original: if True, export original image, otherwise export current image; default = False
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
-            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+            timeout: number of seconds to wait for Photos to complete export (for each photo) before timing out; default = 120
         
         Returns:
-            full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due 
             to live images and burst images.
         
         Raises:
@@ -934,7 +934,7 @@ class Photo:
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
         
         Returns:
-            full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due 
             to live images and burst images.
         
         Raises:
