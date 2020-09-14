@@ -475,7 +475,7 @@ class Album:
             else:
                 uuid = uuid.split("/")[0]
 
-        valuuidalbum = run_script("_album_exists", uuid)
+        valuuidalbum = run_script("_album_exists", id_)
         if valuuidalbum:
             self.id = id_
             self._uuid = uuid
@@ -657,10 +657,19 @@ class Album:
 
 class Folder:
     def __init__(self, uuid):
-        valid_folder = run_script("_folder_exists", uuid)
+        id_ = uuid
+        # check to see if we need to add UUID suffix
+        if float(PhotosLibrary().version) >= 5.0:
+            if len(uuid.split("/")) == 1:
+                # osxphotos style UUID without the suffix
+                id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
+            else:
+                uuid = uuid.split("/")[0]
+        
+        valid_folder = run_script("_folder_exists", id_)
         if valid_folder:
-            self.id = uuid
-            self._uuid = uuid.split("/")[0]
+            self.id = id_ 
+            self._uuid = uuid
         else:
             raise ValueError(f"Invalid folder id: {uuid}")
 
