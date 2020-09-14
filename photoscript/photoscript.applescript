@@ -4,7 +4,10 @@
 
 -- Naming scheme is _classname_methodname
 
-(* max number of times to retry in case of error *)
+(* 	max number of times to retry in case of error
+	some AppleScript calls appear to be flaky and don't always execute
+	so retry those up to MAX_RETRY if not succesful
+*)
 property MAX_RETRY : 5
 property WAIT_FOR_PHOTOS : 300
 
@@ -707,7 +710,6 @@ on _folder_get_folder_for_id(_id)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
 	set albums_folders to _photoslibrary_get_albums_folders()
 	set _folders to _folders of albums_folders
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		repeat with _folder in _folders
 			set _folder_id to id of _folder
@@ -756,9 +758,15 @@ on _folder_set_name(_id, _title)
 	(* set name or title of folder *)
 	set folder_ to _folder_get_folder_for_id(_id)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set name of folder_ to _title
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set name of folder_ to _title
+			if name of folder_ = _title then
+				return _title
+			end if
+		end tell
+	end repeat
 end _folder_set_name
 
 on _folder_parent(_id)

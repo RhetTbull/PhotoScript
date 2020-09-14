@@ -1,5 +1,6 @@
 """ Test Folder class """
 
+from tests.photoscript_config_catalina import ALBUM_1_NAME, FOLDER_1_SUBFOLDERS
 import pytest
 from applescript import AppleScript
 from tests.conftest import photoslib, suspend_capture, get_os_version
@@ -14,6 +15,7 @@ if OS_VER == "15":
         FOLDER_1_NAME,
         FOLDER_1_UUID,
         FOLDER_1_UUID_OSXPHOTOS,
+        FOLDER_1_SUBFOLDERS,
         FOLDER_2_LEN,
         FOLDER_2_NAME,
         FOLDER_2_UUID,
@@ -153,10 +155,68 @@ def test_folder_path(photoslib):
         assert isinstance(p, photoscript.Folder)
         assert p.name == FOLDER_2_PATH[i]
 
+
 def test_folder_albums(photoslib):
     folder = photoslib.folder(FOLDER_3_NAME)
     albums = folder.albums
     assert sorted(album.name for album in albums) == sorted(FOLDER_3_ALBUMS)
+
+
+def test_folder_album(photoslib):
+    folder = photoslib.folder(FOLDER_3_NAME)
+    album = folder.album(ALBUM_1_NAME)
+    assert album.name == ALBUM_1_NAME
+
+
+def test_folder_album_bad_name(photoslib):
+    folder = photoslib.folder(FOLDER_3_NAME)
+    album = folder.album("FOOBAR")
+    assert album is None
+
+
+def test_folder_subfolders(photoslib):
+    folder = photoslib.folder(FOLDER_1_NAME)
+    subfolders = folder.subfolders
+    assert sorted(f.name for f in subfolders) == sorted(FOLDER_1_SUBFOLDERS)
+
+
+def test_folder_subfolders_none(photoslib):
+    folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
+    subfolders = folder.subfolders
+    assert subfolders == []
+
+
+def test_folder_folder(photoslib):
+    folder = photoslib.folder(FOLDER_1_NAME)
+    subfolder = folder.folder(FOLDER_2_NAME)
+    assert subfolder.name == FOLDER_2_NAME
+
+
+def test_folder_folder_none(photoslib):
+    folder = photoslib.folder(FOLDER_1_NAME)
+    subfolder = folder.folder("FOOBAR")
+    assert subfolder is None
+
+
+def test_folder_create_album(photoslib):
+    import photoscript
+
+    folder = photoslib.folder(FOLDER_1_NAME)
+    album = folder.create_album("New Album")
+    assert isinstance(album, photoscript.Album)
+    assert album.name == "New Album"
+    assert album.parent.id == folder.id
+
+
+def test_folder_create_folder(photoslib):
+    import photoscript
+
+    folder = photoslib.folder(FOLDER_1_NAME)
+    subfolder = folder.create_folder("New Folder")
+    assert isinstance(subfolder, photoscript.Folder)
+    assert subfolder.name == "New Folder"
+    assert subfolder.parent.id == folder.id
+
 
 def test_len_1(photoslib):
     """ test Album.__len__ """
