@@ -74,3 +74,41 @@ FOLDER_NAME = "Travel"
 IMPORT_PATHS = ["tests/test_images/IMG_2608.JPG"]
 IMPORT_PHOTOS = ["IMG_2608.JPG"]
 
+PHOTOS_DICT = [
+    {
+        "uuid": "F8EFA39F-7D26-4DC2-82FE-CC9357F19F00/L0/001",
+        "uuid_osxphotos": "F8EFA39F-7D26-4DC2-82FE-CC9357F19F00",
+        "keywords": ["travel"],
+        "filename": "IMG_2774.JPG",
+        "title": None,
+        "description": None,
+        "favorite": False,
+    },
+    {
+        "uuid": "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001",
+        "uuid_osxphotos": "EECD91FE-D716-48F2-A62C-A4D558ACD52E",
+        "keywords": ["travel"],
+        "filename": "IMG_2768.JPG",
+        "title": None,
+        "description": None,
+        "favorite": True,
+    },
+    {
+        "uuid": "B6DB996D-8A0A-4983-AFBD-D206B7D38A23/L0/001",
+        "uuid_osxphotos": "B6DB996D-8A0A-4983-AFBD-D206B7D38A23",
+        "keywords": [],
+        "filename": "IMG_2510.JPG",
+        "title": None,
+        "description": None,
+        "favorite": True,
+    },
+    {
+        "uuid": "1CD1B172-C94B-4093-A303-EE24FE7EEF60/L0/001",
+        "uuid_osxphotos": "1CD1B172-C94B-4093-A303-EE24FE7EEF60",
+        "keywords": [],
+        "filename": "IMG_2242.JPG",
+        "title": "Living Wall",
+        "description": "Wall of plants at Botanical Garden",
+        "favorite": False,
+    },
+]

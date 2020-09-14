@@ -766,6 +766,7 @@ on _folder_set_name(_id, _title)
 				return _title
 			end if
 		end tell
+		set count_ to count_ + 1
 	end repeat
 end _folder_set_name
 
@@ -923,9 +924,16 @@ end _photo_name
 on _photo_set_name(_id, _title)
 	(* set name or title of photo *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set name of media item id (_id) to _title
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set name of media item id (_id) to _title
+			if name of media item id (_id) = _title then
+				return _title
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _photo_set_name
 
 on _photo_description(_id)
@@ -939,9 +947,16 @@ end _photo_description
 on _photo_set_description(_id, _descr)
 	(* set description of photo *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set description of media item id (_id) to _descr
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set description of media item id (_id) to _descr
+			if description of media item id (_id) = _descr then
+				return _descr
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _photo_set_description
 
 on _photo_keywords(_id)
@@ -955,9 +970,16 @@ end _photo_keywords
 on _photo_set_keywords(id_, keyword_list)
 	(* set keywords of photo *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set keywords of media item id (id_) to keyword_list
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set keywords of media item id (id_) to keyword_list
+			if keywords of media item id (id_) = keyword_list then
+				return keyword_list
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _photo_set_keywords
 
 on _photo_favorite(id_)

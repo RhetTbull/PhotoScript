@@ -800,10 +800,18 @@ class Folder:
 
 class Photo:
     def __init__(self, uuid):
+        id_ = uuid
+        # check to see if we need to add UUID suffix
+        if float(PhotosLibrary().version) >= 5.0:
+            if len(uuid.split("/")) == 1:
+                # osxphotos style UUID without the suffix
+                id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
+            else:
+                uuid = uuid.split("/")[0]
         valid = run_script("_photo_exists", uuid)
         if valid:
-            self.id = uuid
-            self._uuid = uuid.split("/")[0]
+            self.id = id_ 
+            self._uuid = uuid
         else:
             raise ValueError(f"Invalid photo id: {uuid}")
 
@@ -816,7 +824,7 @@ class Photo:
     def name(self):
         """ name of photo """
         name = run_script("_photo_name", self.id)
-        return name if name != kMissingValue else None
+        return name if name not in [kMissingValue, ""] else None
 
     @name.setter
     def name(self, name):
@@ -870,7 +878,7 @@ class Photo:
     @favorite.setter
     def favorite(self, favorite):
         """ set favorite status (boolean) """
-        favorite = True if favorite else False
+        favorite = bool(favorite)
         return run_script("_photo_set_favorite", self.id, favorite)
 
     @property
