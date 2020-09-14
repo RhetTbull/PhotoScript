@@ -606,7 +606,7 @@ class Album:
         return exported_photos
 
     def remove_by_id(self, photo_ids):
-        """Remove photos from album.
+        """Remove photos from album. 
             Note: Photos does not provide a way to remove photos from an album via AppleScript.
             This method actually creates a new Album with the same name as the original album and
             copies all photos from original album with exception of those to remove to the new album
@@ -633,6 +633,7 @@ class Album:
         photoslib.delete_album(self)
         new_album.name = name
         self.id = new_album.id
+        self._uuid = new_album.uuid
         return new_album
 
     def remove(self, photos):

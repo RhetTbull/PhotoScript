@@ -238,8 +238,9 @@ def test_album_remove_by_id(photoslib):
     uuids = [photo.id for photo in new_album.photos()]
     assert sorted(uuids) == sorted(ALBUM_1_POST_REMOVE_UUIDS)
     assert new_album.title == ALBUM_1_NAME
-    assert new_album.id == album.id
     assert new_album.parent.id == parent_id
+    assert album.id == new_album.id
+    assert album.uuid == new_album.uuid
 
 
 def test_album_remove(photoslib):

@@ -683,9 +683,16 @@ end _album_add
 on _album_set_name(_id, _title)
 	(* set name or title of album *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set name of album id (_id) to _title
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set name of album id (_id) to _title
+			if name of album id (_id) = _title then
+				return _title
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _album_set_name
 
 on _album_get_path(id_, path_delimiter_)
