@@ -1012,6 +1012,21 @@ on _photo_date(_id)
 	end tell
 end _photo_date
 
+on _photo_set_date(id_, date_)
+	(* set date of photo *)
+	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set date of media item id (id_) to date_
+			if date of media item id (id_) = date_ then
+				return date_
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
+end _photo_set_date
+
 on _photo_height(id_)
 	(* height of photo in pixels *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
@@ -1047,9 +1062,16 @@ end _photo_location
 on _photo_set_location(id_, location_)
 	(* set GPS location of photo *)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set location of media item id (id_) to location_
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set location of media item id (id_) to location_
+			if location of media item id (id_) = location_ then
+				return location_
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _photo_set_location
 
 on _photo_export(theUUID, thePath, original, edited, theTimeOut)

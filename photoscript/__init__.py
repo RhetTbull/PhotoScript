@@ -600,7 +600,10 @@ class Album:
         for photo in self.photos():
             exported_photos.extend(
                 photo.export(
-                    export_path=export_path, original=original, overwrite=overwrite, timeout=timeout
+                    export_path=export_path,
+                    original=original,
+                    overwrite=overwrite,
+                    timeout=timeout,
                 )
             )
         return exported_photos
@@ -666,10 +669,10 @@ class Folder:
                 id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
             else:
                 uuid = uuid.split("/")[0]
-        
+
         valid_folder = run_script("_folder_exists", id_)
         if valid_folder:
-            self.id = id_ 
+            self.id = id_
             self._uuid = uuid
         else:
             raise ValueError(f"Invalid folder id: {uuid}")
@@ -811,7 +814,7 @@ class Photo:
                 uuid = uuid.split("/")[0]
         valid = run_script("_photo_exists", uuid)
         if valid:
-            self.id = id_ 
+            self.id = id_
             self._uuid = uuid
         else:
             raise ValueError(f"Invalid photo id: {uuid}")
@@ -895,7 +898,8 @@ class Photo:
     @property
     def altitude(self):
         """ GPS altitude of photo in meters """
-        return run_script("_photo_altitude", self.id)
+        altitude = run_script("_photo_altitude", self.id)
+        return altitude if altitude != kMissingValue else None
 
     @property
     def location(self):
@@ -935,6 +939,15 @@ class Photo:
     def date(self):
         """ date of photo as timezone-naive datetime.datetime object """
         return run_script("_photo_date", self.id)
+
+    @date.setter
+    def date(self, date):
+        """ Set date of photo as timezone-naive datetime.datetime object
+        
+        Args:
+            date: timezone-naive datetime.datetime object
+        """
+        return run_script("_photo_set_date", self.id, date)
 
     @property
     def filename(self):

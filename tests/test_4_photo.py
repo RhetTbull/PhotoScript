@@ -105,3 +105,62 @@ def test_photo_keywords(photoslib):
         assert sorted(photo_obj.keywords) == sorted(["Foo", "Bar"])
         photo_obj.keywords = []
         assert photo_obj.keywords == []
+
+
+def test_photo_favorite(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        assert photo_obj.favorite == photo["favorite"]
+        photo_obj.favorite = not photo["favorite"]
+        assert photo_obj.favorite != photo["favorite"]
+
+
+def test_photo_height_width(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        assert photo_obj.height == photo["height"]
+        assert photo_obj.width == photo["width"]
+
+
+def test_photo_altitude(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        assert photo_obj.altitude == photo["altitude"]
+
+
+def test_photo_location(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        lat, lon = photo_obj.location
+        assert (lat, lon) == photo["location"]
+        photo_obj.location = (34.0, -118.0)
+        assert photo_obj.location == (34.0, -118.0)
+        photo_obj.location = (None, None)
+        assert photo_obj.location == (None, None)
+
+
+def test_photo_date(photoslib):
+    import datetime
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        date = datetime.datetime.fromisoformat(photo["date"])
+        assert photo_obj.date == date
+        photo_obj.date = datetime.datetime(2020, 9, 14)
+        assert photo_obj.date == datetime.datetime(2020, 9, 14)
+
+def test_photo_filename(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        assert photo_obj.filename == photo["filename"]
