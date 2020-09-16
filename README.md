@@ -9,6 +9,9 @@ PhotoScript provides a python wrapper around Apple Photos applescript interface.
 
 PhotosScript is limited by Photos' very limited AppleScript dictionary. 
 
+## Compatibility
+Designed for MacOS Catalina/Photos 5.  Preliminary testing on Big Sur/Photos 6 beta shows this should work on Big Sur as well.  Photos' AppleScript interface has changed very little since Photos 2 (the earliest version I have access to).  This package should work with most versions of Photos but some methods may not function correctly on versions earlier than Photos 5.  If you find compatibility issues, open an issue or send a PR.
+
 ## Installation
 
 PhotoScript uses setuptools, thus simply run:
@@ -46,6 +49,9 @@ photoslib.quit()
 Full documentation [here](https://github.com/RhetTbull/PhotoScript/blob/master/photoscript.pdf).
 
 Additional documentation about Photos and AppleScript available on the [wiki](https://github.com/RhetTbull/PhotoScript/wiki/Welcome-to-the-PhotoScript-Wiki).
+
+## Testing
+Tested on MacOS Catalina, Photos 5 with 100% coverage. 
 
 ## Limitations
 Photos' AppleScript interface is very limited.  For example, it cannot access information on faces in photos nor can it delete a photo.  PhotoScript is thus limited.  PhotoScript works by executing AppleScript through an Objective-C bridge from python.  Every method call has to do a python->Objective C->AppleScript round trip; this makes the interface much slower than native python code.  This is particularly noticeable when dealing with Folders which requires significant work arounds.
