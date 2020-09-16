@@ -188,6 +188,7 @@ def test_photoslibrary_frontmost(photoslib):
             delay 2
         """
     )
+    photoslib.hide()
     script.run()
     assert not photoslib.frontmost
 

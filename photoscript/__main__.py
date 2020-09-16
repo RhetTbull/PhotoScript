@@ -4,11 +4,14 @@ from .__init__ import PhotosLibrary, Album, Folder, Photo
 
 from code import InteractiveConsole
 
-if __name__ == "__main__":
-    photoslib = PhotosLibrary()
+photoslib = PhotosLibrary()
 
+def main():
+    global photoslib
     banner = "PhotoScript REPL\n" \
             f"Photos version: {photoslib.version}\n" \
             f"Variables defined: photoslib"
-    scope_vars = {"photoslib": photoslib}
     InteractiveConsole(locals=globals()).interact(banner=banner)
+
+if __name__ == "__main__":
+    main()
