@@ -870,8 +870,7 @@ class Photo:
     @keywords.setter
     def keywords(self, keywords):
         """ set keywords to list """
-        if not isinstance(keywords, list):
-            keywords = [keywords] if keywords is not None else []
+        keywords = [] if keywords is None else keywords
         return run_script("_photo_set_keywords", self.id, keywords)
 
     @property

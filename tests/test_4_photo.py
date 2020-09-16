@@ -27,6 +27,23 @@ def test_photo_init_uuid_id(photoslib):
         assert photo_obj.uuid == photo["uuid_osxphotos"]
 
 
+def test_photo_init_uuid_osxphotos(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid_osxphotos"])
+        assert isinstance(photo_obj, photoscript.Photo)
+        assert photo_obj.id == photo["uuid"]
+        assert photo_obj.uuid == photo["uuid_osxphotos"]
+
+
+def test_photo_init_bad_uuid(photoslib):
+    import photoscript
+
+    with pytest.raises(ValueError):
+        photoscript.Photo("BAD_UUID")
+
+
 def test_photo_name(photoslib):
     import photoscript
 
@@ -118,6 +135,19 @@ def test_photo_location(photoslib):
         assert photo_obj.location == (34.0, -118.0)
         photo_obj.location = (None, None)
         assert photo_obj.location == (None, None)
+
+
+def test_photo_location_exception(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        with pytest.raises(ValueError):
+            photo_obj.location = -90.0
+        with pytest.raises(ValueError):
+            photo_obj.location = (-91.0, 0.0)
+        with pytest.raises(ValueError):
+            photo_obj.location = (0.0, 181.0)
 
 
 def test_photo_date(photoslib):
