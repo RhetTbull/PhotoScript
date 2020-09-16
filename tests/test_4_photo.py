@@ -7,34 +7,7 @@ from tests.conftest import photoslib, suspend_capture, get_os_version
 
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
-    from tests.photoscript_config_catalina import (
-        PHOTOS_DICT,
-        ALBUM_1_NAME,
-        ALBUM_1_UUID,
-        ALBUM_NAMES_ALL,
-        ALBUM_NAMES_TOP,
-        FOLDER_NAME,
-        FOLDER_NAMES_ALL,
-        FOLDER_NAMES_TOP,
-        FOLDER_UUID,
-        IMPORT_PATHS,
-        IMPORT_PHOTOS,
-        NUM_PHOTOS,
-        PHOTO_EXPORT_UUID,
-        PHOTO_EXPORT_FILENAME,
-        PHOTO_EXPORT_2_FILENAMES_ORIGINAL,
-        PHOTO_EXPORT_2_FILENAMES,
-        PHOTO_EXPORT_2_FILENAMES_ORIGINAL,
-        PHOTO_FAVORITES_SET_UUID,
-        PHOTO_FAVORITES_UNSET_UUID,
-        PHOTOS_FAVORITES,
-        PHOTOS_FAVORITES_SET,
-        PHOTOS_FILENAMES,
-        PHOTOS_PLANTS,
-        PHOTOS_UUID,
-        PHOTOS_UUID_FILENAMES,
-        SELECTION_UUIDS,
-    )
+    from tests.photoscript_config_catalina import PHOTOS_DICT
 else:
     pytest.exit("This test suite currently only runs on MacOS Catalina ")
 
@@ -158,9 +131,59 @@ def test_photo_date(photoslib):
         photo_obj.date = datetime.datetime(2020, 9, 14)
         assert photo_obj.date == datetime.datetime(2020, 9, 14)
 
+
 def test_photo_filename(photoslib):
     import photoscript
 
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.filename == photo["filename"]
+
+
+def test_photo_export_basic(photoslib):
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTOS_DICT[0]["uuid"])
+
+    exported = photo.export(tmpdir.name)
+    exported = [pathlib.Path(filename).name for filename in exported]
+    expected = [f"{pathlib.Path(PHOTOS_DICT[0]['filename']).stem}.jpeg"]
+    assert exported == expected
+    files = os.listdir(tmpdir.name)
+    assert files == expected
+
+
+def test_export_photo_original_duplicate_overwrite(photoslib):
+    """ Test calling export twice resulting in 
+        duplicate filenames but use overwrite = true"""
+    import os
+    import pathlib
+    import tempfile
+    import photoscript
+
+    tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
+
+    photo = photoscript.Photo(PHOTOS_DICT[0]["uuid"])
+    exported1 = photo.export(tmpdir.name, original=True)
+    exported2 = photo.export(tmpdir.name, original=True, overwrite=True)
+    exported = list({pathlib.Path(filename).name for filename in exported1 + exported2})
+
+    expected = [f"{pathlib.Path(PHOTOS_DICT[0]['filename']).stem}.jpeg"]
+    assert exported == expected
+    files = os.listdir(tmpdir.name)
+    assert files == expected
+
+
+def test_photo_duplicate(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        new_photo = photo_obj.duplicate()
+        assert isinstance(new_photo, photoscript.Photo)
+        assert new_photo.filename == photo_obj.filename
