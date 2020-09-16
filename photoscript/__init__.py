@@ -809,7 +809,7 @@ class Photo:
         if float(PhotosLibrary().version) >= 5.0:
             if len(uuid.split("/")) == 1:
                 # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
+                id_ = f"{uuid}{UUID_SUFFIX_PHOTO}"
             else:
                 uuid = uuid.split("/")[0]
         valid = run_script("_photo_exists", uuid)

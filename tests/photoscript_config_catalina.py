@@ -74,6 +74,14 @@ FOLDER_NAME = "Travel"
 IMPORT_PATHS = ["tests/test_images/IMG_2608.JPG"]
 IMPORT_PHOTOS = ["IMG_2608.JPG"]
 
+FIND_FILES = [
+    "IMG_2242.JPG",
+    "IMG_2510.JPG",
+    "IMG_2608.JPG",
+    "IMG_2768.JPG",
+    "IMG_2774.JPG",
+]
+
 PHOTOS_DICT = [
     {
         "uuid": "F8EFA39F-7D26-4DC2-82FE-CC9357F19F00/L0/001",
