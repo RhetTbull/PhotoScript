@@ -108,15 +108,26 @@ end _photoslibrary_frontmost
 
 on _photoslibrary_get_all_photos()
 	(* return all photos in the library *)
-	set ids to {}
 	tell application "Photos"
-		set mediaItems to media items
-		repeat with _item in mediaItems
-			copy id of _item to end of ids
-		end repeat
+		set ids to id of media items
 	end tell
 	return ids
 end _photoslibrary_get_all_photos
+
+on _photoslibrary_get_photo_by_number(num_)
+	(* return photo number num_; uses Photos' internal numbering *)
+	tell application "Photos"
+		return id of media item num_
+	end tell
+end _photoslibrary_get_photo_by_number
+
+on _photoslibrary_get_photo_by_range(start_, stop_)
+	(* return photos in range (inclusive); uses Photos' internal numbering *)
+	tell application "Photos"
+		return id of media items start_ thru stop_
+	end tell
+end _photoslibrary_get_photo_by_range
+
 
 on _photoslibrary_search_photos(search_str)
 	(* search for photos by text string *)

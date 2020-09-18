@@ -88,35 +88,89 @@ class PhotosLibrary:
     #     del_id = run_script("_photoslibrary_recently_deleted")
     #     return Album(del_id)
 
-    def photos(self, search=None, uuid=None):
-        """List of Photo objects for items in the library
-        Note: for a large library, calling photos() may run a *very* long time (minutes)
+    def photos(self, search=None, uuid=None, range_=None):
+        """Returns a generator that yields Photo objects 
+           for media items in the library.
 
         Args:
             search: optional text string to search for (returns matching items)
-            uuid: list of UUIDs to get
-            you may pass search or uuid but not both
-
+            uuid: optional list of UUIDs to get
+            range_: optional list of [start, stop] sequence of photos to get
+            
         Returns:
-            List of Photo objects or [] if no photos found
+            Generator that yields Photo objects
 
         Raises: 
-            ValueError if both search and uuid are passed
-        """
-        if search is not None and uuid:
-            raise ValueError("Cannot pass both search and uuid")
+            ValueError if more than one of search, uuid, range_ passed or invalid range_
+            TypeError if list not passed for range_
 
-        if search is None and not uuid:
-            # return all photos
-            photo_ids = run_script("_photoslibrary_get_all_photos")
-        elif search is not None:
+        Note: photos() returns a generator instead of a list because retrieving all the photos
+        from a large Photos library can take a very long time--on my system, the rate is about 1
+        per second; this is limited by the Photos AppleScript interface and I've not found 
+        anyway to speed it up.  Using a generator allows you process photos individually rather 
+        than waiting, possibly hours, for Photos to return the results. 
+        
+        range_ works like python's range function.  Thus range_=[0,4] will return 
+        Photos 0, 1, 2, 3; range_=[10] returns the first 10 photos in the library; 
+        range_ start must be in range 0 to len(PhotosLibrary())-1, 
+        stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
+        photos are return by chunking up requests in batches of photos using range_, 
+        e.g. request 10 photos at a time.  
+        """
+
+        if len([x for x in [search, uuid, range_] if x]) > 1:
+            raise ValueError("Cannot pass more than one of search, uuid, range_")
+
+        if not any([search, uuid, range_]):
+            return self._iterphotos()
+
+        if search is not None:
             # search for text
             photo_ids = run_script("_photoslibrary_search_photos", search)
-        else:
+        elif uuid:
             # search by uuid
             photo_ids = uuid
+        else:
+            # search by range
+            if not isinstance(range_, list):
+                raise TypeError("range_ must be a list")
 
-        return [Photo(uuid) for uuid in photo_ids]
+            if not (1 <= len(range_) <= 2):
+                raise ValueError("invalid range, must be list of len 1 or 2")
+
+            if len(range_) == 1:
+                start = 0
+                stop = range_[0]
+            else:
+                start, stop = range_
+
+            if start > stop:
+                raise ValueError("start range must be <= stop range")
+
+            count = len(self)
+            if not ((0 <= start <= count - 1) and (1 <= stop <= count)):
+                raise ValueError(
+                    f"invalid range: valid range is start: 0 to {count-1}, stop: 1 to {count}"
+                )
+
+            photo_ids = run_script("_photoslibrary_get_photo_by_range", start + 1, stop)
+
+        if photo_ids:
+            return self._iterphotos(uuids=photo_ids)
+        else:
+            return []
+
+    def _iterphotos(self, uuids=None):
+        if uuids:
+            for uuid in uuids:
+                yield Photo(uuid)
+        else:
+            # return all photos via generator
+            count = len(self)
+            for x in range(1, count + 1):
+                # AppleScript list indexes start at 1
+                photo_id = run_script("_photoslibrary_get_photo_by_range", x, x)[0]
+                yield Photo(photo_id)
 
     def import_photos(self, photo_paths, album=None, skip_duplicate_check=False):
         """import photos

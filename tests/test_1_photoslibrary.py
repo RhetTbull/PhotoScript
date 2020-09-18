@@ -49,7 +49,7 @@ def test_photoslibrary_import_photos_dup_check(photoslib):
     cwd = os.getcwd()
     photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
     photoslib.import_photos(photo_paths)
-    photos = photoslib.photos()
+    photos = [photo for photo in photoslib.photos()]
     assert len(photos) == NUM_PHOTOS + 1
 
     # Photos will block waiting for user to act on dialog box
@@ -57,7 +57,7 @@ def test_photoslibrary_import_photos_dup_check(photoslib):
     os.system(f'say "{prompt}"')
     photos = photoslib.import_photos(photo_paths)
     assert not photos
-    photos = photoslib.photos()
+    photos = [photo for photo in photoslib.photos()]
     assert len(photos) == NUM_PHOTOS + 1
 
 
@@ -201,9 +201,9 @@ def test_photoslibrary_favorites(photoslib):
     assert sorted(fav_names) == sorted(PHOTOS_FAVORITES)
 
     # set/unset favorites and check again
-    photo = photoslib.photos(uuid=[PHOTO_FAVORITES_SET_UUID])[0]
+    photo = next(photoslib.photos(uuid=[PHOTO_FAVORITES_SET_UUID]))
     photo.favorite = True
-    photo = photoslib.photos(uuid=[PHOTO_FAVORITES_UNSET_UUID])[0]
+    photo = next(photoslib.photos(uuid=[PHOTO_FAVORITES_UNSET_UUID]))
     photo.favorite = False
 
     favorites = photoslib.favorites
@@ -213,21 +213,24 @@ def test_photoslibrary_favorites(photoslib):
 
 def test_photoslibrary_photos_no_args(photoslib):
     photos = photoslib.photos()
-    assert len(photos) == 5
     filenames = [photo.filename for photo in photos]
     assert sorted(filenames) == sorted(PHOTOS_FILENAMES)
 
 
 def test_photoslibrary_photos_search(photoslib):
     photos = photoslib.photos(search="plants")
-    assert len(photos) == len(PHOTOS_PLANTS)
     filenames = [photo.filename for photo in photos]
     assert sorted(filenames) == sorted(PHOTOS_PLANTS)
 
 
+def test_photoslibrary_photos_search_no_results(photoslib):
+    photos = photoslib.photos(search="fish")
+    filenames = [photo.filename for photo in photos]
+    assert filenames == []
+
+
 def test_photoslibrary_photos_uuid(photoslib):
     photos = photoslib.photos(uuid=PHOTOS_UUID)
-    assert len(photos) == len(PHOTOS_UUID)
     filenames = [photo.filename for photo in photos]
     assert sorted(filenames) == sorted(PHOTOS_UUID_FILENAMES)
 
@@ -235,6 +238,29 @@ def test_photoslibrary_photos_uuid(photoslib):
 def test_photoslibrary_photos_exception(photoslib):
     with pytest.raises(ValueError):
         photoslib.photos(uuid=PHOTOS_UUID, search="plants")
+
+
+def test_photoslibrary_photos_range(photoslib):
+    photos = photoslib.photos(range_=[0, NUM_PHOTOS])
+    filenames = [photo.filename for photo in photos]
+    assert sorted(filenames) == sorted(PHOTOS_FILENAMES)
+
+
+def test_photoslibrary_photos_range_single(photoslib):
+    photos = photoslib.photos(range_=[NUM_PHOTOS - 1])
+    filenames = [photo.filename for photo in photos]
+    assert len(filenames) == NUM_PHOTOS - 1
+
+
+def test_photoslibrary_photos_range_exception(photoslib):
+    with pytest.raises(ValueError):
+        photoslib.photos(range_=[0, NUM_PHOTOS + 1])
+    with pytest.raises(ValueError):
+        photoslib.photos(range_=[NUM_PHOTOS, 0])
+    with pytest.raises(TypeError):
+        photoslib.photos(range_=1)
+    with pytest.raises(ValueError):
+        photoslib.photos(range_=[1, 2, 3])
 
 
 def test_photoslibrary_import_photos(photoslib):
@@ -260,10 +286,10 @@ def test_photoslibrary_import_photos_skip_dup_check(photoslib):
     cwd = os.getcwd()
     photo_paths = [str(pathlib.Path(cwd) / path) for path in IMPORT_PATHS]
     photoslib.import_photos(photo_paths)
-    photos = photoslib.photos()
+    photos = [photo for photo in photoslib.photos()]
     assert len(photos) == NUM_PHOTOS + 1
     photoslib.import_photos(photo_paths, skip_duplicate_check=True)
-    photos = photoslib.photos()
+    photos = [photo for photo in photoslib.photos()]
     assert len(photos) == NUM_PHOTOS + 2
 
 
