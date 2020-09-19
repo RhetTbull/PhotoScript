@@ -1163,6 +1163,18 @@ on _photo_spotlight(id_)
 	end tell
 end _photo_spotlight
 
+--------- Utilities ----------
+
+use framework "Foundation"
+
+on _reveal_in_finder(item_list_)
+	(* reveal list of POSIX paths in item_list_ in Finder *)
+	if the class of item_list_ is not list then set item_list_ to item_list as list
+	-- reveal items in file viewer
+	tell current application's NSWorkspace to set theWorkspace to sharedWorkspace()
+	tell theWorkspace to activateFileViewerSelectingURLs:item_list_
+end _reveal_in_finder
+
 --------- Test ----------
 (* tell application "Photos"
 	set folder_ to folder id ("65E8932D-5746-465A-8B64-EE1FA2EB0B4A/L0/020") of folder id ("216F08FA-5F50-4944-99DA-042C1AEDFAEC/L0/020")
@@ -1171,33 +1183,3 @@ end tell *)
 --_photoslibrary_get_albums_folders()
 --_folder_get_folder_for_id("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
 --_folder_exists("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
---------- Code from Photos Utilities ---------
--- see: http://photosautomation.com/scripting/script-library.html 
-
-
-
-(*
-on waitForPhotos(timeoutDurationInSeconds)
-	if running of application "Photos" is false then
-		tell application "Photos" to launch
-		tell current application
-			set currentTimeInSeconds to (time of (current date))
-			repeat until (time of (current date)) is greater than (currentTimeInSeconds + timeoutDurationInSeconds)
-				try
-					tell application "Photos"
-						set mediaItemCount to (count of media items)
-					end tell
-					if mediaItemCount is not 0 then
-						return true
-					else
-						delay 1
-					end if
-				end try
-			end repeat
-		end tell
-		error number -128
-	end if
-	return true
-end waitForPhotos
-
-*)

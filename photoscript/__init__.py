@@ -6,6 +6,7 @@ import os
 import pathlib
 import random
 import string
+from subprocess import run
 import tempfile
 
 from applescript import kMissingValue
@@ -450,7 +451,13 @@ class PhotosLibrary:
         return f"photoscript_{ds}_{random_str}"
 
     def _export_photo(
-        self, photo, export_path, original=False, overwrite=False, timeout=120
+        self,
+        photo,
+        export_path,
+        original=False,
+        overwrite=False,
+        timeout=120,
+        reveal_in_finder=False,
     ):
         """ Export photo to export_path
 
@@ -460,6 +467,7 @@ class PhotosLibrary:
             original: if True, export original image, otherwise export current image; default = False
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
         
         Returns:
             List of full paths of exported photos.  There may be more than one photo exported due 
@@ -516,6 +524,8 @@ class PhotosLibrary:
                     dest_new = dest_new.parent / f"{dest_update}{dest_new.suffix}"
                 ditto(str(path), str(dest_new))
                 exported_paths.append(str(dest_new))
+            if reveal_in_finder:
+                run_script("_reveal_in_finder", exported_paths)
         return exported_paths
 
 
@@ -628,7 +638,14 @@ class Album:
             photo_paths, album=self, skip_duplicate_check=skip_duplicate_check
         )
 
-    def export(self, export_path, original=False, overwrite=False, timeout=120):
+    def export(
+        self,
+        export_path,
+        original=False,
+        overwrite=False,
+        timeout=120,
+        reveal_in_finder=False,
+    ):
         """Export photos in album to path
 
         Args:
@@ -637,7 +654,8 @@ class Album:
             original: if True, export original image, otherwise export current image; default = False
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export (for each photo) before timing out; default = 120
-        
+            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
+ 
         Returns:
             List of full paths of exported photos.  There may be more than one photo exported due 
             to live images and burst images.
@@ -661,6 +679,8 @@ class Album:
                     timeout=timeout,
                 )
             )
+        if reveal_in_finder and exported_photos:
+            run_script("_reveal_in_finder", exported_photos)
         return exported_photos
 
     def remove_by_id(self, photo_ids):
@@ -1016,7 +1036,14 @@ class Photo:
         """ filename of photo """
         return run_script("_photo_filename", self.id)
 
-    def export(self, export_path, original=False, overwrite=False, timeout=120):
+    def export(
+        self,
+        export_path,
+        original=False,
+        overwrite=False,
+        timeout=120,
+        reveal_in_finder=False,
+    ):
         """Export photo
 
         Args:
@@ -1025,6 +1052,7 @@ class Photo:
             original: if True, export original image, otherwise export current image; default = False
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
+            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
         
         Returns:
             List of full paths of exported photos.  There may be more than one photo exported due 
@@ -1045,6 +1073,7 @@ class Photo:
             original=original,
             overwrite=overwrite,
             timeout=timeout,
+            reveal_in_finder=reveal_in_finder
         )
 
     def duplicate(self):
