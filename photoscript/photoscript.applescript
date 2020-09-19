@@ -720,6 +720,15 @@ on _album_get_path(id_, path_delimiter_)
 	return path_
 end _album_get_path
 
+on _album_spotlight(id_)
+	(* spotlight album *)
+	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	tell application "Photos"
+		activate
+		spotlight album id (id_)
+	end tell
+end _album_spotlight
+
 
 ---------- Folder ----------
 
@@ -915,6 +924,16 @@ on _folder_path_ids(id_)
 	end try
 	return path_ids_
 end _folder_path_ids
+
+
+on _folder_spotlight(id_)
+	(* spotlight folder *)
+	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	tell application "Photos"
+		activate
+		spotlight folder id (id_)
+	end tell
+end _folder_spotlight
 
 ---------- Photo ----------
 on _photo_exists(_id)
@@ -1134,6 +1153,15 @@ on _photo_duplicate(id_)
 		return id of _new_photo
 	end tell
 end _photo_duplicate
+
+on _photo_spotlight(id_)
+	(* spotlight photo *)
+	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	tell application "Photos"
+		activate
+		spotlight media item id (id_)
+	end tell
+end _photo_spotlight
 
 --------- Test ----------
 (* tell application "Photos"

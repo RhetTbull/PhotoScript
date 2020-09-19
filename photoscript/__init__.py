@@ -4,12 +4,13 @@ import datetime
 import glob
 import os
 import pathlib
-from photoscript.utils import ditto, findfiles
 import random
 import string
 import tempfile
 
 from applescript import kMissingValue
+
+from photoscript.utils import ditto, findfiles
 
 from .script_loader import run_script
 
@@ -95,14 +96,14 @@ class PhotosLibrary:
         Args:
             search: optional text string to search for (returns matching items)
             uuid: optional list of UUIDs to get
-            range_: optional list of [start, stop] sequence of photos to get
+            range\_: optional list of [start, stop] sequence of photos to get
             
         Returns:
             Generator that yields Photo objects
 
         Raises: 
-            ValueError if more than one of search, uuid, range_ passed or invalid range_
-            TypeError if list not passed for range_
+            ValueError if more than one of search, uuid, range\_ passed or invalid range\_
+            TypeError if list not passed for range\_
 
         Note: photos() returns a generator instead of a list because retrieving all the photos
         from a large Photos library can take a very long time--on my system, the rate is about 1
@@ -110,11 +111,11 @@ class PhotosLibrary:
         anyway to speed it up.  Using a generator allows you process photos individually rather 
         than waiting, possibly hours, for Photos to return the results. 
         
-        range_ works like python's range function.  Thus range_=[0,4] will return 
-        Photos 0, 1, 2, 3; range_=[10] returns the first 10 photos in the library; 
-        range_ start must be in range 0 to len(PhotosLibrary())-1, 
+        range\_ works like python's range function.  Thus range\_=[0,4] will return 
+        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library; 
+        range\_ start must be in range 0 to len(PhotosLibrary())-1, 
         stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
-        photos are return by chunking up requests in batches of photos using range_, 
+        photos are return by chunking up requests in batches of photos using range\_, 
         e.g. request 10 photos at a time.  
         """
 
@@ -709,6 +710,10 @@ class Album:
         photo_uuids = [photo.id for photo in photos]
         return self.remove_by_id(photo_uuids)
 
+    def spotlight(self):
+        """ spotlight the album in Photos """
+        run_script("_album_spotlight", self.id)
+
     def __len__(self):
         return run_script("_album_len", self.id)
 
@@ -851,6 +856,10 @@ class Folder:
             Folder object for newly created folder
         """
         return PhotosLibrary().create_folder(name, folder=self)
+
+    def spotlight(self):
+        """ spotlight the folder in Photos """
+        run_script("_folder_spotlight", self.id)
 
     def __len__(self):
         return run_script("_folder_len", self.id)
@@ -1042,3 +1051,7 @@ class Photo:
         """ duplicates the photo and returns Photo object for the duplicate """
         dup_id = run_script("_photo_duplicate", self.id)
         return Photo(dup_id)
+
+    def spotlight(self):
+        """ spotlight the photo in Photos """
+        run_script("_photo_spotlight", self.id)

@@ -82,6 +82,54 @@ def test_photoslibrary_selection(photoslib, suspend_capture):
     assert sorted(ids) == sorted(SELECTION_UUIDS)
 
 
+def test_album_spotlight(photoslib, suspend_capture):
+    """ Test Album.spotlight() """
+    import os
+
+    with suspend_capture:
+        album = photoslib.album("Farmers Market")
+        album.spotlight()
+        prompt = (
+            "Press 'y' if the 'Farmers Market' album "
+            "is spotlighted in Photos, otherwise press 'n' "
+        )
+        os.system(f'say "{prompt}"')
+        answer = input(f"\n{prompt}")
+        assert answer.lower() == "y"
+
+
+def test_folder_spotlight(photoslib, suspend_capture):
+    """ Test Folder.spotlight() """
+    import os
+
+    with suspend_capture:
+        folder = photoslib.folder("Travel")
+        folder.spotlight()
+        prompt = (
+            "Press 'y' if the 'Travel' folder "
+            "is spotlighted in Photos, otherwise press 'n' "
+        )
+        os.system(f'say "{prompt}"')
+        answer = input(f"\n{prompt}")
+        assert answer.lower() == "y"
+
+
+def test_photo_spotlight(photoslib, suspend_capture):
+    """ Test Photo.spotlight() """
+    import os
+
+    with suspend_capture:
+        photo = [photo for photo in photoslib.photos(uuid=[PHOTO_EXPORT_UUID])][0]
+        photo.spotlight()
+        prompt = (
+            "Press 'y' if the photo of the peppers " 
+            "is spotlighted in Photos, otherwise press 'n' "
+        )
+        os.system(f'say "{prompt}"')
+        answer = input(f"\n{prompt}")
+        assert answer.lower() == "y"
+
+
 ########## Non-interactive tests ##########
 
 
