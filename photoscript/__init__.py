@@ -556,7 +556,7 @@ class Album:
     def name(self):
         """ name of album (read/write) """
         name = run_script("_album_name", self.id)
-        return name if name != kMissingValue else None
+        return name if name != kMissingValue else "" 
 
     @name.setter
     def name(self, name):
@@ -765,7 +765,7 @@ class Folder:
     def name(self):
         """ name of folder """
         name = run_script("_folder_name", self.id)
-        return name if name != kMissingValue else None
+        return name if name != kMissingValue else "" 
 
     @name.setter
     def name(self, name):
@@ -911,7 +911,7 @@ class Photo:
     def name(self):
         """ name of photo """
         name = run_script("_photo_name", self.id)
-        return name if name not in [kMissingValue, ""] else None
+        return name if name not in [kMissingValue, ""] else ""
 
     @name.setter
     def name(self, name):
@@ -934,7 +934,7 @@ class Photo:
     def description(self):
         """ description of photo """
         descr = run_script("_photo_description", self.id)
-        return descr if descr != kMissingValue else None
+        return descr if descr != kMissingValue else ""
 
     @description.setter
     def description(self, descr):

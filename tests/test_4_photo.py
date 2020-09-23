@@ -64,13 +64,13 @@ def test_photo_name(photoslib):
 
         # clear name
         photo_obj.name = None
-        assert photo_obj.name is None
-        assert photo_obj.title is None
+        assert photo_obj.name == ""
+        assert photo_obj.title == "" 
 
         # clear title
         photo_obj.title = None
-        assert photo_obj.name is None
-        assert photo_obj.title is None
+        assert photo_obj.name == ""
+        assert photo_obj.title == "" 
 
 
 def test_photo_description(photoslib):
@@ -82,7 +82,7 @@ def test_photo_description(photoslib):
         photo_obj.description = "New Description"
         assert photo_obj.description == "New Description"
         photo_obj.description = None
-        assert photo_obj.description is None
+        assert photo_obj.description == ""
 
 
 def test_photo_keywords(photoslib):
