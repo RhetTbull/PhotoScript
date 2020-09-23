@@ -763,7 +763,7 @@ class Folder:
 
     @property
     def name(self):
-        """ name of folder """
+        """ name of folder (read/write) """
         name = run_script("_folder_name", self.id)
         return name if name != kMissingValue else "" 
 
@@ -909,7 +909,7 @@ class Photo:
 
     @property
     def name(self):
-        """ name of photo """
+        """ name of photo (read/write) """
         name = run_script("_photo_name", self.id)
         return name if name not in [kMissingValue, ""] else ""
 
