@@ -1,8 +1,8 @@
 # Running the test suite
 
-The tests use pytest so:
+The tests use pytest and the flaky plugin so:
 
-`python3 -m pip install pytest`
+`python3 -m pip install pytest flaky`
 
 `python3 -m pytest`
 

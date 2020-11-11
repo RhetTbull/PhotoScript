@@ -1,9 +1,10 @@
 """ Test PhotosLibrary class """
 
-from tests.photoscript_config_catalina import PHOTO_EXPORT_FILENAME_ORIGINAL
 import pytest
 from applescript import AppleScript
-from tests.conftest import photoslib, suspend_capture, get_os_version
+from flaky import flaky
+from tests.conftest import get_os_version, photoslib, suspend_capture
+from tests.photoscript_config_catalina import PHOTO_EXPORT_FILENAME_ORIGINAL
 
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
@@ -69,6 +70,7 @@ def test_photoslibrary_running(photoslib):
     assert not photoslib.running
 
 
+@flaky(max_runs=5, min_passes=1)
 def test_photoslibrary_hide(photoslib):
     """ Test hide() """
     import time
@@ -87,6 +89,7 @@ def test_photoslibrary_hide(photoslib):
     assert photoslib.hidden
 
 
+@flaky(max_runs=5, min_passes=1)
 def test_photoslibrary_hidden(photoslib):
     """ Test hidden """
     import time
