@@ -65,12 +65,12 @@ def test_photo_name(photoslib):
         # clear name
         photo_obj.name = None
         assert photo_obj.name == ""
-        assert photo_obj.title == "" 
+        assert photo_obj.title == ""
 
         # clear title
         photo_obj.title = None
         assert photo_obj.name == ""
-        assert photo_obj.title == "" 
+        assert photo_obj.title == ""
 
 
 def test_photo_description(photoslib):
@@ -168,6 +168,16 @@ def test_photo_filename(photoslib):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.filename == photo["filename"]
+
+
+def test_photo_albums(photoslib):
+    import photoscript
+
+    for photo in PHOTOS_DICT:
+        photo_obj = photoscript.Photo(photo["uuid"])
+        assert sorted([album.name for album in photo_obj.albums]) == sorted(
+            photo["albums"]
+        )
 
 
 def test_photo_export_basic(photoslib):

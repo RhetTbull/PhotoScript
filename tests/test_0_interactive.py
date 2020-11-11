@@ -141,7 +141,7 @@ def test_reset_photo_spotlight(photoslib, suspend_capture):
     with suspend_capture:
         prompt = "Select the 'Photos' view in Photos then press 'y'"
         os.system(f'say "{prompt}"')
-        asnwer = input("\n{prompt}")
+        answer = input(f"\n{prompt}")
         assert answer.lower() == "y"
 
 

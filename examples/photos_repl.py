@@ -6,9 +6,10 @@
 # If you run this using python from command line, do so with -i flag:
 # python3 -i examples/photos_repl.py
 
-import photoscript
+from photoscript import Photo, Album, Folder, PhotosLibrary
+
 
 if __name__ == "__main__":
-    photoslib = photoscript.PhotosLibrary()
+    photoslib = PhotosLibrary()
     print(f"Photos version: {photoslib.version}")
     print("variables defined: photoslib")

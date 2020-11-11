@@ -13,7 +13,7 @@ else:
 def test_main(photoslib, monkeypatch, capsys):
     import io
     from photoscript.__main__ import main
-    monkeypatch.setattr('sys.stdin', io.StringIO('photos = photoslib.photos()\nlen(photos)\n'))
+    monkeypatch.setattr('sys.stdin', io.StringIO('photos = [p for p in photoslib.photos()]\nlen(photos)\n'))
     main()
     captured = capsys.readouterr()
     assert "Variables defined: photoslib" in captured.err

@@ -38,6 +38,7 @@ album = photoslib.album("Album1")
 photos = album.photos()
 
 for photo in photos:
+    photo.keywords = ["travel", "vacation"]
     print(f"{photo.title}, {photo.description}, {photo.keywords}")
 
 new_album = photoslib.create_album("New Album")

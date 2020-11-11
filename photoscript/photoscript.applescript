@@ -1104,6 +1104,26 @@ on _photo_set_location(id_, location_)
 	end repeat
 end _photo_set_location
 
+on _photo_albums(id_)
+	(* album ids for albums photo id_ is contained in
+	    Args:
+	   	id_: id of the photo
+		
+	    Returns: list of album ids containing photo id_
+	  *)
+	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set _albums_folders to _photoslibrary_get_albums_folders()
+	set _album_ids to {}
+	tell application "Photos"
+		repeat with _album in _albums of _albums_folders
+			if (id of media items of _album) contains id_ then
+				copy id of _album to end of _album_ids
+			end if
+		end repeat
+	end tell
+	return _album_ids
+end _photo_albums
+
 on _photo_export(theUUID, thePath, original, edited, theTimeOut)
 	(* export photo
 	   Args:

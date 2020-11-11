@@ -1036,6 +1036,12 @@ class Photo:
         """ filename of photo """
         return run_script("_photo_filename", self.id)
 
+    @property
+    def albums(self):
+        """ list of Album objects for albums photo is contained in """
+        albums = run_script("_photo_albums", self.id)
+        return [Album(album) for album in albums]
+
     def export(
         self,
         export_path,

@@ -96,6 +96,7 @@ PHOTOS_DICT = [
         "location": (33.50126666999999, -117.66378833000002),
         "date": "2020-08-12 15:43:32",
         "altitude": 29.4,
+        "albums": ["San Juan Capistrano"],
     },
     {
         "uuid": "EECD91FE-D716-48F2-A62C-A4D558ACD52E/L0/001",
@@ -110,6 +111,7 @@ PHOTOS_DICT = [
         "location": (33.501921669999994, -117.66425333000002),
         "date": "2020-08-12 14:12:15",
         "altitude": 32.9,
+        "albums": ["San Juan Capistrano"],
     },
     {
         "uuid": "B6DB996D-8A0A-4983-AFBD-D206B7D38A23/L0/001",
@@ -124,6 +126,7 @@ PHOTOS_DICT = [
         "location": (33.82677, -118.32748332999999),
         "date": "2020-07-18 12:00:20",
         "altitude": 26.1,
+        "albums": ["Farmers Market"],
     },
     {
         "uuid": "1CD1B172-C94B-4093-A303-EE24FE7EEF60/L0/001",
@@ -138,6 +141,7 @@ PHOTOS_DICT = [
         "location": (33.782425, -118.34803833000001),
         "date": "2020-07-05 10:07:04",
         "altitude": 130.6,
+        "albums": [],
     },
     {
         "uuid": "3A71DE26-EDEF-41D3-86C1-E8328DFC9FA0/L0/001",
@@ -152,5 +156,6 @@ PHOTOS_DICT = [
         "location": (None, None),
         "date": "2020-09-07 07:27:40",
         "altitude": None,
+        "albums": [],
     },
 ]
