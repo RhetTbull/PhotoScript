@@ -59,7 +59,7 @@ setup(
     packages=find_packages(exclude=["tests", "examples"]),
     license="License :: OSI Approved :: MIT License",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: MacOS X",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

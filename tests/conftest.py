@@ -7,8 +7,6 @@ from applescript import AppleScript
 import photoscript
 from photoscript.utils import ditto
 
-TEST_LIBRARY = "Test-PhotoScript-10.15.6.photoslibrary"
-
 
 def get_os_version():
     import platform
@@ -30,8 +28,16 @@ def get_os_version():
     return (ver, major, minor)
 
 
-def copy_photos_library(delay=0):
-    """ copy the test library and open Photos """
+OS_VER = get_os_version()[1]
+if OS_VER == "15":
+    from tests.photoscript_config_catalina import TEST_LIBRARY
+else:
+    TEST_LIBRARY = None
+    pytest.exit("This test suite currently only runs on MacOS Catalina ")
+
+
+def copy_photos_library(photos_library=TEST_LIBRARY, delay=0):
+    """ copy the test library and open Photos, returns path to copied library """
     script = AppleScript(
         """
         tell application "Photos"
@@ -40,7 +46,7 @@ def copy_photos_library(delay=0):
         """
     )
     script.run()
-    src = pathlib.Path(os.getcwd()) / f"tests/test_libraries/{TEST_LIBRARY}"
+    src = pathlib.Path(os.getcwd()) / f"tests/test_libraries/{photos_library}"
     picture_folder = (
         pathlib.Path(os.environ["PHOTOSCRIPT_PICTURES_FOLDER"])
         if "PHOTOSCRIPT_PICTURES_FOLDER" in os.environ
@@ -49,7 +55,7 @@ def copy_photos_library(delay=0):
     picture_folder = picture_folder.expanduser()
     if not picture_folder.is_dir():
         pytest.exit(f"Invalid picture folder: '{picture_folder}'")
-    dest = picture_folder / TEST_LIBRARY
+    dest = picture_folder / photos_library 
     ditto(src, dest)
     script = AppleScript(
         f"""
@@ -70,6 +76,7 @@ def copy_photos_library(delay=0):
         """
     )
     script.run()
+    return dest
 
 
 @pytest.fixture(scope="session", autouse=True)

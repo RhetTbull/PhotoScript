@@ -37,7 +37,6 @@ on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
 	return true
 end _photoslibrary_waitforphotos
 
-
 on _photoslibrary_isrunning()
 	(* return true if Photos is running, otherwise false *)
 	set app_name_ to "Photos"

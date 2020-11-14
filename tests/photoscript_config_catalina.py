@@ -1,5 +1,8 @@
 """ Test data for Catalina/Photos 5 """
 
+TEST_LIBRARY = "Test-PhotoScript-10.15.7.photoslibrary"
+TEST_LIBRARY_OPEN = "Test-PhotoScript-10.15.7-Single-Photo.photoslibrary"
+
 ALBUM_1_NAME = "San Juan Capistrano"
 ALBUM_1_UUID = "01F18AB8-B0D7-4414-96A8-28D94AFE86BF/L0/040"
 ALBUM_1_UUID_OSXPHOTOS = "01F18AB8-B0D7-4414-96A8-28D94AFE86BF"

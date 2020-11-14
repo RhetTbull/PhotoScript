@@ -1,12 +1,17 @@
 """ Tests which require user interaction to run """
 
+import pytest
+from applescript import AppleScript
+from tests.conftest import (
+    copy_photos_library,
+    get_os_version,
+    photoslib,
+    suspend_capture,
+)
 from tests.photoscript_config_catalina import (
     ALBUM_1_PHOTO_EXPORT_FILENAMES,
     PHOTO_EXPORT_FILENAME_ORIGINAL,
 )
-import pytest
-from applescript import AppleScript
-from tests.conftest import photoslib, suspend_capture, get_os_version
 
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
@@ -37,11 +42,33 @@ if OS_VER == "15":
         PHOTOS_UUID,
         PHOTOS_UUID_FILENAMES,
         SELECTION_UUIDS,
+        TEST_LIBRARY,
+        TEST_LIBRARY_OPEN,
     )
 else:
     pytest.exit("This test suite currently only runs on MacOS Catalina ")
 
 ########## Interactive tests run first ##########
+
+
+def test_photoslibrary_open(photoslib, suspend_capture):
+    import os
+
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY_OPEN)
+    prompt = "Click Switch in Photos after the drop down sheet appears."
+    os.system(f'say "{prompt}"')
+    with suspend_capture:
+        photoslib.open(test_library)
+        prompt = (
+            "Press 'y' if Photos Library contains a single image "
+            "of a kettlebell, otherwise press 'n' "
+        )
+        os.system(f'say "{prompt}"')
+        answer = input(f"\n{prompt}")
+        assert answer.lower() == "y"
+    # re-copy main test library
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY)
+    photoslib.open(test_library)
 
 
 def test_photoslibrary_import_photos_dup_check(photoslib):
@@ -187,4 +214,3 @@ def test_photo_export_reveal_in_finder(photoslib, suspend_capture):
         os.system(f'say "{prompt}"')
         answer = input(f"\n{prompt}")
         assert answer.lower() == "y"
-

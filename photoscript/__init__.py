@@ -6,11 +6,10 @@ import os
 import pathlib
 import random
 import string
-from subprocess import run
 import tempfile
+from subprocess import run
 
-from applescript import kMissingValue
-
+from applescript import AppleScript, kMissingValue
 from photoscript.utils import ditto, findfiles
 
 from .script_loader import run_script
@@ -41,6 +40,33 @@ class PhotosLibrary:
     def quit(self):
         """ quit Photos.app """
         run_script("_photoslibrary_quit")
+
+    def open(self, library_path):
+        """ open a library """
+        # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
+        # because, for reasons I cannot explain, it fails to run if included there
+        if not pathlib.Path(library_path).is_dir():
+            raise ValueError(f"{library_path} does not appear to be a Photos library")
+        self.activate()
+        script = AppleScript(
+            f"""
+            set tries to 0
+            repeat while tries < 5
+                try
+                    tell application "Photos"
+                        activate
+                        delay 3 
+                        open POSIX file "{library_path}"
+                        delay 1
+                    end tell
+                    set tries to 5
+                on error
+                    set tries to tries + 1
+                end try
+            end repeat
+        """
+        )
+        script.run()
 
     @property
     def running(self):
@@ -556,7 +582,7 @@ class Album:
     def name(self):
         """ name of album (read/write) """
         name = run_script("_album_name", self.id)
-        return name if name != kMissingValue else "" 
+        return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
@@ -765,7 +791,7 @@ class Folder:
     def name(self):
         """ name of folder (read/write) """
         name = run_script("_folder_name", self.id)
-        return name if name != kMissingValue else "" 
+        return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
@@ -1079,7 +1105,7 @@ class Photo:
             original=original,
             overwrite=overwrite,
             timeout=timeout,
-            reveal_in_finder=reveal_in_finder
+            reveal_in_finder=reveal_in_finder,
         )
 
     def duplicate(self):
