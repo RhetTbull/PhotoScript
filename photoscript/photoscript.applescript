@@ -1028,9 +1028,16 @@ end _photo_favorite
 
 on _photo_set_favorite(id_, favorite_)
 	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set favorite of media item id (id_) to favorite_
-	end tell
+	set count_ to 0
+	repeat while count_ < MAX_RETRY
+		tell application "Photos"
+			set favorite of media item id (id_) to favorite_
+			if favorite of media item id (id_) = favorite_ then
+				return favorite_
+			end if
+		end tell
+		set count_ to count_ + 1
+	end repeat
 end _photo_set_favorite
 
 on _photo_date(_id)

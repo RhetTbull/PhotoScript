@@ -41,8 +41,8 @@ class PhotosLibrary:
         """ quit Photos.app """
         run_script("_photoslibrary_quit")
 
-    def open(self, library_path):
-        """ open a library """
+    def open(self, library_path, delay=10):
+        """ open a library and wait for delay for user to acknowledge in Photos """
         # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
         # because, for reasons I cannot explain, it fails to run if included there
         if not pathlib.Path(library_path).is_dir():
@@ -57,7 +57,7 @@ class PhotosLibrary:
                         activate
                         delay 3 
                         open POSIX file "{library_path}"
-                        delay 1
+                        delay {delay}
                     end tell
                     set tries to 5
                 on error
