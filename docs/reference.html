@@ -1,0 +1,969 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>photoscript package &mdash; PhotoScript 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to PhotoScript’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PhotoScript
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">photoscript package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#photoscript-module">photoscript module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PhotoScript</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>photoscript package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/reference.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="photoscript-package">
+<h1>photoscript package<a class="headerlink" href="#photoscript-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="photoscript-module">
+<h2>photoscript module<a class="headerlink" href="#photoscript-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="photoscript.PhotosLibrary">
+<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">PhotosLibrary</code><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="photoscript.PhotosLibrary.activate">
+<code class="sig-name descname">activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>activate Photos.app</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.album">
+<code class="sig-name descname">album</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">name</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album" title="Permalink to this definition">¶</a></dt>
+<dd><p>Album instance by name or id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of album</p></li>
+<li><p><strong>uuid</strong> – id of album</p></li>
+<li><p><strong>top_level</strong> – if True, searches only top level albums; default = False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Album object or None if album could not be found</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError if both name and id passed</strong><strong> or </strong><strong>neither passed.</strong> – </p>
+</dd>
+</dl>
+<p>Must pass only name or id but not both.
+If more than one album with same name, returns the first one found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.album_names">
+<code class="sig-name descname">album_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of album names in the Photos library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>top_level</strong> – if True, returns only top-level albums otherwise also returns albums in sub-folders; default is False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.albums">
+<code class="sig-name descname">albums</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.albums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.albums" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Album objects for all albums</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.create_album">
+<code class="sig-name descname">create_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">folder</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_album" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates an album</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of new album</p></li>
+<li><p><strong>folder</strong> – Folder object in which to create new album.
+If None, creates top-level album.  Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Album object for newly created album</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AppleScriptError if error creating the album</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.create_folder">
+<code class="sig-name descname">create_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">folder</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of new folder</p></li>
+<li><p><strong>folder</strong> – Folder object in which to create the new folder.
+If None, creates top-level folder. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder object for newly created folder</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AppleScriptError if folder cannot be created</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.delete_album">
+<code class="sig-name descname">delete_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">album</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_album" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes album (but does not delete photos in the album)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>album</strong> – an Album object for album to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.delete_folder">
+<code class="sig-name descname">delete_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder</strong> – a Folder object for folder to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.favorites">
+<em class="property">property </em><code class="sig-name descname">favorites</code><a class="headerlink" href="#photoscript.PhotosLibrary.favorites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Album object for the Favorites album</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.folder">
+<code class="sig-name descname">folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">name</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folder instance by name or uuid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of folder</p></li>
+<li><p><strong>uuid</strong> – id of folder</p></li>
+<li><p><strong>top_level</strong> – if True, only searches top level folders by name; default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder object or None if folder could not be found</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError if both name and id passed</strong><strong> or </strong><strong>neither passed.</strong> – </p>
+</dd>
+</dl>
+<p>Must pass only name or id but not both.
+If more than one folder with same name, returns first one found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.folder_by_path">
+<code class="sig-name descname">folder_by_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_by_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_by_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return folder in the library by path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> – list of folder names in descending path order, e.g. [“Folder”, “SubFolder1”, “SubFolder2”]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder object for folder at folder_path or None if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.folder_names">
+<code class="sig-name descname">folder_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of folder names in the Photos library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>top_level</strong> – if True, returns only top-level folders otherwise also returns sub-folders; default is False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.folders">
+<code class="sig-name descname">folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folders" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Folder objects for all folders</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.frontmost">
+<em class="property">property </em><code class="sig-name descname">frontmost</code><a class="headerlink" href="#photoscript.PhotosLibrary.frontmost" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if Photos.app is front most app otherwise False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.hidden">
+<em class="property">property </em><code class="sig-name descname">hidden</code><a class="headerlink" href="#photoscript.PhotosLibrary.hidden" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if Photos is hidden (or not running), False if Photos is visible</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.hide">
+<code class="sig-name descname">hide</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.hide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.hide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tell Photos to hide its window</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.import_photos">
+<code class="sig-name descname">import_photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_paths</span></em>, <em class="sig-param"><span class="n">album</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skip_duplicate_check</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.import_photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.import_photos" title="Permalink to this definition">¶</a></dt>
+<dd><p>import photos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>photo_paths</strong> – list of file paths to import as str or pathlib.Path</p></li>
+<li><p><strong>album</strong> – optional, Album object for album to import into</p></li>
+<li><p><strong>skip_duplicate_check</strong> – if True, Photos will not check for duplicates on import, default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of Photo objects for impoted photos</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True,</dt><dd><p>Photos will block with drop-down sheet until the user clicks “Cancel, Import, or Don’t Import.”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.make_album_folders">
+<code class="sig-name descname">make_album_folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">album_name</span></em>, <em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_album_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_album_folders" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Make album in a folder path.  If either the album or any component of the</dt><dd><p>folder path doesn’t exist, it will be created.  If album or folder path
+does exist, no duplicate is created.  Folder path is created recursively
+if needed.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>album_name</strong> – name of album to create.  If album already exists, returns existing album.</p></li>
+<li><p><strong>folder_path</strong> – list of folder names in descending path order, e.g. [“Folder”, “SubFolder1”, “SubFolder2”].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Album object.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError if folder_path is empty</strong><strong> or </strong><strong>album_name is None.</strong> – </p></li>
+<li><p><strong>TypeError if folder_path is not a list.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.make_folders">
+<code class="sig-name descname">make_folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_folders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively makes folders and subfolders.  Works similar to <a class="reference external" href="https://docs.python.org/3/library/os.html#os.makedirs">os.makedirs</a>.
+If any component of folder_path already exists, does not raise error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> – list of folder names in descending path order, e.g. [“Folder”, “SubFolder1”, “SubFolder2”]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder object for the final sub folder</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError if folder_path is empty</strong> – </p></li>
+<li><p><strong>TypeError if folder_path is not a list</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.PhotosLibrary.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of Photos.app</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">library_path</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>open a library and wait for delay for user to acknowledge in Photos</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.photos">
+<code class="sig-name descname">photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">search</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">range_</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.photos" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns a generator that yields Photo objects</dt><dd><p>for media items in the library.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search</strong> – optional text string to search for (returns matching items)</p></li>
+<li><p><strong>uuid</strong> – optional list of UUIDs to get</p></li>
+<li><p><strong>range_</strong> – optional list of [start, stop] sequence of photos to get</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Generator that yields Photo objects</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError if more than one of search</strong><strong>, </strong><strong>uuid</strong><strong>, </strong><strong>range_ passed</strong><strong> or </strong><strong>invalid range_</strong> – </p></li>
+<li><p><strong>TypeError if list not passed for range_</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Note: photos() returns a generator instead of a list because retrieving all the photos
+from a large Photos library can take a very long time–on my system, the rate is about 1
+per second; this is limited by the Photos AppleScript interface and I’ve not found
+anyway to speed it up.  Using a generator allows you process photos individually rather
+than waiting, possibly hours, for Photos to return the results.</p>
+<p>range_ works like python’s range function.  Thus range_=[0,4] will return
+Photos 0, 1, 2, 3; range_=[10] returns the first 10 photos in the library;
+range_ start must be in range 0 to len(PhotosLibrary())-1,
+stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
+photos are return by chunking up requests in batches of photos using range_,
+e.g. request 10 photos at a time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.quit">
+<code class="sig-name descname">quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.quit" title="Permalink to this definition">¶</a></dt>
+<dd><p>quit Photos.app</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.running">
+<em class="property">property </em><code class="sig-name descname">running</code><a class="headerlink" href="#photoscript.PhotosLibrary.running" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if Photos is running, otherwise False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.selection">
+<em class="property">property </em><code class="sig-name descname">selection</code><a class="headerlink" href="#photoscript.PhotosLibrary.selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of Photo objects for currently selected photos or [] if no selection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.PhotosLibrary.version">
+<em class="property">property </em><code class="sig-name descname">version</code><a class="headerlink" href="#photoscript.PhotosLibrary.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>version of Photos.app as str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="photoscript.Album">
+<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="photoscript.Album.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photos</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>add photos from the library to album</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>photos</strong> – list of Photo objects to add to album</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of Photo objects for added photos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.export">
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span></em>, <em class="sig-param"><span class="n">original</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">120</span></em>, <em class="sig-param"><span class="n">reveal_in_finder</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export photos in album to path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>photo</strong> – Photo object to export</p></li>
+<li><p><strong>export_path</strong> – path to export to</p></li>
+<li><p><strong>original</strong> – if True, export original image, otherwise export current image; default = False</p></li>
+<li><p><strong>overwrite</strong> – if True, export will overwrite a file of same name as photo in export_path; default = False</p></li>
+<li><p><strong>timeout</strong> – number of seconds to wait for Photos to complete export (for each photo) before timing out; default = 120</p></li>
+<li><p><strong>reveal_in_finder</strong> – if True, will open Finder with exported items selected when done; default = False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of full paths of exported photos.  There may be more than one photo exported due
+to live images and burst images.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError if export_path is not a valid directory</strong> – </p>
+</dd>
+</dl>
+<p>Note: Photos always exports as high-quality JPEG unless original=True.
+If original=True, will export all burst images for burst photos and
+live movie for live photos.  If original=False, only the primary image from a
+burst set will be exported for burst photos and the live movie component of a
+live image will not be exported, only the JPEG component.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.import_photos">
+<code class="sig-name descname">import_photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_paths</span></em>, <em class="sig-param"><span class="n">skip_duplicate_check</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.import_photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.import_photos" title="Permalink to this definition">¶</a></dt>
+<dd><p>import photos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>photos</strong> – list of file paths to import</p></li>
+<li><p><strong>skip_duplicate_check</strong> – if True, Photos will not check for duplicates on import, default is False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of Photo objects for impoted photos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Album.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of album (read/write)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.parent">
+<em class="property">property </em><code class="sig-name descname">parent</code><a class="headerlink" href="#photoscript.Album.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return parent Folder object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.parent_id">
+<em class="property">property </em><code class="sig-name descname">parent_id</code><a class="headerlink" href="#photoscript.Album.parent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>parent container id</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.path_str">
+<code class="sig-name descname">path_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">'/'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.path_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.path_str" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Return internal library path to album as string.</dt><dd><p>e.g. “Folder/SubFolder/AlbumName”</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delim</strong> – character to use as delimiter between path elements; default is “/”</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError if delim is not a single character</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.photos">
+<code class="sig-name descname">photos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.photos" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Photo objects for photos contained in album</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photos</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.remove" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove photos from album.</dt><dd><p>Note: Photos does not provide a way to remove photos from an album via AppleScript.
+This method actually creates a new Album with the same name as the original album and
+copies all photos from original album with exception of those to remove to the new album
+then deletes the old album.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>photos</strong> – list of Photo objects to remove</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new Album object for the new album with photos removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.remove_by_id">
+<code class="sig-name descname">remove_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_ids</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.remove_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove photos from album.</dt><dd><p>Note: Photos does not provide a way to remove photos from an album via AppleScript.
+This method actually creates a new Album with the same name as the original album and
+copies all photos from original album with exception of those to remove to the new album
+then deletes the old album.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>photo_ids</strong> – list of photo ids to remove</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new Album object for the new album with photos removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.spotlight">
+<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.spotlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>spotlight the album in Photos</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.title">
+<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Album.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>title of album (alias for Album.name)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Album.uuid">
+<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Album.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>UUID of Album (read only)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="photoscript.Folder">
+<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="photoscript.Folder.album">
+<code class="sig-name descname">album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.album" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Album object contained in this folder for album named name
+or None if no matching album</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.albums">
+<em class="property">property </em><code class="sig-name descname">albums</code><a class="headerlink" href="#photoscript.Folder.albums" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Album objects for albums contained in folder</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.create_album">
+<code class="sig-name descname">create_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.create_album" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an album in this folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – name of new album</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Album object for newly created album</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.create_folder">
+<code class="sig-name descname">create_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a folder in this folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Folder object for newly created folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.folder">
+<code class="sig-name descname">folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folder object for first subfolder folder named name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – name of folder to to return</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder object for first subfolder who’s name matches name or None if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Folder.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of folder (read/write)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.parent">
+<em class="property">property </em><code class="sig-name descname">parent</code><a class="headerlink" href="#photoscript.Folder.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return parent Folder object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.parent_id">
+<em class="property">property </em><code class="sig-name descname">parent_id</code><a class="headerlink" href="#photoscript.Folder.parent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>parent container id</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.path">
+<code class="sig-name descname">path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of Folder objects this folder is contained in.
+path()[0] is the top-level folder this folder is contained in and
+path()[-1] is the immediate parent of this folder.  Returns empty
+list if folder is not contained in another folders.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.path_str">
+<code class="sig-name descname">path_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">'/'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.path_str" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Return internal library path to folder as string.</dt><dd><p>e.g. “Folder/SubFolder”</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delim</strong> – character to use as delimiter between path elements; default is “/”</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError if delim is not a single character</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.spotlight">
+<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.spotlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>spotlight the folder in Photos</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.subfolders">
+<em class="property">property </em><code class="sig-name descname">subfolders</code><a class="headerlink" href="#photoscript.Folder.subfolders" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Folder objects for immediate sub-folders contained in folder</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.title">
+<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Folder.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>title of folder (alias for Folder.name)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Folder.uuid">
+<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Folder.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>UUID of folder</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="photoscript.Photo">
+<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Photo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="photoscript.Photo.albums">
+<em class="property">property </em><code class="sig-name descname">albums</code><a class="headerlink" href="#photoscript.Photo.albums" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of Album objects for albums photo is contained in</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.altitude">
+<em class="property">property </em><code class="sig-name descname">altitude</code><a class="headerlink" href="#photoscript.Photo.altitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>GPS altitude of photo in meters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.date">
+<em class="property">property </em><code class="sig-name descname">date</code><a class="headerlink" href="#photoscript.Photo.date" title="Permalink to this definition">¶</a></dt>
+<dd><p>date of photo as timezone-naive datetime.datetime object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.description">
+<em class="property">property </em><code class="sig-name descname">description</code><a class="headerlink" href="#photoscript.Photo.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>description of photo</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.duplicate">
+<code class="sig-name descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>duplicates the photo and returns Photo object for the duplicate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.export">
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span></em>, <em class="sig-param"><span class="n">original</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">120</span></em>, <em class="sig-param"><span class="n">reveal_in_finder</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export photo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>photo</strong> – Photo object to export</p></li>
+<li><p><strong>export_path</strong> – path to export to</p></li>
+<li><p><strong>original</strong> – if True, export original image, otherwise export current image; default = False</p></li>
+<li><p><strong>overwrite</strong> – if True, export will overwrite a file of same name as photo in export_path; default = False</p></li>
+<li><p><strong>timeout</strong> – number of seconds to wait for Photos to complete export before timing out; default = 120</p></li>
+<li><p><strong>reveal_in_finder</strong> – if True, will open Finder with exported items selected when done; default = False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of full paths of exported photos.  There may be more than one photo exported due
+to live images and burst images.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError if export_path is not a valid directory</strong> – </p>
+</dd>
+</dl>
+<p>Note: Photos always exports as high-quality JPEG unless original=True.
+If original=True, will export all burst images for burst photos and
+live movie for live photos.  If original=False, only the primary image from a
+burst set will be exported for burst photos and the live movie component of a
+live image will not be exported, only the JPEG component.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.favorite">
+<em class="property">property </em><code class="sig-name descname">favorite</code><a class="headerlink" href="#photoscript.Photo.favorite" title="Permalink to this definition">¶</a></dt>
+<dd><p>return favorite status (boolean)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.filename">
+<em class="property">property </em><code class="sig-name descname">filename</code><a class="headerlink" href="#photoscript.Photo.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>filename of photo</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.height">
+<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#photoscript.Photo.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>height of photo in pixels</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.keywords">
+<em class="property">property </em><code class="sig-name descname">keywords</code><a class="headerlink" href="#photoscript.Photo.keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of keywords for photo</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.location">
+<em class="property">property </em><code class="sig-name descname">location</code><a class="headerlink" href="#photoscript.Photo.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>The GPS latitude and longitude, in a tuple of 2 numbers or None.
+Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Photo.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of photo (read/write)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.spotlight">
+<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.spotlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>spotlight the photo in Photos</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.title">
+<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Photo.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>title of photo (alias for name)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.uuid">
+<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Photo.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>UUID of Photo</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="photoscript.Photo.width">
+<em class="property">property </em><code class="sig-name descname">width</code><a class="headerlink" href="#photoscript.Photo.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>width of photo in pixels</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PhotoScript’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Rhet Turnbull
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
