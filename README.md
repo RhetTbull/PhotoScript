@@ -47,7 +47,7 @@ photoslib.import_photos(["/Users/rhet/Downloads/test.jpeg"], album=new_album)
 photoslib.quit()
 ```
 ## Documentation
-Full documentation [here](https://github.com/RhetTbull/PhotoScript/blob/master/photoscript.pdf).
+Full documentation [here](https://rhettbull.github.io/PhotoScript/).
 
 Additional documentation about Photos and AppleScript available on the [wiki](https://github.com/RhetTbull/PhotoScript/wiki/Welcome-to-the-PhotoScript-Wiki).
 
