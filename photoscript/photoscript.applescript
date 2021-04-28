@@ -680,12 +680,32 @@ on _album_add(id_, items_)
 		repeat with item_ in items_
 			copy media item id (item_) to end of media_list_
 		end repeat
-		set album_ to album id (id_)
-		add media_list_ to album_
+		
 		set media_id_list_ to {}
 		repeat with item_ in media_list_
 			copy id of item_ to end of media_id_list_
 		end repeat
+		
+		set album_ to album id (id_)
+		set count_ to 0
+		repeat while count_ < MAX_RETRY
+			-- add is flaky and sometimes doesn't actually add the photos
+			add media_list_ to album_
+			
+			set added_all_ to true
+			set album_photo_ids_ to (id of media items of album_)
+			repeat with media_id_ in media_id_list_
+				if album_photo_ids_ does not contain media_id_ then
+					set added_all_ to false
+				end if
+			end repeat
+			if added_all_ then
+				set count_ to MAX_RETRY
+			else
+				set count_ to count_ + 1
+			end if
+		end repeat
+		
 		return media_id_list_
 	end tell
 end _album_add
