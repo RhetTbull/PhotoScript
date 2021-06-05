@@ -9,3 +9,4 @@ working/
 .coverage
 cov_html/
 docsrc/_build/
+venv/
