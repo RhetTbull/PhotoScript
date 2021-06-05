@@ -37,7 +37,9 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 
 # get version info from _version
 with open(
-    os.path.join(this_directory, "photoscript", "_version.py"), mode="r", encoding="utf-8"
+    os.path.join(this_directory, "photoscript", "_version.py"),
+    mode="r",
+    encoding="utf-8",
 ) as f:
     exec(f.read(), about)
 
@@ -67,6 +69,11 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    install_requires=["pyobjc>=6.2.2", "py-applescript==1.0.2"],
+    install_requires=[
+        "pyobjc-core==7.2",
+        "pyobjc-framework-AppleScriptKit==7.2",
+        "pyobjc-framework-AppleScriptObjC==7.2",
+        "py-applescript==1.0.2",
+    ],
     include_package_data=True,
 )
