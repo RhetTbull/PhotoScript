@@ -70,9 +70,9 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     install_requires=[
-        "pyobjc-core==7.2",
-        "pyobjc-framework-AppleScriptKit==7.2",
-        "pyobjc-framework-AppleScriptObjC==7.2",
+        "pyobjc-core",
+        "pyobjc-framework-AppleScriptKit",
+        "pyobjc-framework-AppleScriptObjC",
         "py-applescript==1.0.2",
     ],
     include_package_data=True,
