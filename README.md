@@ -1,4 +1,7 @@
 # PhotoScript
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -65,3 +68,23 @@ Where possible, PhotoScript attempts to provide work-arounds to Photos' limitati
 ## Dependencies
 - [py-applescript](https://github.com/rdhyee/py-applescript)
 - [PyObjC](https://github.com/ronaldoussoren/pyobjc)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://davidhaberthür.ch"><img src="https://avatars.githubusercontent.com/u/1651235?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Haberthür</b></sub></a><br /><a href="https://github.com/RhetTbull/PhotoScript/commits?author=habi" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

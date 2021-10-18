@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "habi",
+      "name": "David Haberthür",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1651235?v=4",
+      "profile": "http://davidhaberthür.ch",
+      "contributions": [
+        "doc"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "PhotoScript",
+  "projectOwner": "RhetTbull",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
