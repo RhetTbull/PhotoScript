@@ -4,15 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to PhotoScript’s documentation! &#8212; PhotoScript 0.1.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Welcome to PhotoScript’s documentation! &#8212; PhotoScript 0.1.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="photoscript package" href="reference.html" />
@@ -32,21 +32,33 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-photoscript-s-documentation">
+  <section id="welcome-to-photoscript-s-documentation">
 <h1>Welcome to PhotoScript’s documentation!<a class="headerlink" href="#welcome-to-photoscript-s-documentation" title="Permalink to this headline">¶</a></h1>
-</div>
-<div class="section" id="photoscript">
+</section>
+<section id="photoscript">
 <h1>PhotoScript<a class="headerlink" href="#photoscript" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-photoscript">
+<a class="reference external image-reference" href="https://github.com/python/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a class="reference external image-reference" href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<p><span class="raw-html-m2r"><!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section --></span></p>
+<a class="reference external image-reference" href="#contributors-"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat" /></a>
+<p><span class="raw-html-m2r"><!-- ALL-CONTRIBUTORS-BADGE:END --></span></p>
+<section id="what-is-photoscript">
 <h2>What is PhotoScript<a class="headerlink" href="#what-is-photoscript" title="Permalink to this headline">¶</a></h2>
 <p>PhotoScript provides a python wrapper around Apple Photos applescript interface.  With PhotoScript you can interact with Photos using python.  Runs only on MacOS.  Tested on MacOS Catalina.</p>
-</div>
-<div class="section" id="installation">
+<p>PhotosScript is limited by Photos’ very limited AppleScript dictionary.</p>
+</section>
+<section id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Designed for MacOS Catalina/Photos 5.  Preliminary testing on Big Sur/Photos 6 beta shows this should work on Big Sur as well.  Photos’ AppleScript interface has changed very little since Photos 2 (the earliest version I have access to).  This package should work with most versions of Photos but some methods may not function correctly on versions earlier than Photos 5.  If you find compatibility issues, open an issue or send a PR.</p>
+</section>
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>PhotoScript uses setuptools, thus simply run:</p>
 <p><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
-</div>
-<div class="section" id="example">
+<p>Or you can install via pip:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">photoscript</span></code></p>
+</section>
+<section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Simple example showing use of photoscript &quot;&quot;&quot;</span>
 
@@ -58,9 +70,10 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running Photos version: </span><span class="si">{</span><span class="n">photoslib</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">album</span> <span class="o">=</span> <span class="n">photoslib</span><span class="o">.</span><span class="n">album</span><span class="p">(</span><span class="s2">&quot;Album1&quot;</span><span class="p">)</span>
-<span class="n">photos</span> <span class="o">=</span> <span class="n">album</span><span class="o">.</span><span class="n">photos</span>
+<span class="n">photos</span> <span class="o">=</span> <span class="n">album</span><span class="o">.</span><span class="n">photos</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">photo</span> <span class="ow">in</span> <span class="n">photos</span><span class="p">:</span>
+    <span class="n">photo</span><span class="o">.</span><span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;travel&quot;</span><span class="p">,</span> <span class="s2">&quot;vacation&quot;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">photo</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">photo</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">photo</span><span class="o">.</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">new_album</span> <span class="o">=</span> <span class="n">photoslib</span><span class="o">.</span><span class="n">create_album</span><span class="p">(</span><span class="s2">&quot;New Album&quot;</span><span class="p">)</span>
@@ -69,16 +82,52 @@
 <span class="n">photoslib</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="see-also">
-<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Full documentation <a class="reference external" href="https://rhettbull.github.io/PhotoScript/">here</a>.</p>
+<p>Additional documentation about Photos and AppleScript available on the <a class="reference external" href="https://github.com/RhetTbull/PhotoScript/wiki/Welcome-to-the-PhotoScript-Wiki">wiki</a>.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Tested on MacOS Catalina, Photos 5 with 100% coverage.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>Photos’ AppleScript interface is very limited.  For example, it cannot access information on faces in photos nor can it delete a photo.  PhotoScript is thus limited.  PhotoScript works by executing AppleScript through an Objective-C bridge from python.  Every method call has to do a python-&gt;Objective C-&gt;AppleScript round trip; this makes the interface much slower than native python code.  This is particularly noticeable when dealing with Folders which requires significant work arounds.</p>
+<p>Where possible, PhotoScript attempts to provide work-arounds to Photos’ limitations. For example, Photos does not provide a way to remove a photo from an album.  PhotoScript does provide a <code class="docutils literal notranslate"><span class="pre">Album.remove()</span></code> method but in order to do this, it creates a new album with the same name as the original, copies all but the removed photos to the new album then deletes the original album.  This simulates removing photos and produces the desired effect but is not the same thing as removing a photo from an album.</p>
+</section>
+<section id="related-projects">
+<h2>Related Projects<a class="headerlink" href="#related-projects" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/RhetTbull/osxphotos">osxphotos</a>: Python package that provides read-only access to the Photos library including all associated metadata.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/rdhyee/py-applescript">py-applescript</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ronaldoussoren/pyobjc">PyObjC</a></p></li>
+</ul>
+</section>
+<section id="contributors">
+<h2>Contributors ✨<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
+<p>Thanks goes to these wonderful people (<a class="reference external" href="https://allcontributors.org/docs/en/emoji-key">emoji key</a>):</p>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://davidhaberthür.ch"><img src="https://avatars.githubusercontent.com/u/1651235?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Haberthür</b></sub></a><br /><a href="https://github.com/RhetTbull/PhotoScript/commits?author=habi" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end --><!-- ALL-CONTRIBUTORS-LIST:END --><p>This project follows the <a class="reference external" href="https://github.com/all-contributors/all-contributors">all-contributors</a> specification. Contributions of any kind welcome!</p>
+</section>
+</section>
+<section id="id1">
+<h1>Documentation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">photoscript package</a><ul>
@@ -87,15 +136,15 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
+</section>
+<section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
           </div>
@@ -130,7 +179,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -152,7 +201,7 @@
       &copy;2020, Rhet Turnbull.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

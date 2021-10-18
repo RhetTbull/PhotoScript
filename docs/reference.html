@@ -4,15 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>photoscript package &#8212; PhotoScript 0.1.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>photoscript package &#8212; PhotoScript 0.1.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Welcome to PhotoScript’s documentation!" href="index.html" />
@@ -32,22 +32,22 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="photoscript-package">
+  <section id="photoscript-package">
 <h1>photoscript package<a class="headerlink" href="#photoscript-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="photoscript-module">
+<section id="photoscript-module">
 <h2>photoscript module<a class="headerlink" href="#photoscript-module" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="photoscript.PhotosLibrary">
-<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">PhotosLibrary</code><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">photoscript.</span></span><span class="sig-name descname"><span class="pre">PhotosLibrary</span></span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="photoscript.PhotosLibrary.activate">
-<code class="sig-name descname">activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.activate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.activate">
+<span class="sig-name descname"><span class="pre">activate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.activate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.activate" title="Permalink to this definition">¶</a></dt>
 <dd><p>activate Photos.app</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.album">
-<code class="sig-name descname">album</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">name</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.album">
+<span class="sig-name descname"><span class="pre">album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album" title="Permalink to this definition">¶</a></dt>
 <dd><p>Album instance by name or id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -69,8 +69,8 @@ If more than one album with same name, returns the first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.album_names">
-<code class="sig-name descname">album_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album_names" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.album_names">
+<span class="sig-name descname"><span class="pre">album_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.album_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.album_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of album names in the Photos library</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -80,14 +80,14 @@ If more than one album with same name, returns the first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.albums">
-<code class="sig-name descname">albums</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.albums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.albums" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.albums">
+<span class="sig-name descname"><span class="pre">albums</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.albums"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.albums" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Album objects for all albums</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.create_album">
-<code class="sig-name descname">create_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">folder</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.create_album">
+<span class="sig-name descname"><span class="pre">create_album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_album" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates an album</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -107,8 +107,8 @@ If None, creates top-level album.  Default is None.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.create_folder">
-<code class="sig-name descname">create_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">folder</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.create_folder">
+<span class="sig-name descname"><span class="pre">create_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.create_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.create_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a folder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -128,8 +128,8 @@ If None, creates top-level folder. Default is None.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.delete_album">
-<code class="sig-name descname">delete_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">album</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.delete_album">
+<span class="sig-name descname"><span class="pre">delete_album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">album</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_album" title="Permalink to this definition">¶</a></dt>
 <dd><p>deletes album (but does not delete photos in the album)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -139,8 +139,8 @@ If None, creates top-level folder. Default is None.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.delete_folder">
-<code class="sig-name descname">delete_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.delete_folder">
+<span class="sig-name descname"><span class="pre">delete_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.delete_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.delete_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes folder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -149,15 +149,15 @@ If None, creates top-level folder. Default is None.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.favorites">
-<em class="property">property </em><code class="sig-name descname">favorites</code><a class="headerlink" href="#photoscript.PhotosLibrary.favorites" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.favorites">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">favorites</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.favorites" title="Permalink to this definition">¶</a></dt>
 <dd><p>Album object for the Favorites album</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.folder">
-<code class="sig-name descname">folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">name</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.folder">
+<span class="sig-name descname"><span class="pre">folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Folder instance by name or uuid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -179,8 +179,8 @@ If more than one folder with same name, returns first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.folder_by_path">
-<code class="sig-name descname">folder_by_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_by_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_by_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.folder_by_path">
+<span class="sig-name descname"><span class="pre">folder_by_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_by_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_by_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return folder in the library by path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -193,8 +193,8 @@ If more than one folder with same name, returns first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.folder_names">
-<code class="sig-name descname">folder_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_names" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.folder_names">
+<span class="sig-name descname"><span class="pre">folder_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folder_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folder_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of folder names in the Photos library</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -204,32 +204,32 @@ If more than one folder with same name, returns first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.folders">
-<code class="sig-name descname">folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">top_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folders" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.folders">
+<span class="sig-name descname"><span class="pre">folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.folders" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Folder objects for all folders</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.frontmost">
-<em class="property">property </em><code class="sig-name descname">frontmost</code><a class="headerlink" href="#photoscript.PhotosLibrary.frontmost" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.frontmost">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">frontmost</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.frontmost" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if Photos.app is front most app otherwise False</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.hidden">
-<em class="property">property </em><code class="sig-name descname">hidden</code><a class="headerlink" href="#photoscript.PhotosLibrary.hidden" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.hidden">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">hidden</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.hidden" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if Photos is hidden (or not running), False if Photos is visible</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.hide">
-<code class="sig-name descname">hide</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.hide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.hide" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.hide">
+<span class="sig-name descname"><span class="pre">hide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.hide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.hide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell Photos to hide its window</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.import_photos">
-<code class="sig-name descname">import_photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_paths</span></em>, <em class="sig-param"><span class="n">album</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skip_duplicate_check</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.import_photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.import_photos" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.import_photos">
+<span class="sig-name descname"><span class="pre">import_photos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">photo_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">album</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_duplicate_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.import_photos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.import_photos" title="Permalink to this definition">¶</a></dt>
 <dd><p>import photos</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -240,7 +240,7 @@ If more than one folder with same name, returns first one found.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of Photo objects for impoted photos</p>
+<dd class="field-even"><p>list of Photo objects for imported photos</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -250,8 +250,8 @@ If more than one folder with same name, returns first one found.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.make_album_folders">
-<code class="sig-name descname">make_album_folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">album_name</span></em>, <em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_album_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_album_folders" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.make_album_folders">
+<span class="sig-name descname"><span class="pre">make_album_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">album_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_album_folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_album_folders" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Make album in a folder path.  If either the album or any component of the</dt><dd><p>folder path doesn’t exist, it will be created.  If album or folder path
 does exist, no duplicate is created.  Folder path is created recursively
@@ -278,8 +278,8 @@ if needed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.make_folders">
-<code class="sig-name descname">make_folders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_folders" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.make_folders">
+<span class="sig-name descname"><span class="pre">make_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.make_folders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.make_folders" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively makes folders and subfolders.  Works similar to <a class="reference external" href="https://docs.python.org/3/library/os.html#os.makedirs">os.makedirs</a>.
 If any component of folder_path already exists, does not raise error.</p>
 <dl class="field-list simple">
@@ -298,21 +298,21 @@ If any component of folder_path already exists, does not raise error.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.name">
-<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.PhotosLibrary.name" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>name of Photos.app</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.open">
-<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">library_path</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.open" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">library_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.open" title="Permalink to this definition">¶</a></dt>
 <dd><p>open a library and wait for delay for user to acknowledge in Photos</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.photos">
-<code class="sig-name descname">photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">search</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uuid</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">range_</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.photos" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.photos">
+<span class="sig-name descname"><span class="pre">photos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.photos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.photos" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Returns a generator that yields Photo objects</dt><dd><p>for media items in the library.</p>
 </dd>
@@ -349,37 +349,37 @@ e.g. request 10 photos at a time.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.PhotosLibrary.quit">
-<code class="sig-name descname">quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.PhotosLibrary.quit" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.quit">
+<span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#PhotosLibrary.quit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.PhotosLibrary.quit" title="Permalink to this definition">¶</a></dt>
 <dd><p>quit Photos.app</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.running">
-<em class="property">property </em><code class="sig-name descname">running</code><a class="headerlink" href="#photoscript.PhotosLibrary.running" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.running">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">running</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if Photos is running, otherwise False</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.selection">
-<em class="property">property </em><code class="sig-name descname">selection</code><a class="headerlink" href="#photoscript.PhotosLibrary.selection" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.selection">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">selection</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of Photo objects for currently selected photos or [] if no selection</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.PhotosLibrary.version">
-<em class="property">property </em><code class="sig-name descname">version</code><a class="headerlink" href="#photoscript.PhotosLibrary.version" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.PhotosLibrary.version">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">version</span></span><a class="headerlink" href="#photoscript.PhotosLibrary.version" title="Permalink to this definition">¶</a></dt>
 <dd><p>version of Photos.app as str</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="photoscript.Album">
-<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">photoscript.</span></span><span class="sig-name descname"><span class="pre">Album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="photoscript.Album.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photos</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.add" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">photos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>add photos from the library to album</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -392,8 +392,8 @@ e.g. request 10 photos at a time.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.export">
-<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span></em>, <em class="sig-param"><span class="n">original</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">120</span></em>, <em class="sig-param"><span class="n">reveal_in_finder</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.export" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">export_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reveal_in_finder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export photos in album to path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -422,8 +422,8 @@ live image will not be exported, only the JPEG component.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.import_photos">
-<code class="sig-name descname">import_photos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_paths</span></em>, <em class="sig-param"><span class="n">skip_duplicate_check</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.import_photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.import_photos" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.import_photos">
+<span class="sig-name descname"><span class="pre">import_photos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">photo_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_duplicate_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.import_photos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.import_photos" title="Permalink to this definition">¶</a></dt>
 <dd><p>import photos</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -433,32 +433,32 @@ live image will not be exported, only the JPEG component.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of Photo objects for impoted photos</p>
+<dd class="field-even"><p>list of Photo objects for imported photos</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Album.name">
-<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Album.name" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Album.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#photoscript.Album.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>name of album (read/write)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Album.parent">
-<em class="property">property </em><code class="sig-name descname">parent</code><a class="headerlink" href="#photoscript.Album.parent" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Album.parent">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#photoscript.Album.parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return parent Folder object</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Album.parent_id">
-<em class="property">property </em><code class="sig-name descname">parent_id</code><a class="headerlink" href="#photoscript.Album.parent_id" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Album.parent_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">parent_id</span></span><a class="headerlink" href="#photoscript.Album.parent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>parent container id</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.path_str">
-<code class="sig-name descname">path_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">'/'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.path_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.path_str" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.path_str">
+<span class="sig-name descname"><span class="pre">path_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.path_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.path_str" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Return internal library path to album as string.</dt><dd><p>e.g. “Folder/SubFolder/AlbumName”</p>
 </dd>
@@ -474,14 +474,14 @@ live image will not be exported, only the JPEG component.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.photos">
-<code class="sig-name descname">photos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.photos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.photos" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.photos">
+<span class="sig-name descname"><span class="pre">photos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.photos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.photos" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Photo objects for photos contained in album</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.remove">
-<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photos</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.remove" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">photos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.remove" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Remove photos from album.</dt><dd><p>Note: Photos does not provide a way to remove photos from an album via AppleScript.
 This method actually creates a new Album with the same name as the original album and
@@ -500,8 +500,8 @@ then deletes the old album.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.remove_by_id">
-<code class="sig-name descname">remove_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">photo_ids</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.remove_by_id" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.remove_by_id">
+<span class="sig-name descname"><span class="pre">remove_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">photo_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.remove_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.remove_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Remove photos from album.</dt><dd><p>Note: Photos does not provide a way to remove photos from an album via AppleScript.
 This method actually creates a new Album with the same name as the original album and
@@ -520,44 +520,44 @@ then deletes the old album.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Album.spotlight">
-<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Album.spotlight" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Album.spotlight">
+<span class="sig-name descname"><span class="pre">spotlight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Album.spotlight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Album.spotlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>spotlight the album in Photos</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Album.title">
-<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Album.title" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Album.title">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#photoscript.Album.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>title of album (alias for Album.name)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Album.uuid">
-<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Album.uuid" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Album.uuid">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#photoscript.Album.uuid" title="Permalink to this definition">¶</a></dt>
 <dd><p>UUID of Album (read only)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="photoscript.Folder">
-<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">photoscript.</span></span><span class="sig-name descname"><span class="pre">Folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="photoscript.Folder.album">
-<code class="sig-name descname">album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.album">
+<span class="sig-name descname"><span class="pre">album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.album" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return Album object contained in this folder for album named name
 or None if no matching album</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.albums">
-<em class="property">property </em><code class="sig-name descname">albums</code><a class="headerlink" href="#photoscript.Folder.albums" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.albums">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">albums</span></span><a class="headerlink" href="#photoscript.Folder.albums" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Album objects for albums contained in folder</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.create_album">
-<code class="sig-name descname">create_album</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.create_album" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.create_album">
+<span class="sig-name descname"><span class="pre">create_album</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_album"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.create_album" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an album in this folder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -570,8 +570,8 @@ or None if no matching album</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.create_folder">
-<code class="sig-name descname">create_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.create_folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.create_folder">
+<span class="sig-name descname"><span class="pre">create_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.create_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.create_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a folder in this folder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -581,8 +581,8 @@ or None if no matching album</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.folder">
-<code class="sig-name descname">folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.folder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.folder">
+<span class="sig-name descname"><span class="pre">folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Folder object for first subfolder folder named name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -594,27 +594,27 @@ or None if no matching album</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.name">
-<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Folder.name" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#photoscript.Folder.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>name of folder (read/write)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.parent">
-<em class="property">property </em><code class="sig-name descname">parent</code><a class="headerlink" href="#photoscript.Folder.parent" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.parent">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#photoscript.Folder.parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return parent Folder object</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.parent_id">
-<em class="property">property </em><code class="sig-name descname">parent_id</code><a class="headerlink" href="#photoscript.Folder.parent_id" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.parent_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">parent_id</span></span><a class="headerlink" href="#photoscript.Folder.parent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>parent container id</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.path">
-<code class="sig-name descname">path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.path">
+<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of Folder objects this folder is contained in.
 path()[0] is the top-level folder this folder is contained in and
 path()[-1] is the immediate parent of this folder.  Returns empty
@@ -622,8 +622,8 @@ list if folder is not contained in another folders.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.path_str">
-<code class="sig-name descname">path_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">'/'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.path_str" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.path_str">
+<span class="sig-name descname"><span class="pre">path_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.path_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.path_str" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Return internal library path to folder as string.</dt><dd><p>e.g. “Folder/SubFolder”</p>
 </dd>
@@ -639,67 +639,67 @@ list if folder is not contained in another folders.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Folder.spotlight">
-<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Folder.spotlight" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Folder.spotlight">
+<span class="sig-name descname"><span class="pre">spotlight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Folder.spotlight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Folder.spotlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>spotlight the folder in Photos</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.subfolders">
-<em class="property">property </em><code class="sig-name descname">subfolders</code><a class="headerlink" href="#photoscript.Folder.subfolders" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.subfolders">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">subfolders</span></span><a class="headerlink" href="#photoscript.Folder.subfolders" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Folder objects for immediate sub-folders contained in folder</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.title">
-<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Folder.title" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.title">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#photoscript.Folder.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>title of folder (alias for Folder.name)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Folder.uuid">
-<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Folder.uuid" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Folder.uuid">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#photoscript.Folder.uuid" title="Permalink to this definition">¶</a></dt>
 <dd><p>UUID of folder</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="photoscript.Photo">
-<em class="property">class </em><code class="sig-prename descclassname">photoscript.</code><code class="sig-name descname">Photo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt id="photoscript.Photo.albums">
-<em class="property">property </em><code class="sig-name descname">albums</code><a class="headerlink" href="#photoscript.Photo.albums" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Photo">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">photoscript.</span></span><span class="sig-name descname"><span class="pre">Photo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Photo" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.albums">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">albums</span></span><a class="headerlink" href="#photoscript.Photo.albums" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of Album objects for albums photo is contained in</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.altitude">
-<em class="property">property </em><code class="sig-name descname">altitude</code><a class="headerlink" href="#photoscript.Photo.altitude" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.altitude">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">altitude</span></span><a class="headerlink" href="#photoscript.Photo.altitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>GPS altitude of photo in meters</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.date">
-<em class="property">property </em><code class="sig-name descname">date</code><a class="headerlink" href="#photoscript.Photo.date" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.date">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">date</span></span><a class="headerlink" href="#photoscript.Photo.date" title="Permalink to this definition">¶</a></dt>
 <dd><p>date of photo as timezone-naive datetime.datetime object</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.description">
-<em class="property">property </em><code class="sig-name descname">description</code><a class="headerlink" href="#photoscript.Photo.description" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.description">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#photoscript.Photo.description" title="Permalink to this definition">¶</a></dt>
 <dd><p>description of photo</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Photo.duplicate">
-<code class="sig-name descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.duplicate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Photo.duplicate">
+<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.duplicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Photo.duplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>duplicates the photo and returns Photo object for the duplicate</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Photo.export">
-<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">export_path</span></em>, <em class="sig-param"><span class="n">original</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">120</span></em>, <em class="sig-param"><span class="n">reveal_in_finder</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.export" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Photo.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">export_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reveal_in_finder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Photo.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export photo</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -727,71 +727,71 @@ burst set will be exported for burst photos and the live movie component of a
 live image will not be exported, only the JPEG component.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.favorite">
-<em class="property">property </em><code class="sig-name descname">favorite</code><a class="headerlink" href="#photoscript.Photo.favorite" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.favorite">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">favorite</span></span><a class="headerlink" href="#photoscript.Photo.favorite" title="Permalink to this definition">¶</a></dt>
 <dd><p>return favorite status (boolean)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.filename">
-<em class="property">property </em><code class="sig-name descname">filename</code><a class="headerlink" href="#photoscript.Photo.filename" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.filename">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#photoscript.Photo.filename" title="Permalink to this definition">¶</a></dt>
 <dd><p>filename of photo</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.height">
-<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#photoscript.Photo.height" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.height">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#photoscript.Photo.height" title="Permalink to this definition">¶</a></dt>
 <dd><p>height of photo in pixels</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.keywords">
-<em class="property">property </em><code class="sig-name descname">keywords</code><a class="headerlink" href="#photoscript.Photo.keywords" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.keywords">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">keywords</span></span><a class="headerlink" href="#photoscript.Photo.keywords" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of keywords for photo</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.location">
-<em class="property">property </em><code class="sig-name descname">location</code><a class="headerlink" href="#photoscript.Photo.location" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.location">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#photoscript.Photo.location" title="Permalink to this definition">¶</a></dt>
 <dd><p>The GPS latitude and longitude, in a tuple of 2 numbers or None.
 Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.name">
-<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#photoscript.Photo.name" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#photoscript.Photo.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>name of photo (read/write)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="photoscript.Photo.spotlight">
-<code class="sig-name descname">spotlight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.spotlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#photoscript.Photo.spotlight" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="photoscript.Photo.spotlight">
+<span class="sig-name descname"><span class="pre">spotlight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/photoscript.html#Photo.spotlight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#photoscript.Photo.spotlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>spotlight the photo in Photos</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.title">
-<em class="property">property </em><code class="sig-name descname">title</code><a class="headerlink" href="#photoscript.Photo.title" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.title">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#photoscript.Photo.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>title of photo (alias for name)</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.uuid">
-<em class="property">property </em><code class="sig-name descname">uuid</code><a class="headerlink" href="#photoscript.Photo.uuid" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.uuid">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#photoscript.Photo.uuid" title="Permalink to this definition">¶</a></dt>
 <dd><p>UUID of Photo</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="photoscript.Photo.width">
-<em class="property">property </em><code class="sig-name descname">width</code><a class="headerlink" href="#photoscript.Photo.width" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="photoscript.Photo.width">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#photoscript.Photo.width" title="Permalink to this definition">¶</a></dt>
 <dd><p>width of photo in pixels</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -829,7 +829,7 @@ Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -851,7 +851,7 @@ Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.</p>
       &copy;2020, Rhet Turnbull.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -5,14 +5,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>photoscript &#8212; PhotoScript 0.1.2 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <title>photoscript &#8212; PhotoScript 0.1.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
@@ -243,7 +242,7 @@
 <span class="sd">            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. </span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            list of Photo objects for impoted photos</span>
+<span class="sd">            list of Photo objects for imported photos</span>
 <span class="sd">            </span>
 <span class="sd">        NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, </span>
 <span class="sd">            Photos will block with drop-down sheet until the user clicks &quot;Cancel, Import, or Don&#39;t Import.&quot;</span>
@@ -691,7 +690,7 @@
 <span class="sd">            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list of Photo objects for impoted photos</span>
+<span class="sd">            list of Photo objects for imported photos</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">library</span> <span class="o">=</span> <span class="n">PhotosLibrary</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">library</span><span class="o">.</span><span class="n">import_photos</span><span class="p">(</span>
@@ -1185,7 +1184,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1207,7 +1206,7 @@
       &copy;2020, Rhet Turnbull.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
