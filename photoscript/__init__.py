@@ -209,7 +209,7 @@ class PhotosLibrary:
             skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. 
             
         Returns:
-            list of Photo objects for impoted photos
+            list of Photo objects for imported photos
             
         NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, 
             Photos will block with drop-down sheet until the user clicks "Cancel, Import, or Don't Import."
@@ -657,7 +657,7 @@ class Album:
             skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False
 
         Returns:
-            list of Photo objects for impoted photos
+            list of Photo objects for imported photos
         """
         library = PhotosLibrary()
         return library.import_photos(
