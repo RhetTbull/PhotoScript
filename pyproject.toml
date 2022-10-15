@@ -8,13 +8,24 @@ readme = "README.md"
 homepage = "https://github.com/RhetTbull/photoscript"
 repository = "https://github.com/RhetTbull/photoscript"
 keywords = ["photos", "mac", "macos", "applescript", "apple"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: MacOS X",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pyobjc-core = "^8.5.1"
-pyobjc-framework-Cocoa = "^8.5.1"
-pyobjc-framework-AppleScriptKit = "^8.5.1"
-pyobjc-framework-AppleScriptObjC = "^8.5.1"
+pyobjc-core = ">=7.3, <9.0"
+pyobjc-framework-Cocoa = ">=7.3, <9.0"
+pyobjc-framework-AppleScriptKit = ">=7.3, <9.0"
+pyobjc-framework-AppleScriptObjC = ">=7.3, <9.0"
 py-applescript = "^1.0.3"
 
 [tool.poetry.group.dev.dependencies]
