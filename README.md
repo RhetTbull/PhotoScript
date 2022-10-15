@@ -17,13 +17,11 @@ Designed for MacOS Catalina/Photos 5.  Preliminary testing on Big Sur/Photos 6 b
 
 ## Installation
 
-PhotoScript uses setuptools, thus simply run:
-
-`python3 setup.py install`
+PhotoScript uses [poetry](https://python-poetry.org/) for dependency management.  To install, clone the repo and run `poetry install`. If you don't have poetry already installed, follow the [installation instructions](https://python-poetry.org/docs/#installation). To enter the virtual environment, run `poetry shell`.
 
 Or you can install via pip:
 
-`pip install photoscript`
+`python3 -m pip install photoscript`
 
 ## Example
 
