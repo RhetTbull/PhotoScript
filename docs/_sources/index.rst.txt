@@ -6,7 +6,7 @@
 Welcome to PhotoScript's documentation!
 =======================================
 
-.. include:: README.rst
+.. mdinclude:: ../../README.md
 
 
 Documentation
