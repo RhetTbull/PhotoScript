@@ -1,8 +1,0 @@
-pytest==6.2.4
-flaky==3.7.0
-wheel==0.36.2
-twine==3.4.1
-sphinx
-sphinx_rtd_theme
-m2r2
-build
