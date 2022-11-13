@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>photoscript &#8212; PhotoScript 0.1.6 documentation</title>
+    <title>photoscript &#8212; PhotoScript 0.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -45,6 +45,7 @@
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">run</span>
 
 <span class="kn">from</span> <span class="nn">applescript</span> <span class="kn">import</span> <span class="n">AppleScript</span><span class="p">,</span> <span class="n">kMissingValue</span>
+
 <span class="kn">from</span> <span class="nn">photoscript.utils</span> <span class="kn">import</span> <span class="n">ditto</span><span class="p">,</span> <span class="n">findfiles</span>
 
 <span class="kn">from</span> <span class="nn">.script_loader</span> <span class="kn">import</span> <span class="n">run_script</span>
@@ -64,20 +65,20 @@
 
 <div class="viewcode-block" id="PhotosLibrary"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary">[docs]</a><span class="k">class</span> <span class="nc">PhotosLibrary</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; create new PhotosLibrary object and launch Photos &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_waitforphotos&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_version&quot;</span><span class="p">))</span>
+        <span class="sd">&quot;&quot;&quot;create new PhotosLibrary object and launch Photos&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryWaitForPhotos&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryVersion&quot;</span><span class="p">))</span>
 
 <div class="viewcode-block" id="PhotosLibrary.activate"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; activate Photos.app &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_activate&quot;</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;activate Photos.app&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryActivate&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.quit"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.quit">[docs]</a>    <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; quit Photos.app &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_quit&quot;</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;quit Photos.app&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryQuit&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.open"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">library_path</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; open a library and wait for delay for user to acknowledge in Photos &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;open a library and wait for delay for user to acknowledge in Photos&quot;&quot;&quot;</span>
         <span class="c1"># Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript</span>
         <span class="c1"># because, for reasons I cannot explain, it fails to run if included there</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">library_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
@@ -105,80 +106,79 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; True if Photos is running, otherwise False &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_isrunning&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;True if Photos is running, otherwise False&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryIsRunning&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PhotosLibrary.hide"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.hide">[docs]</a>    <span class="k">def</span> <span class="nf">hide</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tell Photos to hide its window &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_hide&quot;</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;Tell Photos to hide its window&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryHide&quot;</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; True if Photos is hidden (or not running), False if Photos is visible &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_hidden&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;True if Photos is hidden (or not running), False if Photos is visible&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryIsHidden&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; name of Photos.app &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_name&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;name of Photos.app&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryName&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; version of Photos.app as str &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;version of Photos.app as str&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frontmost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; True if Photos.app is front most app otherwise False &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_frontmost&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;True if Photos.app is front most app otherwise False&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryIsFrontMost&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; List of Photo objects for currently selected photos or [] if no selection &quot;&quot;&quot;</span>
-        <span class="n">uuids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_get_selection&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;List of Photo objects for currently selected photos or [] if no selection&quot;&quot;&quot;</span>
+        <span class="n">uuids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryGetSelection&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Photo</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">uuids</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">favorites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Album object for the Favorites album &quot;&quot;&quot;</span>
-        <span class="n">fav_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_favorites&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Album object for the Favorites album&quot;&quot;&quot;</span>
+        <span class="n">fav_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryFavorites&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Album</span><span class="p">(</span><span class="n">fav_id</span><span class="p">)</span>
 
     <span class="c1"># doesn&#39;t seem to be a way to do anything with the recently deleted album except count items</span>
     <span class="c1"># @property</span>
     <span class="c1"># def recently_deleted(self):</span>
     <span class="c1">#     &quot;&quot;&quot; Album object for the Recently Deleted album &quot;&quot;&quot;</span>
-    <span class="c1">#     del_id = run_script(&quot;_photoslibrary_recently_deleted&quot;)</span>
+    <span class="c1">#     del_id = run_script(&quot;photosLibraryRecentlyDeleted&quot;)</span>
     <span class="c1">#     return Album(del_id)</span>
 
 <div class="viewcode-block" id="PhotosLibrary.photos"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.photos">[docs]</a>    <span class="k">def</span> <span class="nf">photos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">range_</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a generator that yields Photo objects </span>
-<span class="sd">           for media items in the library.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a generator that yields Photo objects for media items in the library.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            search: optional text string to search for (returns matching items)</span>
 <span class="sd">            uuid: optional list of UUIDs to get</span>
 <span class="sd">            range\_: optional list of [start, stop] sequence of photos to get</span>
-<span class="sd">            </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Generator that yields Photo objects</span>
 
-<span class="sd">        Raises: </span>
+<span class="sd">        Raises:</span>
 <span class="sd">            ValueError if more than one of search, uuid, range\_ passed or invalid range\_</span>
 <span class="sd">            TypeError if list not passed for range\_</span>
 
 <span class="sd">        Note: photos() returns a generator instead of a list because retrieving all the photos</span>
 <span class="sd">        from a large Photos library can take a very long time--on my system, the rate is about 1</span>
-<span class="sd">        per second; this is limited by the Photos AppleScript interface and I&#39;ve not found </span>
-<span class="sd">        anyway to speed it up.  Using a generator allows you process photos individually rather </span>
-<span class="sd">        than waiting, possibly hours, for Photos to return the results. </span>
-<span class="sd">        </span>
-<span class="sd">        range\_ works like python&#39;s range function.  Thus range\_=[0,4] will return </span>
-<span class="sd">        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library; </span>
-<span class="sd">        range\_ start must be in range 0 to len(PhotosLibrary())-1, </span>
+<span class="sd">        per second; this is limited by the Photos AppleScript interface and I&#39;ve not found</span>
+<span class="sd">        anyway to speed it up.  Using a generator allows you process photos individually rather</span>
+<span class="sd">        than waiting, possibly hours, for Photos to return the results.</span>
+
+<span class="sd">        range\_ works like python&#39;s range function.  Thus range\_=[0,4] will return</span>
+<span class="sd">        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library;</span>
+<span class="sd">        range\_ start must be in range 0 to len(PhotosLibrary())-1,</span>
 <span class="sd">        stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which</span>
-<span class="sd">        photos are return by chunking up requests in batches of photos using range\_, </span>
-<span class="sd">        e.g. request 10 photos at a time.  </span>
+<span class="sd">        photos are return by chunking up requests in batches of photos using range\_,</span>
+<span class="sd">        e.g. request 10 photos at a time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">search</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">range_</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -189,7 +189,7 @@
 
         <span class="k">if</span> <span class="n">search</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># search for text</span>
-            <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_search_photos&quot;</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+            <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibrarySearchPhotos&quot;</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">uuid</span><span class="p">:</span>
             <span class="c1"># search by uuid</span>
             <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">uuid</span>
@@ -216,7 +216,7 @@
                     <span class="sa">f</span><span class="s2">&quot;invalid range: valid range is start: 0 to </span><span class="si">{</span><span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">, stop: 1 to </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-            <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_get_photo_by_range&quot;</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span>
+            <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryGetPhotoByRange&quot;</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stop</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">photo_ids</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterphotos</span><span class="p">(</span><span class="n">uuids</span><span class="o">=</span><span class="n">photo_ids</span><span class="p">)</span>
@@ -232,7 +232,7 @@
             <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="c1"># AppleScript list indexes start at 1</span>
-                <span class="n">photo_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_get_photo_by_range&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">photo_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryGetPhotoByRange&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">yield</span> <span class="n">Photo</span><span class="p">(</span><span class="n">photo_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PhotosLibrary.import_photos"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.import_photos">[docs]</a>    <span class="k">def</span> <span class="nf">import_photos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_paths</span><span class="p">,</span> <span class="n">album</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skip_duplicate_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -241,26 +241,26 @@
 <span class="sd">        Args:</span>
 <span class="sd">            photo_paths: list of file paths to import as str or pathlib.Path</span>
 <span class="sd">            album: optional, Album object for album to import into</span>
-<span class="sd">            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. </span>
-<span class="sd">            </span>
+<span class="sd">            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            list of Photo objects for imported photos</span>
-<span class="sd">            </span>
-<span class="sd">        NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, </span>
+
+<span class="sd">        NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True,</span>
 <span class="sd">            Photos will block with drop-down sheet until the user clicks &quot;Cancel, Import, or Don&#39;t Import.&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># stringify paths in case pathlib.Path paths are passed</span>
         <span class="n">photo_paths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">photo_path</span><span class="p">)</span> <span class="k">for</span> <span class="n">photo_path</span> <span class="ow">in</span> <span class="n">photo_paths</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">album</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span>
-                <span class="s2">&quot;_photoslibrary_import_to_album&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;photosLibraryImportToAlbum&quot;</span><span class="p">,</span>
                 <span class="n">photo_paths</span><span class="p">,</span>
                 <span class="n">album</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                 <span class="n">skip_duplicate_check</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span>
-                <span class="s2">&quot;_photoslibrary_import&quot;</span><span class="p">,</span> <span class="n">photo_paths</span><span class="p">,</span> <span class="n">skip_duplicate_check</span>
+                <span class="s2">&quot;photosLibraryImport&quot;</span><span class="p">,</span> <span class="n">photo_paths</span><span class="p">,</span> <span class="n">skip_duplicate_check</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">Photo</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span> <span class="k">for</span> <span class="n">photo</span> <span class="ow">in</span> <span class="n">photo_ids</span><span class="p">]</span></div>
@@ -271,7 +271,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            top_level: if True, returns only top-level albums otherwise also returns albums in sub-folders; default is False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_album_names&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryAlbumNames&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.folder_names"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.folder_names">[docs]</a>    <span class="k">def</span> <span class="nf">folder_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_level</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;List of folder names in the Photos library</span>
@@ -279,7 +279,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            top_level: if True, returns only top-level folders otherwise also returns sub-folders; default is False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_folder_names&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryFolderNames&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.album"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.album">[docs]</a>    <span class="k">def</span> <span class="nf">album</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_level</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Album instance by name or id</span>
@@ -292,7 +292,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Album object or None if album could not be found</span>
 
-<span class="sd">        Raises: </span>
+<span class="sd">        Raises:</span>
 <span class="sd">            ValueError if both name and id passed or neither passed.</span>
 
 <span class="sd">        Must pass only name or id but not both.</span>
@@ -302,7 +302,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass only name or uuid but not both&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
-            <span class="n">uuid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_by_name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_level</span><span class="p">)</span>
+            <span class="n">uuid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumByName&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_level</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">uuid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">Album</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -311,8 +311,8 @@
             <span class="k">return</span> <span class="n">Album</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.albums"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.albums">[docs]</a>    <span class="k">def</span> <span class="nf">albums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_level</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Album objects for all albums &quot;&quot;&quot;</span>
-        <span class="n">album_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_album_ids&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Album objects for all albums&quot;&quot;&quot;</span>
+        <span class="n">album_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryAlbumIDs&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Album</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">album_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.create_album"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.create_album">[docs]</a>    <span class="k">def</span> <span class="nf">create_album</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -330,11 +330,9 @@
 <span class="sd">            AppleScriptError if error creating the album</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">album_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_create_album&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">album_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryCreateAlbum&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">album_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span>
-                <span class="s2">&quot;_photoslibrary_create_album_at_folder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span>
-            <span class="p">)</span>
+            <span class="n">album_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryCreateAlbumAtFolder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">album_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Album</span><span class="p">(</span><span class="n">album_id</span><span class="p">)</span>
@@ -347,7 +345,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            album: an Album object for album to delete</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_delete_album&quot;</span><span class="p">,</span> <span class="n">album</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryDeleteAlbum&quot;</span><span class="p">,</span> <span class="n">album</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.folder"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.folder">[docs]</a>    <span class="k">def</span> <span class="nf">folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Folder instance by name or uuid</span>
@@ -360,9 +358,9 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Folder object or None if folder could not be found</span>
 
-<span class="sd">        Raises: </span>
+<span class="sd">        Raises:</span>
 <span class="sd">            ValueError if both name and id passed or neither passed.</span>
-<span class="sd">            </span>
+
 <span class="sd">        Must pass only name or id but not both.</span>
 <span class="sd">        If more than one folder with same name, returns first one found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -370,7 +368,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass only name or uuid but not both&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
-            <span class="n">uuid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_by_name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_level</span><span class="p">)</span>
+            <span class="n">uuid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderByName&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_level</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">uuid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -379,23 +377,23 @@
             <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.folder_by_path"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.folder_by_path">[docs]</a>    <span class="k">def</span> <span class="nf">folder_by_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return folder in the library by path</span>
+        <span class="sd">&quot;&quot;&quot;Return folder in the library by path</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            folder_path: list of folder names in descending path order, e.g. [&quot;Folder&quot;, &quot;SubFolder1&quot;, &quot;SubFolder2&quot;]</span>
 
-<span class="sd">        Returns: </span>
+<span class="sd">        Returns:</span>
 <span class="sd">            Folder object for folder at folder_path or None if not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_by_path&quot;</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">)</span>
+        <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderByPath&quot;</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">folder_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">folder_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.folders"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.folders">[docs]</a>    <span class="k">def</span> <span class="nf">folders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Folder objects for all folders &quot;&quot;&quot;</span>
-        <span class="n">folder_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_folder_ids&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Folder objects for all folders&quot;&quot;&quot;</span>
+        <span class="n">folder_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryFolderIDs&quot;</span><span class="p">,</span> <span class="n">top_level</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Folder</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">folder_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.create_folder"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.create_folder">[docs]</a>    <span class="k">def</span> <span class="nf">create_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -413,11 +411,9 @@
 <span class="sd">            AppleScriptError if folder cannot be created</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_create_folder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryCreateFolder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span>
-                <span class="s2">&quot;_photoslibrary_create_folder_at_folder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span>
-            <span class="p">)</span>
+            <span class="n">folder_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryCreateFolderAtFolder&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">folder_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">folder_id</span><span class="p">)</span>
@@ -425,7 +421,7 @@
             <span class="k">raise</span> <span class="n">AppleScriptError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not create folder </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhotosLibrary.make_folders"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.make_folders">[docs]</a>    <span class="k">def</span> <span class="nf">make_folders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Recursively makes folders and subfolders.  Works similar to os.makedirs_.  </span>
+        <span class="sd">&quot;&quot;&quot;Recursively makes folders and subfolders.  Works similar to os.makedirs_.</span>
 <span class="sd">        If any component of folder_path already exists, does not raise error.</span>
 
 <span class="sd">        .. _os.makedirs: https://docs.python.org/3/library/os.html#os.makedirs</span>
@@ -457,7 +453,7 @@
 
 <div class="viewcode-block" id="PhotosLibrary.make_album_folders"><a class="viewcode-back" href="../reference.html#photoscript.PhotosLibrary.make_album_folders">[docs]</a>    <span class="k">def</span> <span class="nf">make_album_folders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">album_name</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make album in a folder path.  If either the album or any component of the</span>
-<span class="sd">           folder path doesn&#39;t exist, it will be created.  If album or folder path </span>
+<span class="sd">           folder path doesn&#39;t exist, it will be created.  If album or folder path</span>
 <span class="sd">           does exist, no duplicate is created.  Folder path is created recursively</span>
 <span class="sd">           if needed.</span>
 
@@ -467,7 +463,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Album object.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError if folder_path is empty or album_name is None.</span>
 <span class="sd">            TypeError if folder_path is not a list.</span>
@@ -491,13 +487,13 @@
 <span class="sd">        Args:</span>
 <span class="sd">            folder: a Folder object for folder to delete</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_delete_folder&quot;</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryDeleteFolder&quot;</span><span class="p">,</span> <span class="n">folder</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photoslibrary_count&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photosLibraryCount&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_temp_album_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; get a temporary album name that doesn&#39;t clash with album in the library &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;get a temporary album name that doesn&#39;t clash with album in the library&quot;&quot;&quot;</span>
         <span class="n">temp_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_name</span><span class="p">()</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">album</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">temp_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_name</span><span class="p">()</span>
@@ -520,7 +516,7 @@
         <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
         <span class="n">reveal_in_finder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Export photo to export_path</span>
+        <span class="sd">&quot;&quot;&quot;Export photo to export_path</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            photo: Photo object to export</span>
@@ -529,19 +525,19 @@
 <span class="sd">            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False</span>
 <span class="sd">            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120</span>
 <span class="sd">            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due </span>
+<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due</span>
 <span class="sd">            to live images and burst images.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError if export_path is not a valid directory</span>
 
-<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True. </span>
-<span class="sd">        If original=True, will export all burst images for burst photos and </span>
-<span class="sd">        live movie for live photos.  If original=False, only the primary image from a </span>
-<span class="sd">        burst set will be exported for burst photos and the live movie component of a </span>
-<span class="sd">        live image will not be exported, only the JPEG component. </span>
+<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True.</span>
+<span class="sd">        If original=True, will export all burst images for burst photos and</span>
+<span class="sd">        live movie for live photos.  If original=False, only the primary image from a</span>
+<span class="sd">        burst set will be exported for burst photos and the live movie component of a</span>
+<span class="sd">        live image will not be exported, only the JPEG component.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">dest</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span>
@@ -554,7 +550,7 @@
 
         <span class="c1"># export original</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span>
-            <span class="s2">&quot;_photo_export&quot;</span><span class="p">,</span> <span class="n">photo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">edited</span><span class="p">,</span> <span class="n">timeout</span>
+            <span class="s2">&quot;photoExport&quot;</span><span class="p">,</span> <span class="n">photo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">edited</span><span class="p">,</span> <span class="n">timeout</span>
         <span class="p">)</span>
 
         <span class="n">exported_paths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -586,7 +582,7 @@
                 <span class="n">ditto</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dest_new</span><span class="p">))</span>
                 <span class="n">exported_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">dest_new</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">reveal_in_finder</span><span class="p">:</span>
-                <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_reveal_in_finder&quot;</span><span class="p">,</span> <span class="n">exported_paths</span><span class="p">)</span>
+                <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;revealInFinder&quot;</span><span class="p">,</span> <span class="n">exported_paths</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">exported_paths</span></div>
 
 
@@ -601,7 +597,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">valuuidalbum</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_exists&quot;</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span>
+        <span class="n">valuuidalbum</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumExists&quot;</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">valuuidalbum</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">id_</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span>
@@ -610,41 +606,41 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; UUID of Album (read only)&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;UUID of Album (read only)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; name of album (read/write) &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;name of album (read/write)&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set name of album &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set name of album&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; title of album (alias for Album.name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;title of album (alias for Album.name)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@title</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set title of album (alias for name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set title of album (alias for name)&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">title</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parent_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; parent container id &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_parent&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;parent container id&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumParent&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="c1"># TODO: if no parent should return a &quot;My Albums&quot; object that contains all top-level folders/albums</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return parent Folder object &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return parent Folder object&quot;&quot;&quot;</span>
         <span class="n">parent_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_id</span>
         <span class="k">if</span> <span class="n">parent_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">parent_id</span><span class="p">)</span>
@@ -664,11 +660,11 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">delim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;delim must be single character&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_get_path&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumGetPath&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Album.photos"><a class="viewcode-back" href="../reference.html#photoscript.Album.photos">[docs]</a>    <span class="k">def</span> <span class="nf">photos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Photo objects for photos contained in album &quot;&quot;&quot;</span>
-        <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_photos&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Photo objects for photos contained in album&quot;&quot;&quot;</span>
+        <span class="n">photo_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumPhotes&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Photo</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">photo_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Album.add"><a class="viewcode-back" href="../reference.html#photoscript.Album.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photos</span><span class="p">):</span>
@@ -681,7 +677,7 @@
 <span class="sd">            list of Photo objects for added photos</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uuids</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">photos</span><span class="p">]</span>
-        <span class="n">added_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_add&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">uuids</span><span class="p">)</span>
+        <span class="n">added_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumAdd&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">uuids</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Photo</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">added_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Album.import_photos"><a class="viewcode-back" href="../reference.html#photoscript.Album.import_photos">[docs]</a>    <span class="k">def</span> <span class="nf">import_photos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_paths</span><span class="p">,</span> <span class="n">skip_duplicate_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -716,19 +712,19 @@
 <span class="sd">            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False</span>
 <span class="sd">            timeout: number of seconds to wait for Photos to complete export (for each photo) before timing out; default = 120</span>
 <span class="sd">            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False</span>
-<span class="sd"> </span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due </span>
+<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due</span>
 <span class="sd">            to live images and burst images.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError if export_path is not a valid directory</span>
 
-<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True. </span>
-<span class="sd">        If original=True, will export all burst images for burst photos and </span>
-<span class="sd">        live movie for live photos.  If original=False, only the primary image from a </span>
-<span class="sd">        burst set will be exported for burst photos and the live movie component of a </span>
-<span class="sd">        live image will not be exported, only the JPEG component. </span>
+<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True.</span>
+<span class="sd">        If original=True, will export all burst images for burst photos and</span>
+<span class="sd">        live movie for live photos.  If original=False, only the primary image from a</span>
+<span class="sd">        burst set will be exported for burst photos and the live movie component of a</span>
+<span class="sd">        live image will not be exported, only the JPEG component.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">exported_photos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">photo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">photos</span><span class="p">():</span>
@@ -741,11 +737,11 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">reveal_in_finder</span> <span class="ow">and</span> <span class="n">exported_photos</span><span class="p">:</span>
-            <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_reveal_in_finder&quot;</span><span class="p">,</span> <span class="n">exported_photos</span><span class="p">)</span>
+            <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;revealInFinder&quot;</span><span class="p">,</span> <span class="n">exported_photos</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">exported_photos</span></div>
 
 <div class="viewcode-block" id="Album.remove_by_id"><a class="viewcode-back" href="../reference.html#photoscript.Album.remove_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">remove_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_ids</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove photos from album. </span>
+        <span class="sd">&quot;&quot;&quot;Remove photos from album.</span>
 <span class="sd">            Note: Photos does not provide a way to remove photos from an album via AppleScript.</span>
 <span class="sd">            This method actually creates a new Album with the same name as the original album and</span>
 <span class="sd">            copies all photos from original album with exception of those to remove to the new album</span>
@@ -792,11 +788,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_by_id</span><span class="p">(</span><span class="n">photo_uuids</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Album.spotlight"><a class="viewcode-back" href="../reference.html#photoscript.Album.spotlight">[docs]</a>    <span class="k">def</span> <span class="nf">spotlight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; spotlight the album in Photos &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_spotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;spotlight the album in Photos&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumSpotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_album_len&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;albumCount&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Folder"><a class="viewcode-back" href="../reference.html#photoscript.Folder">[docs]</a><span class="k">class</span> <span class="nc">Folder</span><span class="p">:</span>
@@ -810,7 +806,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">valid_folder</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_exists&quot;</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span>
+        <span class="n">valid_folder</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderExists&quot;</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">valid_folder</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">id_</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span>
@@ -819,41 +815,41 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; UUID of folder&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;UUID of folder&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; name of folder (read/write) &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;name of folder (read/write)&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set name of photo &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set name of photo&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; title of folder (alias for Folder.name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;title of folder (alias for Folder.name)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@title</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set title of folder (alias for name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set title of folder (alias for name)&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">title</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parent_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; parent container id &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_parent&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;parent container id&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderParent&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="c1"># TODO: if no parent should return a &quot;My Albums&quot; object that contains all top-level folders/albums?</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return parent Folder object &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return parent Folder object&quot;&quot;&quot;</span>
         <span class="n">parent_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_id</span>
         <span class="k">if</span> <span class="n">parent_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Folder</span><span class="p">(</span><span class="n">parent_id</span><span class="p">)</span>
@@ -873,7 +869,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">delim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;delim must be single character&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_get_path&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderGetPath&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Folder.path"><a class="viewcode-back" href="../reference.html#photoscript.Folder.path">[docs]</a>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return list of Folder objects this folder is contained in.</span>
@@ -881,13 +877,13 @@
 <span class="sd">        path()[-1] is the immediate parent of this folder.  Returns empty</span>
 <span class="sd">        list if folder is not contained in another folders.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_path_ids&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderPathIDs&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folder_path</span><span class="p">]</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">albums</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Album objects for albums contained in folder &quot;&quot;&quot;</span>
-        <span class="n">album_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_albums&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Album objects for albums contained in folder&quot;&quot;&quot;</span>
+        <span class="n">album_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderAlbums&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Album</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">album_ids</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Folder.album"><a class="viewcode-back" href="../reference.html#photoscript.Folder.album">[docs]</a>    <span class="k">def</span> <span class="nf">album</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -901,8 +897,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">subfolders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Folder objects for immediate sub-folders contained in folder &quot;&quot;&quot;</span>
-        <span class="n">folder_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_folders&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Folder objects for immediate sub-folders contained in folder&quot;&quot;&quot;</span>
+        <span class="n">folder_ids</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderFolders&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Folder</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">folder_ids</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Folder.folder"><a class="viewcode-back" href="../reference.html#photoscript.Folder.folder">[docs]</a>    <span class="k">def</span> <span class="nf">folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -939,11 +935,11 @@
         <span class="k">return</span> <span class="n">PhotosLibrary</span><span class="p">()</span><span class="o">.</span><span class="n">create_folder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Folder.spotlight"><a class="viewcode-back" href="../reference.html#photoscript.Folder.spotlight">[docs]</a>    <span class="k">def</span> <span class="nf">spotlight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; spotlight the folder in Photos &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_spotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;spotlight the folder in Photos&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderSpotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_folder_len&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;folderCount&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Photo"><a class="viewcode-back" href="../reference.html#photoscript.Photo">[docs]</a><span class="k">class</span> <span class="nc">Photo</span><span class="p">:</span>
@@ -956,7 +952,7 @@
                 <span class="n">id_</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">uuid</span><span class="si">}{</span><span class="n">UUID_SUFFIX_PHOTO</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">valid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_exists&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoExists&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">id_</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span>
@@ -965,83 +961,83 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; UUID of Photo &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;UUID of Photo&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; name of photo (read/write) &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;name of photo (read/write)&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">kMissingValue</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set name of photo &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set name of photo&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; title of photo (alias for name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;title of photo (alias for name)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@title</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set title of photo (alias for name) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set title of photo (alias for name)&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">title</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; description of photo &quot;&quot;&quot;</span>
-        <span class="n">descr</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_description&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;description of photo&quot;&quot;&quot;</span>
+        <span class="n">descr</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoDescription&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">descr</span> <span class="k">if</span> <span class="n">descr</span> <span class="o">!=</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@description</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set description of photo &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set description of photo&quot;&quot;&quot;</span>
         <span class="n">descr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">descr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">descr</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_description&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">descr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetDescription&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">descr</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of keywords for photo &quot;&quot;&quot;</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_keywords&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of keywords for photo&quot;&quot;&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoKeywords&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keywords</span><span class="p">]</span> <span class="k">if</span> <span class="n">keywords</span> <span class="o">!=</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">keywords</span>
 
     <span class="nd">@keywords</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set keywords to list &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set keywords to list&quot;&quot;&quot;</span>
         <span class="n">keywords</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">keywords</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_keywords&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetKeywords&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; return favorite status (boolean) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_favorite&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;return favorite status (boolean)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoFavorite&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="nd">@favorite</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">favorite</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; set favorite status (boolean) &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;set favorite status (boolean)&quot;&quot;&quot;</span>
         <span class="n">favorite</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">favorite</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_favorite&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">favorite</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetFavorite&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">favorite</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; height of photo in pixels &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_height&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;height of photo in pixels&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoHeight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; width of photo in pixels &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_width&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;width of photo in pixels&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoWidth&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; GPS altitude of photo in meters &quot;&quot;&quot;</span>
-        <span class="n">altitude</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_altitude&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;GPS altitude of photo in meters&quot;&quot;&quot;</span>
+        <span class="n">altitude</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoAltitude&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">altitude</span> <span class="k">if</span> <span class="n">altitude</span> <span class="o">!=</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
@@ -1049,7 +1045,7 @@
         <span class="sd">&quot;&quot;&quot;The GPS latitude and longitude, in a tuple of 2 numbers or None.</span>
 <span class="sd">        Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_location&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoLocation&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">kMissingValue</span> <span class="k">else</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
@@ -1076,31 +1072,31 @@
             <span class="n">kMissingValue</span> <span class="k">if</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_location&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetLocation&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; date of photo as timezone-naive datetime.datetime object &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_date&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;date of photo as timezone-naive datetime.datetime object&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoDate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="nd">@date</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Set date of photo as timezone-naive datetime.datetime object</span>
-<span class="sd">        </span>
+        <span class="sd">&quot;&quot;&quot;Set date of photo as timezone-naive datetime.datetime object</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            date: timezone-naive datetime.datetime object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_set_date&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSetDate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; filename of photo &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_filename&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;filename of photo&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoFilename&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">albums</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; list of Album objects for albums photo is contained in &quot;&quot;&quot;</span>
-        <span class="n">albums</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_albums&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;list of Album objects for albums photo is contained in&quot;&quot;&quot;</span>
+        <span class="n">albums</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoAlbums&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">Album</span><span class="p">(</span><span class="n">album</span><span class="p">)</span> <span class="k">for</span> <span class="n">album</span> <span class="ow">in</span> <span class="n">albums</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Photo.export"><a class="viewcode-back" href="../reference.html#photoscript.Photo.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
@@ -1120,19 +1116,19 @@
 <span class="sd">            overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False</span>
 <span class="sd">            timeout: number of seconds to wait for Photos to complete export before timing out; default = 120</span>
 <span class="sd">            reveal_in_finder: if True, will open Finder with exported items selected when done; default = False</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due </span>
+<span class="sd">            List of full paths of exported photos.  There may be more than one photo exported due</span>
 <span class="sd">            to live images and burst images.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError if export_path is not a valid directory</span>
 
-<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True. </span>
-<span class="sd">        If original=True, will export all burst images for burst photos and </span>
-<span class="sd">        live movie for live photos.  If original=False, only the primary image from a </span>
-<span class="sd">        burst set will be exported for burst photos and the live movie component of a </span>
-<span class="sd">        live image will not be exported, only the JPEG component. </span>
+<span class="sd">        Note: Photos always exports as high-quality JPEG unless original=True.</span>
+<span class="sd">        If original=True, will export all burst images for burst photos and</span>
+<span class="sd">        live movie for live photos.  If original=False, only the primary image from a</span>
+<span class="sd">        burst set will be exported for burst photos and the live movie component of a</span>
+<span class="sd">        live image will not be exported, only the JPEG component.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PhotosLibrary</span><span class="p">()</span><span class="o">.</span><span class="n">_export_photo</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -1144,13 +1140,13 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Photo.duplicate"><a class="viewcode-back" href="../reference.html#photoscript.Photo.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; duplicates the photo and returns Photo object for the duplicate &quot;&quot;&quot;</span>
-        <span class="n">dup_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_duplicate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;duplicates the photo and returns Photo object for the duplicate&quot;&quot;&quot;</span>
+        <span class="n">dup_id</span> <span class="o">=</span> <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoDuplicate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Photo</span><span class="p">(</span><span class="n">dup_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Photo.spotlight"><a class="viewcode-back" href="../reference.html#photoscript.Photo.spotlight">[docs]</a>    <span class="k">def</span> <span class="nf">spotlight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; spotlight the photo in Photos &quot;&quot;&quot;</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;_photo_spotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
+        <span class="sd">&quot;&quot;&quot;spotlight the photo in Photos&quot;&quot;&quot;</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s2">&quot;photoSpotlight&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -1208,7 +1204,7 @@
       &copy;2020, Rhet Turnbull.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
