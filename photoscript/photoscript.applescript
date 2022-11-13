@@ -14,7 +14,7 @@ property WAIT_FOR_PHOTOS : 300
 
 ---------- PhotoLibrary ----------
 
-on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
+on photosLibraryWaitForPhotos(timeoutDurationInSeconds)
 	if running of application "Photos" is false then
 		tell application "Photos" to launch
 		tell current application
@@ -35,194 +35,194 @@ on _photoslibrary_waitforphotos(timeoutDurationInSeconds)
 		error number -128
 	end if
 	return true
-end _photoslibrary_waitforphotos
+end photosLibraryWaitForPhotos
 
-on _photoslibrary_isrunning()
+on photosLibraryIsRunning()
 	(* return true if Photos is running, otherwise false *)
-	set app_name_ to "Photos"
+	set theApp to "Photos"
 	
-	if application app_name_ is running then
+	if application theApp is running then
 		return true
 	else
 		return false
 	end if
-end _photoslibrary_isrunning
+end photosLibraryIsRunning
 
-on _photoslibrary_hide()
+on photosLibraryHide()
 	(* tell Photos to hide if it's running; if not running, do nothing  *)
-	set app_name_ to "Photos"
+	set theApp to "Photos"
 	try
 		tell application "System Events"
-			set visible of application process app_name_ to false
+			set visible of application process theApp to false
 		end tell
 	end try
-end _photoslibrary_hide
+end photosLibraryHide
 
-on _photoslibrary_hidden()
+on photosLibraryIsHidden()
 	(* return true if hidden or not running, otherwise false *)
-	set app_name_ to "Photos"
+	set theApp to "Photos"
 	try
 		tell application "System Events"
-			return not visible of application process app_name_
+			return not visible of application process theApp
 		end tell
 	on error
 		return true
 	end try
-end _photoslibrary_hidden
+end photosLibraryIsHidden
 
-on _photoslibrary_activate()
+on photosLibraryActivate()
 	(* activate Photos app *)
 	tell application "Photos"
 		activate
 	end tell
-end _photoslibrary_activate
+end photosLibraryActivate
 
-on _photoslibrary_quit()
+on photosLibraryQuit()
 	(* quit Photos app *)
 	tell application "Photos"
 		quit
 	end tell
-end _photoslibrary_quit
+end photosLibraryQuit
 
-on _photoslibrary_name()
+on photosLibraryName()
 	(* name of application *)
 	tell application "Photos"
 		return name
 	end tell
-end _photoslibrary_name
+end photosLibraryName
 
-on _photoslibrary_version()
+on photosLibraryVersion()
 	(* Photos version *)
 	tell application "Photos"
 		return version
 	end tell
-end _photoslibrary_version
+end photosLibraryVersion
 
-on _photoslibrary_frontmost()
+on photosLibraryIsFrontMost()
 	(* returns true if front most app, otherwise false *)
 	tell application "Photos"
 		return frontmost
 	end tell
-end _photoslibrary_frontmost
+end photosLibraryIsFrontMost
 
-on _photoslibrary_get_all_photos()
+on photosLibraryGetAllPhotos()
 	(* return all photos in the library *)
 	tell application "Photos"
-		set ids to id of media items
+		set theIDs to id of media items
 	end tell
-	return ids
-end _photoslibrary_get_all_photos
+	return theIDs
+end photosLibraryGetAllPhotos
 
-on _photoslibrary_get_photo_by_number(num_)
+on photosLibraryGetPhotoByNumber(photoNumber)
 	(* return photo number num_; uses Photos' internal numbering *)
 	tell application "Photos"
-		return id of media item num_
+		return id of media item photoNumber
 	end tell
-end _photoslibrary_get_photo_by_number
+end photosLibraryGetPhotoByNumber
 
-on _photoslibrary_get_photo_by_range(start_, stop_)
+on photosLibraryGetPhotoByRange(startNumber, stopNumber)
 	(* return photos in range (inclusive); uses Photos' internal numbering *)
 	tell application "Photos"
-		return id of media items start_ thru stop_
+		return id of media items startNumber thru stopNumber
 	end tell
-end _photoslibrary_get_photo_by_range
+end photosLibraryGetPhotoByRange
 
 
-on _photoslibrary_search_photos(search_str)
+on photosLibrarySearchPhotos(searchString)
 	(* search for photos by text string *)
-	set ids to {}
+	set theIDs to {}
 	tell application "Photos"
-		set _items to search for search_str
-		repeat with _item in _items
-			copy id of _item to end of ids
+		set theItems to search for searchString
+		repeat with anItem in theItems
+			copy id of anItem to end of theIDs
 		end repeat
 	end tell
-	return ids
-end _photoslibrary_search_photos
+	return theIDs
+end photosLibrarySearchPhotos
 
-on _photoslibrary_count()
+on photosLibraryCount()
 	(* return count of photos in the library *)
 	tell application "Photos"
 		set mediaItemCount to (count of media items)
 		return mediaItemCount
 	end tell
-end _photoslibrary_count
+end photosLibraryCount
 
-on _photoslibrary_import(filenames, skip_duplicate_check)
-	(* import files
-	   Args:
-	       filenames: list of files in POSIX format to import
-		skip_duplicate_check: boolean, if True, skips checking for duplicates
-	  Returns:
-	  	list of item IDs for imported items
+on photosLibraryImport(filenames, skipDuplicateCheck)
+	(* 	import files
+		Args:
+			filenames: list of files in POSIX format to import
+			skipDuplicateCheck: boolean, if True, skips checking for duplicates
+		Returns:
+			list of item IDs for imported items
 	*)
-	set file_list to {}
+	set fileList to {}
 	repeat with f in filenames
 		set fname to POSIX file f
-		copy fname to the end of file_list
+		copy fname to the end of fileList
 	end repeat
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
-		set items_ to import file_list skip check duplicates skip_duplicate_check
-		if items_ = missing value then
+		set theItems to import fileList skip check duplicates skipDuplicateCheck
+		if theItems = missing value then
 			return {}
 		end if
-		set item_list_ to {}
-		repeat with item_ in items_
-			copy id of item_ to end of item_list_
+		set itemList to {}
+		repeat with theItem in theItems
+			copy id of theItem to end of itemList
 		end repeat
-		return item_list_
+		return itemList
 	end tell
-end _photoslibrary_import
+end photosLibraryImport
 
-on _photoslibrary_import_to_album(filenames, album_, skip_duplicate_check)
+on photosLibraryImportToAlbum(filenames, albumID, skipDuplicateCheck)
 	(* import files into album 
 	   Args:
 	       filenames: list of files in POSIX format to import
-	       album_name: name of album to import to
-		skip_duplicate_check: boolean, if True, skips checking for duplicates
+	       albumID: ID of album to import to
+		skipDuplicateCheck: boolean, if True, skips checking for duplicates
 	  Returns:
 	  	list of item IDs for imported items
 	*)
-	set file_list to {}
+	set fileList to {}
 	repeat with f in filenames
 		set fname to POSIX file f
-		copy fname to the end of file_list
+		copy fname to the end of fileList
 	end repeat
 	tell application "Photos"
-		set items_ to import file_list into album id (album_) skip check duplicates skip_duplicate_check
-		if items_ = missing value then
+		set theItems to import fileList into album id (albumID) skip check duplicates skipDuplicateCheck
+		if theItems = missing value then
 			return {}
 		end if
-		set item_list_ to {}
-		repeat with item_ in items_
-			copy id of item_ to end of item_list_
+		set itemList to {}
+		repeat with theItem in theItems
+			copy id of theItem to end of itemList
 		end repeat
-		return item_list_
+		return itemList
 	end tell
-end _photoslibrary_import_to_album
+end photosLibraryImportToAlbum
 
-on _photoslibrary_album_names(top_level)
+on photosLibraryAlbumNames(topLevel)
 	(* return list of album names found in Photos *)
-	set albums_folders to _photoslibrary_get_album_folder_names(top_level)
+	set albums_folders to photosLibraryGetAlbumFolderNames(topLevel)
 	return album_names of albums_folders
-end _photoslibrary_album_names
+end photosLibraryAlbumNames
 
-on _photoslibrary_folder_names(top_level)
+on photosLibraryFolderNames(topLevel)
 	(* return list of folder names found in Photos *)
-	set albums_folders to _photoslibrary_get_album_folder_names(top_level)
+	set albums_folders to photosLibraryGetAlbumFolderNames(topLevel)
 	return folder_names of albums_folders
-end _photoslibrary_folder_names
+end photosLibraryFolderNames
 
-on _photoslibrary_get_albums_folders()
+on photosLibraryGetAlbumsFolders()
 	(* return record containing album names and folder names in the library
 	
 	    Returns: {album_names:list of album names, folder_names:list of folder names}
 	*)
 	# see https://discussions.apple.com/docs/DOC-250002459
 	tell application "Photos"
-		set allfolders to {}
-		set allalbums to the albums --  collect all albums
+		set allFolders to {}
+		set allAlbums to the albums --  collect all albums
 		set level to 0 -- nesting level of folders
 		
 		set nextlevelFolders to the folders
@@ -236,94 +236,94 @@ on _photoslibrary_get_albums_folders()
 					set ffolders to its folders
 					set falbums to its albums
 					set nextlevelFolders to ffolders & nextlevelFolders
-					set allalbums to falbums & allalbums
+					set allAlbums to falbums & allAlbums
 				end tell
 			end repeat
-			set allfolders to currentLevelFolders & allfolders
+			set allFolders to currentLevelFolders & allFolders
 			
 			set level to level + 1
 		end repeat
 	end tell
 	
-	set albums_folders to {_albums:allalbums, _folders:allfolders}
+	set albums_folders to {_albums:allAlbums, _folders:allFolders}
 	return albums_folders
-end _photoslibrary_get_albums_folders
+end photosLibraryGetAlbumsFolders
 
 
-on _photoslibrary_get_top_level_albums_folders()
+on photosLibraryGetTopLevelAlbumsFolders()
 	(* return record containing album names and folder names in the library
 	
 	    Returns: {album_names:list of album names, folder_names:list of folder names}
 	*)
 	tell application "Photos"
-		set allfolders_ to the folders
-		set allalbums_ to the albums
+		set allFolders to the folders
+		set allAlbums to the albums
 		
 		-- On Mojave, this returns all albums and folders so filter only those with no parents
-		set allfolders to {}
-		set allalbums to {}
-		repeat with folder_ in allfolders_
+		set allFoldersFiltered to {}
+		set allAlbumsFiltered to {}
+		repeat with folder_ in allFolders
 			try
-				set parent_id_ to id of parent of folder_
+				set parentID to id of parent of folder_
 			on error
 				-- no parent
 				set top_folder_ to folder id (id of folder_)
-				copy top_folder_ to end of allfolders
+				copy top_folder_ to end of allFoldersFiltered
 			end try
 		end repeat
 		
-		repeat with album_ in allalbums_
+		repeat with album_ in allAlbums
 			try
-				set parent_id_ to id of parent of album_
+				set parentID to id of parent of album_
 			on error
 				-- no parent
-				set top_album_ to album id (id of album_)
-				copy top_album_ to end of allalbums
+				set topAlbum to album id (id of album_)
+				copy topAlbum to end of allAlbumsFiltered
 			end try
 		end repeat
 	end tell
 	
-	set albums_folders to {_albums:allalbums, _folders:allfolders}
+	set albums_folders to {_albums:allAlbumsFiltered, _folders:allFoldersFiltered}
 	return albums_folders
-end _photoslibrary_get_top_level_albums_folders
+end photosLibraryGetTopLevelAlbumsFolders
 
-on _photoslibrary_get_album_folder_names(top_level)
+on photosLibraryGetAlbumFolderNames(topLevel)
 	(* return names of albums and folders *)
-	if top_level then
-		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	if topLevel then
+		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders to _photoslibrary_get_albums_folders()
+		set albums_folders to photosLibraryGetAlbumsFolders()
 	end if
-	set allalbums to _albums of albums_folders
-	set allfolders to _folders of albums_folders
-	set allalbumnames to {}
-	set allfoldernames to {}
+	set allAlbums to _albums of albums_folders
+	set allFolders to _folders of albums_folders
+	set allAlbumNames to {}
+	set allFolderNames to {}
 	tell application "Photos"
 		
-		repeat with _album in allalbums
+		repeat with _album in allAlbums
 			set theName to name of _album
-			copy theName to end of allalbumnames
+			copy theName to end of allAlbumNames
 		end repeat
-		repeat with _folder in allfolders
+		repeat with _folder in allFolders
 			set theName to name of _folder
-			copy theName to end of allfoldernames
+			copy theName to end of allFolderNames
 		end repeat
 	end tell
-	set album_folder_names to {album_names:allalbumnames, folder_names:allfoldernames}
-	return album_folder_names
-end _photoslibrary_get_album_folder_names
+	set albumfolderNames to {album_names:allAlbumNames, folder_names:allFolderNames}
+	return albumfolderNames
+end photosLibraryGetAlbumFolderNames
 
-on _photoslibrary_album_ids(top_level)
+on photosLibraryAlbumIDs(topLevel)
 	(* return list of album ids found in Photos 
 	  Args:
-	      top_level: boolean; if true returns only top-level albums otherwise all albums
+	      topLevel: boolean; if true returns only top-level albums otherwise all albums
 	*)
-	if top_level then
+	if topLevel then
 		tell application "Photos"
 			return id of every album
 		end tell
 	else
-		set albums_folders to _photoslibrary_get_albums_folders()
+		set albums_folders to photosLibraryGetAlbumsFolders()
 		set _albums to _albums of albums_folders
 		set _ids to {}
 		repeat with _a in _albums
@@ -331,18 +331,18 @@ on _photoslibrary_album_ids(top_level)
 		end repeat
 		return _ids
 	end if
-end _photoslibrary_album_ids
+end photosLibraryAlbumIDs
 
 
-on _photoslibrary_folder_ids(top_level)
+on photosLibraryFolderIDs(topLevel)
 	(* return list of folder ids found in Photos 
 	  Args:
-	      top_level: boolean; if true returns only top-level folders otherwise all folders
+	      topLevel: boolean; if true returns only top-level folders otherwise all folders
 	*)
-	if top_level then
-		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	if topLevel then
+		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders to _photoslibrary_get_albums_folders()
+		set albums_folders to photosLibraryGetAlbumsFolders()
 	end if
 	set _folders to _folders of albums_folders
 	set _ids to {}
@@ -350,18 +350,18 @@ on _photoslibrary_folder_ids(top_level)
 		copy id of _f to end of _ids
 	end repeat
 	return _ids
-end _photoslibrary_folder_ids
+end photosLibraryFolderIDs
 
 
-on _photoslibrary_folder_id_lists(top_level)
+on photosLibraryFolderIDLists(topLevel)
 	(* return list of folder ids found in Photos as list of ids
 	  Args:
-	      top_level: boolean; if true returns only top-level folders otherwise all folders
+	      topLevel: boolean; if true returns only top-level folders otherwise all folders
 	*)
-	if top_level then
-		set albums_folders to _photoslibrary_get_top_level_albums_folders()
+	if topLevel then
+		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders to _photoslibrary_get_albums_folders()
+		set albums_folders to photosLibraryGetAlbumsFolders()
 	end if
 	set _folders to _folders of albums_folders
 	set _id_list to {}
@@ -369,8 +369,8 @@ on _photoslibrary_folder_id_lists(top_level)
 		set folder_ids_ to {id of _f}
 		try
 			repeat
-				set parent_id_ to id of parent of _f
-				copy parent_id_ to end of folder_ids_
+				set parentID to id of parent of _f
+				copy parentID to end of folder_ids_
 				set _f to parent of _f
 			end repeat
 		on error
@@ -378,16 +378,16 @@ on _photoslibrary_folder_id_lists(top_level)
 		end try
 	end repeat
 	return _id_list
-end _photoslibrary_folder_id_lists
+end photosLibraryFolderIDLists
 
 
-on _photoslibrary_create_album(albumName)
+on photosLibraryCreateAlbum(albumName)
 	(*  creates album named albumName
 	     does not check for duplicate album
            Returns:
 		    UUID of newly created album or 0 if error
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set count_ to 0
 		repeat while count_ < MAX_RETRY
@@ -401,16 +401,16 @@ on _photoslibrary_create_album(albumName)
 		end repeat
 		return 0
 	end tell
-end _photoslibrary_create_album
+end photosLibraryCreateAlbum
 
-on _photoslibrary_create_album_at_folder(albumName, folder_id_)
+on photosLibraryCreateAlbumAtFolder(albumName, folder_id_)
 	(*  creates album named albumName inside folder folder_id_
 	     does not check for duplicate album
            Returns:
 		    UUID of newly created album or 0 if error
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	set folder_ to _folder_get_folder_for_id(folder_id_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set folder_ to folderGetFolderForID(folder_id_)
 	tell application "Photos"
 		set count_ to 0
 		repeat while count_ < MAX_RETRY
@@ -424,49 +424,49 @@ on _photoslibrary_create_album_at_folder(albumName, folder_id_)
 		end repeat
 		return 0
 	end tell
-end _photoslibrary_create_album_at_folder
+end photosLibraryCreateAlbumAtFolder
 
-on _photoslibrary_get_selection()
+on photosLibraryGetSelection()
 	(* return ids of selected items *)
-	set item_ids_ to {}
+	set theItemids_ to {}
 	tell application "Photos"
-		set items_ to selection
-		repeat with item_ in items_
-			copy id of item_ to end of item_ids_
+		set theItems to selection
+		repeat with theItem in theItems
+			copy id of theItem to end of theItemids_
 		end repeat
 	end tell
-	return item_ids_
-end _photoslibrary_get_selection
+	return theItemids_
+end photosLibraryGetSelection
 
-on _photoslibrary_favorites()
+on photosLibraryFavorites()
 	(* return favorites album *)
 	tell application "Photos"
 		return id of favorites album
 	end tell
-end _photoslibrary_favorites
+end photosLibraryFavorites
 
-on _photoslibrary_recently_deleted()
+on photosLibraryRecentlyDeleted()
 	(* return recently deleted album *)
 	tell application "Photos"
 		return id of recently deleted album
 	end tell
-end _photoslibrary_recently_deleted
+end photosLibraryRecentlyDeleted
 
-on _photoslibrary_delete_album(id_)
+on photosLibraryDeleteAlbum(id_)
 	(* delete album with id_ *)
 	tell application "Photos"
 		set album_ to album id (id_)
 		delete album_
 	end tell
-end _photoslibrary_delete_album
+end photosLibraryDeleteAlbum
 
-on _photoslibrary_create_folder(folderName)
+on photosLibraryCreateFolder(folderName)
 	(*  creates folder named folderName
 	     does not check for duplicate folder
            Returns:
 		    UUID of newly created folder or 0 if error
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set count_ to 0
 		repeat while count_ < MAX_RETRY
@@ -480,16 +480,16 @@ on _photoslibrary_create_folder(folderName)
 		end repeat
 		return 0
 	end tell
-end _photoslibrary_create_folder
+end photosLibraryCreateFolder
 
-on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
+on photosLibraryCreateFolderAtFolder(folderName, folder_id_)
 	(*  creates folder named folderName inside folder folder_id_
 	     does not check for duplicate folder
            Returns:
 		    UUID of newly created folder 
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	set folder_ to _folder_get_folder_for_id(folder_id_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set folder_ to folderGetFolderForID(folder_id_)
 	tell application "Photos"
 		set count_ to 0
 		repeat while count_ < MAX_RETRY
@@ -503,36 +503,36 @@ on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
 		end repeat
 		return 0
 	end tell
-end _photoslibrary_create_folder_at_folder
+end photosLibraryCreateFolderAtFolder
 
-on _photoslibrary_delete_folder(id_)
+on photosLibraryDeleteFolder(id_)
 	(* delete folder with id_ *)
-	set folder_ to _folder_get_folder_for_id(id_)
+	set folder_ to folderGetFolderForID(id_)
 	tell application "Photos"
 		delete folder_
 	end tell
-end _photoslibrary_delete_folder
+end photosLibraryDeleteFolder
 
 (*
-on _photoslibrary_delete_folder(_id)
+on photosLibraryDeleteFolder(_id)
 	--TODO: doesn't currently work 
-	_photoslibrary_waitforphotos(300)
-	set _folder_ids to _photoslibrary_internal_path_ids_to_album_folder(_folder_get_folder_for_id(_id))
+	photosLibraryWaitForPhotos(300)
+	set _folder_ids to photosLibraryInternalPathIDsToAlbumFolder(folderGetFolderForID(_id))
 	tell application "Photos"
 		set folder_ to folder id (item 1 of _folder_ids)
 		set _folder_ids to rest of _folder_ids
 		repeat with _folder_id in _folder_ids
-			set folder_ to _folder_get_folder_for_id(_folder_id)
+			set folder_ to folderGetFolderForID(_folder_id)
 		end repeat
 		say (name of folder_ as text)
 		delete (folder_)
 		
 	end tell
-end _photoslibrary_delete_folder
+end photosLibraryDeleteFolder
 *)
 
-on _photoslibrary_internal_path_to_album_folder(targetObject, pathItemDelimiter)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+on photosLibraryInternalPathToAlbumFolder(targetObject, pathItemDelimiter)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		if not (exists targetObject) then
 			error "The indicated item does not exist."
@@ -551,17 +551,17 @@ on _photoslibrary_internal_path_to_album_folder(targetObject, pathItemDelimiter)
 			set folderName to name of parent of targetObject
 			set parentID to id of parent of targetObject
 			set pathToObject to folderName & pathItemDelimiter & pathToObject
-			set targetObject to _folder_get_folder_for_id(parentID)
+			set targetObject to folderGetFolderForID(parentID)
 		on error
 			return pathToObject
 		end try
 		
 	end repeat
-end _photoslibrary_internal_path_to_album_folder
+end photosLibraryInternalPathToAlbumFolder
 
 
-on _photoslibrary_internal_path_ids_to_album_folder(targetObject)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+on photosLibraryInternalPathIDsToAlbumFolder(targetObject)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		if not (exists targetObject) then
 			error "The indicated item does not exist."
@@ -580,32 +580,32 @@ on _photoslibrary_internal_path_ids_to_album_folder(targetObject)
 			set folderID to id of parent of targetObject
 			set parentID to id of parent of targetObject
 			copy folderID to beginning of pathToObject
-			set targetObject to _folder_get_folder_for_id(parentID)
+			set targetObject to folderGetFolderForID(parentID)
 		on error
 			return pathToObject
 		end try
 		
 	end repeat
-end _photoslibrary_internal_path_ids_to_album_folder
+end photosLibraryInternalPathIDsToAlbumFolder
 
 ---------- Album ----------
 
-on _album_name(_id)
+on albumName(_id)
 	(* return name of album with id _id *)
 	tell application "Photos"
 		return name of album id (_id)
 	end tell
-end _album_name
+end albumName
 
-on _album_by_name(name_, top_level_)
+on albumByName(name_, topLevel)
 	(* return album id of album named name_ or 0 if no album found with name_
 	    if more than one album named name_, returns the first one found 
-	  if top_level_ = true, returns only top level albums
+	  if topLevel = true, returns only top level albums
 	*)
-	if top_level_ then
-		set albums_folders_ to _photoslibrary_get_top_level_albums_folders()
+	if topLevel then
+		set albums_folders_ to photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders_ to _photoslibrary_get_albums_folders()
+		set albums_folders_ to photosLibraryGetAlbumsFolders()
 	end if
 	set _albums to _albums of albums_folders_
 	repeat with _a in _albums
@@ -614,11 +614,11 @@ on _album_by_name(name_, top_level_)
 		end if
 	end repeat
 	return 0
-end _album_by_name
+end albumByName
 
-on _album_exists(_id)
+on albumExists(_id)
 	(* return true if album with _id exists otherwise false *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		try
 			set _exist to album id (_id)
@@ -628,9 +628,9 @@ on _album_exists(_id)
 		
 		return true
 	end tell
-end _album_exists
+end albumExists
 
-on _album_parent(_id)
+on albumParent(_id)
 	(* returns parent folder id of album or 0 if no parent *)
 	try
 		tell application "Photos"
@@ -639,9 +639,9 @@ on _album_parent(_id)
 	on error
 		return 0
 	end try
-end _album_parent
+end albumParent
 
-on _album_photos(id_)
+on albumPhotes(id_)
 	(* return list of ids for media items in album _id *)
 	set ids to {}
 	tell application "Photos"
@@ -652,38 +652,38 @@ on _album_photos(id_)
 		end repeat
 	end tell
 	return ids
-end _album_photos
+end albumPhotes
 
-on _album_len(id_)
+on albumCount(id_)
 	(* return count of items in albums *)
 	tell application "Photos"
 		return count of media items in album id (id_)
 	end tell
-end _album_len
+end albumCount
 
-on _album_add(id_, items_)
+on albumAdd(id_, theItems)
 	(* add media items to album
 	    Args:
 		id_: id of album
-	       items_: list of media item ids
+	       theItems: list of media item ids
 		   
 	   Returns:
 	      list of media item ids added
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
-		if items_ = {} then
+		if theItems = {} then
 			return {}
 		end if
 		
 		set media_list_ to {}
-		repeat with item_ in items_
-			copy media item id (item_) to end of media_list_
+		repeat with theItem in theItems
+			copy media item id (theItem) to end of media_list_
 		end repeat
 		
 		set media_id_list_ to {}
-		repeat with item_ in media_list_
-			copy id of item_ to end of media_id_list_
+		repeat with theItem in media_list_
+			copy id of theItem to end of media_id_list_
 		end repeat
 		
 		set album_ to album id (id_)
@@ -708,11 +708,11 @@ on _album_add(id_, items_)
 		
 		return media_id_list_
 	end tell
-end _album_add
+end albumAdd
 
-on _album_set_name(_id, _title)
+on albumSetName(_id, _title)
 	(* set name or title of album *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -723,38 +723,38 @@ on _album_set_name(_id, _title)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _album_set_name
+end albumSetName
 
-on _album_get_path(id_, path_delimiter_)
+on albumGetPath(id_, path_delimiter_)
 	(* return path to album as a string *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set album_ to album id (id_)
 	end tell
 	try
-		set path_ to _photoslibrary_internal_path_to_album_folder(album_, path_delimiter_)
+		set path_ to photosLibraryInternalPathToAlbumFolder(album_, path_delimiter_)
 	on error
 		set path_ to ""
 	end try
 	return path_
-end _album_get_path
+end albumGetPath
 
-on _album_spotlight(id_)
+on albumSpotlight(id_)
 	(* spotlight album *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		activate
 		spotlight album id (id_)
 	end tell
-end _album_spotlight
+end albumSpotlight
 
 
 ---------- Folder ----------
 
-on _folder_get_folder_for_id(_id)
+on folderGetFolderForID(_id)
 	(* return folder for _id *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	set albums_folders to _photoslibrary_get_albums_folders()
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set albums_folders to photosLibraryGetAlbumsFolders()
 	set _folders to _folders of albums_folders
 	tell application "Photos"
 		repeat with _folder in _folders
@@ -765,12 +765,12 @@ on _folder_get_folder_for_id(_id)
 		end repeat
 		return missing value
 	end tell
-end _folder_get_folder_for_id
+end folderGetFolderForID
 
-on _folder_exists(_id)
+on folderExists(_id)
 	(* return true if folder with _id exists otherwise false *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	set version_ to _photoslibrary_version() as number
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set version_ to photosLibraryVersion() as number
 	if version_ < 5 then
 		tell application "Photos"
 			try
@@ -782,28 +782,28 @@ on _folder_exists(_id)
 			return true
 		end tell
 	else
-		set _exist to _folder_get_folder_for_id(_id)
+		set _exist to folderGetFolderForID(_id)
 		if _exist is not missing value then
 			return true
 		else
 			return false
 		end if
 	end if
-end _folder_exists
+end folderExists
 
-on _folder_name(_id)
+on folderName(_id)
 	(* return name of folder with id _id *)
-	set folder_ to _folder_get_folder_for_id(_id)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set folder_ to folderGetFolderForID(_id)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return name of folder_
 	end tell
-end _folder_name
+end folderName
 
-on _folder_set_name(_id, _title)
+on folderSetName(_id, _title)
 	(* set name or title of folder *)
-	set folder_ to _folder_get_folder_for_id(_id)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set folder_ to folderGetFolderForID(_id)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -814,26 +814,26 @@ on _folder_set_name(_id, _title)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _folder_set_name
+end folderSetName
 
-on _folder_parent(_id)
+on folderParent(_id)
 	(* returns parent folder id of folder or 0 if no parent *)
 	try
-		set folder_ to _folder_get_folder_for_id(_id)
-		_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+		set folder_ to folderGetFolderForID(_id)
+		photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 		tell application "Photos"
 			return id of parent of folder_
 		end tell
 	on error
 		return 0
 	end try
-end _folder_parent
+end folderParent
 
-on _folder_albums(id_)
+on folderAlbums(id_)
 	(* return list of ids for albums in folder id_ *)
 	set ids to {}
-	set _folder to _folder_get_folder_for_id(id_)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set _folder to folderGetFolderForID(id_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set _albums to albums of _folder
 		repeat with _album in _albums
@@ -841,13 +841,13 @@ on _folder_albums(id_)
 		end repeat
 	end tell
 	return ids
-end _folder_albums
+end folderAlbums
 
-on _folder_folders(id_)
+on folderFolders(id_)
 	(* return list of ids for folders in folder id_ *)
 	set ids to {}
-	set _folder to _folder_get_folder_for_id(id_)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set _folder to folderGetFolderForID(id_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set _folders to folders of _folder
 		repeat with _f in _folders
@@ -855,29 +855,29 @@ on _folder_folders(id_)
 		end repeat
 	end tell
 	return ids
-end _folder_folders
+end folderFolders
 
-on _folder_len(id_)
+on folderCount(id_)
 	(* return count of items (albums and folders) in folder id_*)
-	set folder_ to _folder_get_folder_for_id(id_)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	set folder_ to folderGetFolderForID(id_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set _albums_count to (count of albums in folder_)
 		set _folders_count to (count of folders in folder_)
 		set _len to _albums_count + _folders_count
 		return _len
 	end tell
-end _folder_len
+end folderCount
 
-on _folder_by_name(name_, top_level_)
+on folderByName(name_, topLevel)
 	(* return folder id of folder named name_ or 0 if no folder found with name_
 	    if more than one folder named name_, returns the first one found 
-	  if top_level_ = true, returns only top level folder
+	  if topLevel = true, returns only top level folder
 	*)
-	if top_level_ then
-		set albums_folders_ to the _photoslibrary_get_top_level_albums_folders()
+	if topLevel then
+		set albums_folders_ to the photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders_ to _photoslibrary_get_albums_folders()
+		set albums_folders_ to photosLibraryGetAlbumsFolders()
 	end if
 	set _folders to _folders of albums_folders_
 	repeat with _f in _folders
@@ -886,9 +886,9 @@ on _folder_by_name(name_, top_level_)
 		end if
 	end repeat
 	return 0
-end _folder_by_name
+end folderByName
 
-on _folder_by_path(folder_path_)
+on folderByPath(folder_path_)
 	(* return folder id for folder by path
 	Args:
 		folder_path_: list of folder names, e.g. {"Folder","SubFolder", "SubSubFolder"}
@@ -896,9 +896,9 @@ on _folder_by_path(folder_path_)
 	Returns: 
 		folder id or 0 if not found
 	*)
-	set top_level_folders to _folders of _photoslibrary_get_top_level_albums_folders()
+	set topLevelfolders to _folders of photosLibraryGetTopLevelAlbumsFolders()
 	set folder_ to missing value
-	repeat with f_ in top_level_folders
+	repeat with f_ in topLevelfolders
 		if name of f_ = item 1 of folder_path_ then
 			set folder_ to f_
 		end if
@@ -907,7 +907,7 @@ on _folder_by_path(folder_path_)
 		return 0
 	end if
 	set folder_path_ to rest of folder_path_
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		try
 			repeat with folder_name_ in folder_path_
@@ -920,44 +920,44 @@ on _folder_by_path(folder_path_)
 		end try
 	end tell
 	return id of folder_
-end _folder_by_path
+end folderByPath
 
-on _folder_get_path(id_, path_delimiter_)
+on folderGetPath(id_, path_delimiter_)
 	(* return path to folder as a string *)
-	set folder_ to _folder_get_folder_for_id(id_)
+	set folder_ to folderGetFolderForID(id_)
 	try
-		set path_ to _photoslibrary_internal_path_to_album_folder(folder_, path_delimiter_)
+		set path_ to photosLibraryInternalPathToAlbumFolder(folder_, path_delimiter_)
 	on error
 		set path_ to ""
 	end try
 	return path_
-end _folder_get_path
+end folderGetPath
 
-on _folder_path_ids(id_)
+on folderPathIDs(id_)
 	(* return path to folder as a string *)
-	set folder_ to _folder_get_folder_for_id(id_)
+	set folder_ to folderGetFolderForID(id_)
 	try
-		set path_ids_ to _photoslibrary_internal_path_ids_to_album_folder(folder_)
+		set path_ids_ to photosLibraryInternalPathIDsToAlbumFolder(folder_)
 	on error
 		set path_ids_ to {}
 	end try
 	return path_ids_
-end _folder_path_ids
+end folderPathIDs
 
 
-on _folder_spotlight(id_)
+on folderSpotlight(id_)
 	(* spotlight folder *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		activate
 		spotlight folder id (id_)
 	end tell
-end _folder_spotlight
+end folderSpotlight
 
 ---------- Photo ----------
-on _photo_exists(_id)
+on photoExists(_id)
 	(* return true if media item with _id exists otherwise false *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		try
 			set _exist to media item id (_id)
@@ -967,19 +967,19 @@ on _photo_exists(_id)
 		
 		return true
 	end tell
-end _photo_exists
+end photoExists
 
-on _photo_name(_id)
+on photoName(_id)
 	(* name or title of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return name of media item id (_id)
 	end tell
-end _photo_name
+end photoName
 
-on _photo_set_name(_id, _title)
+on photoSetName(_id, _title)
 	(* set name or title of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -990,19 +990,19 @@ on _photo_set_name(_id, _title)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_name
+end photoSetName
 
-on _photo_description(_id)
+on photoDescription(_id)
 	(* description of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return description of media item id (_id)
 	end tell
-end _photo_description
+end photoDescription
 
-on _photo_set_description(_id, _descr)
+on photoSetDescription(_id, _descr)
 	(* set description of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -1013,19 +1013,19 @@ on _photo_set_description(_id, _descr)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_description
+end photoSetDescription
 
-on _photo_keywords(_id)
+on photoKeywords(_id)
 	(* keywords of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return keywords of media item id (_id)
 	end tell
-end _photo_keywords
+end photoKeywords
 
-on _photo_set_keywords(id_, keyword_list)
+on photoSetKeywords(id_, keyword_list)
 	(* set keywords of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -1036,18 +1036,18 @@ on _photo_set_keywords(id_, keyword_list)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_keywords
+end photoSetKeywords
 
-on _photo_favorite(id_)
+on photoFavorite(id_)
 	(* return favorite status of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return favorite of media item id (id_)
 	end tell
-end _photo_favorite
+end photoFavorite
 
-on _photo_set_favorite(id_, favorite_)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+on photoSetFavorite(id_, favorite_)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -1058,19 +1058,19 @@ on _photo_set_favorite(id_, favorite_)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_favorite
+end photoSetFavorite
 
-on _photo_date(_id)
+on photoDate(_id)
 	(* date of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return date of media item id (_id)
 	end tell
-end _photo_date
+end photoDate
 
-on _photo_set_date(id_, date_)
+on photoSetDate(id_, date_)
 	(* set date of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -1081,43 +1081,43 @@ on _photo_set_date(id_, date_)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_date
+end photoSetDate
 
-on _photo_height(id_)
+on photoHeight(id_)
 	(* height of photo in pixels *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return height of media item id (id_)
 	end tell
-end _photo_height
+end photoHeight
 
-on _photo_width(id_)
+on photoWidth(id_)
 	(* width of photo in pixels *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return width of media item id (id_)
 	end tell
-end _photo_width
+end photoWidth
 
-on _photo_altitude(id_)
+on photoAltitude(id_)
 	(* GPS altitude of photo in meters *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return altitude of media item id (id_)
 	end tell
-end _photo_altitude
+end photoAltitude
 
-on _photo_location(id_)
+on photoLocation(id_)
 	(* GPS location of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return location of media item id (id_)
 	end tell
-end _photo_location
+end photoLocation
 
-on _photo_set_location(id_, location_)
+on photoSetLocation(id_, location_)
 	(* set GPS location of photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set count_ to 0
 	repeat while count_ < MAX_RETRY
 		tell application "Photos"
@@ -1128,17 +1128,17 @@ on _photo_set_location(id_, location_)
 		end tell
 		set count_ to count_ + 1
 	end repeat
-end _photo_set_location
+end photoSetLocation
 
-on _photo_albums(id_)
+on photoAlbums(id_)
 	(* album ids for albums photo id_ is contained in
 	    Args:
 	   	id_: id of the photo
 		
 	    Returns: list of album ids containing photo id_
 	  *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
-	set _albums_folders to _photoslibrary_get_albums_folders()
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set _albums_folders to photosLibraryGetAlbumsFolders()
 	set _album_ids to {}
 	tell application "Photos"
 		repeat with _album in _albums of _albums_folders
@@ -1148,9 +1148,9 @@ on _photo_albums(id_)
 		end repeat
 	end tell
 	return _album_ids
-end _photo_albums
+end photoAlbums
 
-on _photo_export(theUUID, thePath, original, edited, theTimeOut)
+on photoExport(theUUID, thePath, original, edited, theTimeOut)
 	(* export photo
 	   Args:
 	      theUUID: id of the photo to export
@@ -1159,7 +1159,7 @@ on _photo_export(theUUID, thePath, original, edited, theTimeOut)
 		  edited: boolean, if true, exports edited photo
 		  theTimeOut: how long to wait in case Photos timesout
 	*)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set thePath to thePath
 		set theItem to media item id theUUID
@@ -1181,51 +1181,51 @@ on _photo_export(theUUID, thePath, original, edited, theTimeOut)
 		return theFilename
 	end tell
 	
-end _photo_export
+end photoExport
 
-on _photo_filename(id_)
+on photoFilename(id_)
 	(* original filename of the photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		return filename of media item id (id_)
 	end tell
-end _photo_filename
+end photoFilename
 
-on _photo_duplicate(id_)
+on photoDuplicate(id_)
 	(* duplicate photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		set _new_photo to duplicate media item id (id_)
 		return id of _new_photo
 	end tell
-end _photo_duplicate
+end photoDuplicate
 
-on _photo_spotlight(id_)
+on photoSpotlight(id_)
 	(* spotlight photo *)
-	_photoslibrary_waitforphotos(WAIT_FOR_PHOTOS)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		activate
 		spotlight media item id (id_)
 	end tell
-end _photo_spotlight
+end photoSpotlight
 
 --------- Utilities ----------
 
 use framework "Foundation"
 
-on _reveal_in_finder(item_list_)
-	(* reveal list of POSIX paths in item_list_ in Finder *)
-	if the class of item_list_ is not list then set item_list_ to item_list as list
+on revealInFinder(itemList)
+	(* reveal list of POSIX paths in itemList in Finder *)
+	if the class of itemList is not list then set itemList to theItemlist as list
 	-- reveal items in file viewer
 	tell current application's NSWorkspace to set theWorkspace to sharedWorkspace()
-	tell theWorkspace to activateFileViewerSelectingURLs:item_list_
-end _reveal_in_finder
+	tell theWorkspace to activateFileViewerSelectingURLs:itemList
+end revealInFinder
 
 --------- Test ----------
 (* tell application "Photos"
 	set folder_ to folder id ("65E8932D-5746-465A-8B64-EE1FA2EB0B4A/L0/020") of folder id ("216F08FA-5F50-4944-99DA-042C1AEDFAEC/L0/020")
 	--set folder_ to folder id ("216F08FA-5F50-4944-99DA-042C1AEDFAEC/L0/020")
 end tell *)
---_photoslibrary_get_albums_folders()
---_folder_get_folder_for_id("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
---_folder_exists("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
+--photosLibraryGetAlbumsFolders()
+--folderGetFolderForID("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
+--folderExists("211E9B61-1D23-4E75-8CA2-62146A0391E1/L0/020")
