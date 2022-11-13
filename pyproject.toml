@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "photoscript"
-version = "0.1.6"
+version = "0.2.0"
 description = "Python wrapper around Apple Photos applescript interface"
 authors = ["Rhet Turnbull <rturnbull+git@gmail.com>"]
 license = "MIT License"
@@ -17,15 +17,16 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pyobjc-core = ">=7.3, <9.0"
-pyobjc-framework-Cocoa = ">=7.3, <9.0"
-pyobjc-framework-AppleScriptKit = ">=7.3, <9.0"
-pyobjc-framework-AppleScriptObjC = ">=7.3, <9.0"
+pyobjc-core = ">=9.0,<10.0"
+pyobjc-framework-Cocoa = ">=9.0,<10.0"
+pyobjc-framework-AppleScriptKit = ">=9.0,<10.0"
+pyobjc-framework-AppleScriptObjC = ">=9.0,<10.0"
 py-applescript = "^1.0.3"
 
 [tool.poetry.group.dev.dependencies]

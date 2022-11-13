@@ -1,17 +1,17 @@
 (* mock photoscript applescript functions for testing AppleScriptError *)
 
-on _photoslibrary_create_folder(folderName)
+on photosLibraryCreateFolder(folderName)
 	return 0
-end _photoslibrary_create_folder
+end photosLibraryCreateFolder
 
-on _photoslibrary_create_folder_at_folder(folderName, folder_id_)
+on photosLibraryCreateFolderAtFolder(folderName, folder_id_)
 	return 0
-end _photoslibrary_create_folder_at_folder
+end photosLibraryCreateFolderAtFolder
 
-on _photoslibrary_create_album(albumName)
+on photosLibraryCreateAlbum(albumName)
 	return 0
-end _photoslibrary_create_album
+end photosLibraryCreateAlbum
 
-on _photoslibrary_create_album_at_folder(albumName, folder_id_)
+on photosLibraryCreateAlbumAtFolder(albumName, folder_id_)
 	return 0
-end _photoslibrary_create_album_at_folder
+end photosLibraryCreateAlbumAtFolder

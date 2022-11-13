@@ -10,6 +10,7 @@ import tempfile
 from subprocess import run
 
 from applescript import AppleScript, kMissingValue
+
 from photoscript.utils import ditto, findfiles
 
 from .script_loader import run_script
@@ -29,20 +30,20 @@ class AppleScriptError(Exception):
 
 class PhotosLibrary:
     def __init__(self):
-        """ create new PhotosLibrary object and launch Photos """
-        run_script("_photoslibrary_waitforphotos", 300)
-        self._version = str(run_script("_photoslibrary_version"))
+        """create new PhotosLibrary object and launch Photos"""
+        run_script("photosLibraryWaitForPhotos", 300)
+        self._version = str(run_script("photosLibraryVersion"))
 
     def activate(self):
-        """ activate Photos.app """
-        run_script("_photoslibrary_activate")
+        """activate Photos.app"""
+        run_script("photosLibraryActivate")
 
     def quit(self):
-        """ quit Photos.app """
-        run_script("_photoslibrary_quit")
+        """quit Photos.app"""
+        run_script("photosLibraryQuit")
 
     def open(self, library_path, delay=10):
-        """ open a library and wait for delay for user to acknowledge in Photos """
+        """open a library and wait for delay for user to acknowledge in Photos"""
         # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
         # because, for reasons I cannot explain, it fails to run if included there
         if not pathlib.Path(library_path).is_dir():
@@ -70,80 +71,79 @@ class PhotosLibrary:
 
     @property
     def running(self):
-        """ True if Photos is running, otherwise False """
-        return run_script("_photoslibrary_isrunning")
+        """True if Photos is running, otherwise False"""
+        return run_script("photosLibraryIsRunning")
 
     def hide(self):
-        """ Tell Photos to hide its window """
-        run_script("_photoslibrary_hide")
+        """Tell Photos to hide its window"""
+        run_script("photosLibraryHide")
 
     @property
     def hidden(self):
-        """ True if Photos is hidden (or not running), False if Photos is visible """
-        return run_script("_photoslibrary_hidden")
+        """True if Photos is hidden (or not running), False if Photos is visible"""
+        return run_script("photosLibraryIsHidden")
 
     @property
     def name(self):
-        """ name of Photos.app """
-        return run_script("_photoslibrary_name")
+        """name of Photos.app"""
+        return run_script("photosLibraryName")
 
     @property
     def version(self):
-        """ version of Photos.app as str """
+        """version of Photos.app as str"""
         return self._version
 
     @property
     def frontmost(self):
-        """ True if Photos.app is front most app otherwise False """
-        return run_script("_photoslibrary_frontmost")
+        """True if Photos.app is front most app otherwise False"""
+        return run_script("photosLibraryIsFrontMost")
 
     @property
     def selection(self):
-        """ List of Photo objects for currently selected photos or [] if no selection """
-        uuids = run_script("_photoslibrary_get_selection")
+        """List of Photo objects for currently selected photos or [] if no selection"""
+        uuids = run_script("photosLibraryGetSelection")
         return [Photo(uuid) for uuid in uuids]
 
     @property
     def favorites(self):
-        """ Album object for the Favorites album """
-        fav_id = run_script("_photoslibrary_favorites")
+        """Album object for the Favorites album"""
+        fav_id = run_script("photosLibraryFavorites")
         return Album(fav_id)
 
     # doesn't seem to be a way to do anything with the recently deleted album except count items
     # @property
     # def recently_deleted(self):
     #     """ Album object for the Recently Deleted album """
-    #     del_id = run_script("_photoslibrary_recently_deleted")
+    #     del_id = run_script("photosLibraryRecentlyDeleted")
     #     return Album(del_id)
 
     def photos(self, search=None, uuid=None, range_=None):
-        """Returns a generator that yields Photo objects 
-           for media items in the library.
+        """Returns a generator that yields Photo objects for media items in the library.
 
         Args:
             search: optional text string to search for (returns matching items)
             uuid: optional list of UUIDs to get
             range\_: optional list of [start, stop] sequence of photos to get
-            
+
         Returns:
             Generator that yields Photo objects
 
-        Raises: 
+        Raises:
             ValueError if more than one of search, uuid, range\_ passed or invalid range\_
             TypeError if list not passed for range\_
 
         Note: photos() returns a generator instead of a list because retrieving all the photos
         from a large Photos library can take a very long time--on my system, the rate is about 1
-        per second; this is limited by the Photos AppleScript interface and I've not found 
-        anyway to speed it up.  Using a generator allows you process photos individually rather 
-        than waiting, possibly hours, for Photos to return the results. 
-        
-        range\_ works like python's range function.  Thus range\_=[0,4] will return 
-        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library; 
-        range\_ start must be in range 0 to len(PhotosLibrary())-1, 
+        per second; this is limited by the Photos AppleScript interface and I've not found
+        anyway to speed it up.  Using a generator allows you process photos individually rather
+        than waiting, possibly hours, for Photos to return the results.
+
+        range\_ works like python's range function.  Thus range\_=[0,4] will return
+        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library;
+        range\_ start must be in range 0 to len(PhotosLibrary())-1,
         stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
-        photos are return by chunking up requests in batches of photos using range\_, 
-        e.g. request 10 photos at a time.  
+        photos are return by chunking up requests in batches of photos using range\_,
+        e.g. request 10 photos at a time.
         """
 
         if len([x for x in [search, uuid, range_] if x]) > 1:
@@ -154,7 +154,7 @@ class PhotosLibrary:
 
         if search is not None:
             # search for text
-            photo_ids = run_script("_photoslibrary_search_photos", search)
+            photo_ids = run_script("photosLibrarySearchPhotos", search)
         elif uuid:
             # search by uuid
             photo_ids = uuid
@@ -181,7 +181,7 @@ class PhotosLibrary:
                     f"invalid range: valid range is start: 0 to {count-1}, stop: 1 to {count}"
                 )
 
-            photo_ids = run_script("_photoslibrary_get_photo_by_range", start + 1, stop)
+            photo_ids = run_script("photosLibraryGetPhotoByRange", start + 1, stop)
 
         if photo_ids:
             return self._iterphotos(uuids=photo_ids)
@@ -197,7 +197,7 @@ class PhotosLibrary:
             count = len(self)
             for x in range(1, count + 1):
                 # AppleScript list indexes start at 1
-                photo_id = run_script("_photoslibrary_get_photo_by_range", x, x)[0]
+                photo_id = run_script("photosLibraryGetPhotoByRange", x, x)[0]
                 yield Photo(photo_id)
 
     def import_photos(self, photo_paths, album=None, skip_duplicate_check=False):
@@ -206,26 +206,26 @@ class PhotosLibrary:
         Args:
             photo_paths: list of file paths to import as str or pathlib.Path
             album: optional, Album object for album to import into
-            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False. 
-            
+            skip_duplicate_check: if True, Photos will not check for duplicates on import, default is False.
+
         Returns:
             list of Photo objects for imported photos
-            
-        NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True, 
+
+        NOTE: If you attempt to import a duplicate photo and skip_duplicate_check != True,
             Photos will block with drop-down sheet until the user clicks "Cancel, Import, or Don't Import."
         """
         # stringify paths in case pathlib.Path paths are passed
         photo_paths = [str(photo_path) for photo_path in photo_paths]
         if album is not None:
             photo_ids = run_script(
-                "_photoslibrary_import_to_album",
+                "photosLibraryImportToAlbum",
                 photo_paths,
                 album.id,
                 skip_duplicate_check,
             )
         else:
             photo_ids = run_script(
-                "_photoslibrary_import", photo_paths, skip_duplicate_check
+                "photosLibraryImport", photo_paths, skip_duplicate_check
             )
 
         return [Photo(photo) for photo in photo_ids]
@@ -236,7 +236,7 @@ class PhotosLibrary:
         Args:
             top_level: if True, returns only top-level albums otherwise also returns albums in sub-folders; default is False
         """
-        return run_script("_photoslibrary_album_names", top_level)
+        return run_script("photosLibraryAlbumNames", top_level)
 
     def folder_names(self, top_level=False):
         """List of folder names in the Photos library
@@ -244,7 +244,7 @@ class PhotosLibrary:
         Args:
             top_level: if True, returns only top-level folders otherwise also returns sub-folders; default is False
         """
-        return run_script("_photoslibrary_folder_names", top_level)
+        return run_script("photosLibraryFolderNames", top_level)
 
     def album(self, *name, uuid=None, top_level=False):
         """Album instance by name or id
@@ -257,7 +257,7 @@ class PhotosLibrary:
         Returns:
             Album object or None if album could not be found
 
-        Raises: 
+        Raises:
             ValueError if both name and id passed or neither passed.
 
         Must pass only name or id but not both.
@@ -267,7 +267,7 @@ class PhotosLibrary:
             raise ValueError("Must pass only name or uuid but not both")
 
         if name:
-            uuid = run_script("_album_by_name", name[0], top_level)
+            uuid = run_script("albumByName", name[0], top_level)
             if uuid != 0:
                 return Album(uuid)
             else:
@@ -276,8 +276,8 @@ class PhotosLibrary:
             return Album(uuid)
 
     def albums(self, top_level=False):
-        """ list of Album objects for all albums """
-        album_ids = run_script("_photoslibrary_album_ids", top_level)
+        """list of Album objects for all albums"""
+        album_ids = run_script("photosLibraryAlbumIDs", top_level)
         return [Album(uuid) for uuid in album_ids]
 
     def create_album(self, name, folder=None):
@@ -295,11 +295,9 @@ class PhotosLibrary:
             AppleScriptError if error creating the album
         """
         if folder is None:
-            album_id = run_script("_photoslibrary_create_album", name)
+            album_id = run_script("photosLibraryCreateAlbum", name)
         else:
-            album_id = run_script(
-                "_photoslibrary_create_album_at_folder", name, folder.id
-            )
+            album_id = run_script("photosLibraryCreateAlbumAtFolder", name, folder.id)
 
         if album_id != 0:
             return Album(album_id)
@@ -312,7 +310,7 @@ class PhotosLibrary:
         Args:
             album: an Album object for album to delete
         """
-        return run_script("_photoslibrary_delete_album", album.id)
+        return run_script("photosLibraryDeleteAlbum", album.id)
 
     def folder(self, *name, uuid=None, top_level=True):
         """Folder instance by name or uuid
@@ -325,9 +323,9 @@ class PhotosLibrary:
         Returns:
             Folder object or None if folder could not be found
 
-        Raises: 
+        Raises:
             ValueError if both name and id passed or neither passed.
-            
+
         Must pass only name or id but not both.
         If more than one folder with same name, returns first one found.
         """
@@ -335,7 +333,7 @@ class PhotosLibrary:
             raise ValueError("Must pass only name or uuid but not both")
 
         if name:
-            uuid = run_script("_folder_by_name", name[0], top_level)
+            uuid = run_script("folderByName", name[0], top_level)
             if uuid != 0:
                 return Folder(uuid)
             else:
@@ -344,23 +342,23 @@ class PhotosLibrary:
             return Folder(uuid)
 
     def folder_by_path(self, folder_path):
-        """ Return folder in the library by path
+        """Return folder in the library by path
 
         Args:
             folder_path: list of folder names in descending path order, e.g. ["Folder", "SubFolder1", "SubFolder2"]
 
-        Returns: 
+        Returns:
             Folder object for folder at folder_path or None if not found
         """
-        folder_id = run_script("_folder_by_path", folder_path)
+        folder_id = run_script("folderByPath", folder_path)
         if folder_id != 0:
             return Folder(folder_id)
         else:
             return None
 
     def folders(self, top_level=True):
-        """ list of Folder objects for all folders """
-        folder_ids = run_script("_photoslibrary_folder_ids", top_level)
+        """list of Folder objects for all folders"""
+        folder_ids = run_script("photosLibraryFolderIDs", top_level)
         return [Folder(uuid) for uuid in folder_ids]
 
     def create_folder(self, name, folder=None):
@@ -378,11 +376,9 @@ class PhotosLibrary:
             AppleScriptError if folder cannot be created
         """
         if folder is None:
-            folder_id = run_script("_photoslibrary_create_folder", name)
+            folder_id = run_script("photosLibraryCreateFolder", name)
         else:
-            folder_id = run_script(
-                "_photoslibrary_create_folder_at_folder", name, folder.id
-            )
+            folder_id = run_script("photosLibraryCreateFolderAtFolder", name, folder.id)
 
         if folder_id != 0:
             return Folder(folder_id)
@@ -390,7 +386,7 @@ class PhotosLibrary:
             raise AppleScriptError(f"Could not create folder {name}")
 
     def make_folders(self, folder_path):
-        """Recursively makes folders and subfolders.  Works similar to os.makedirs_.  
+        """Recursively makes folders and subfolders.  Works similar to os.makedirs_.
         If any component of folder_path already exists, does not raise error.
 
         .. _os.makedirs: https://docs.python.org/3/library/os.html#os.makedirs
@@ -422,7 +418,7 @@ class PhotosLibrary:
 
     def make_album_folders(self, album_name, folder_path):
         """Make album in a folder path.  If either the album or any component of the
-           folder path doesn't exist, it will be created.  If album or folder path 
+           folder path doesn't exist, it will be created.  If album or folder path
            does exist, no duplicate is created.  Folder path is created recursively
            if needed.
 
@@ -432,7 +428,7 @@ class PhotosLibrary:
 
         Returns:
             Album object.
-        
+
         Raises:
             ValueError if folder_path is empty or album_name is None.
             TypeError if folder_path is not a list.
@@ -456,13 +452,13 @@ class PhotosLibrary:
         Args:
             folder: a Folder object for folder to delete
         """
-        return run_script("_photoslibrary_delete_folder", folder.id)
+        return run_script("photosLibraryDeleteFolder", folder.id)
 
     def __len__(self):
-        return run_script("_photoslibrary_count")
+        return run_script("photosLibraryCount")
 
     def _temp_album_name(self):
-        """ get a temporary album name that doesn't clash with album in the library """
+        """get a temporary album name that doesn't clash with album in the library"""
         temp_name = self._temp_name()
         while self.album(temp_name) is not None:
             temp_name = self._temp_name()
@@ -485,7 +481,7 @@ class PhotosLibrary:
         timeout=120,
         reveal_in_finder=False,
     ):
-        """ Export photo to export_path
+        """Export photo to export_path
 
         Args:
             photo: Photo object to export
@@ -494,19 +490,19 @@ class PhotosLibrary:
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
             reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
-        
+
         Returns:
-            List of full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due
             to live images and burst images.
-        
+
         Raises:
             ValueError if export_path is not a valid directory
 
-        Note: Photos always exports as high-quality JPEG unless original=True. 
-        If original=True, will export all burst images for burst photos and 
-        live movie for live photos.  If original=False, only the primary image from a 
-        burst set will be exported for burst photos and the live movie component of a 
-        live image will not be exported, only the JPEG component. 
+        Note: Photos always exports as high-quality JPEG unless original=True.
+        If original=True, will export all burst images for burst photos and
+        live movie for live photos.  If original=False, only the primary image from a
+        burst set will be exported for burst photos and the live movie component of a
+        live image will not be exported, only the JPEG component.
         """
 
         dest = pathlib.Path(export_path)
@@ -519,7 +515,7 @@ class PhotosLibrary:
 
         # export original
         filename = run_script(
-            "_photo_export", photo.id, tmpdir.name, original, edited, timeout
+            "photoExport", photo.id, tmpdir.name, original, edited, timeout
         )
 
         exported_paths = []
@@ -551,7 +547,7 @@ class PhotosLibrary:
                 ditto(str(path), str(dest_new))
                 exported_paths.append(str(dest_new))
             if reveal_in_finder:
-                run_script("_reveal_in_finder", exported_paths)
+                run_script("revealInFinder", exported_paths)
         return exported_paths
 
 
@@ -566,7 +562,7 @@ class Album:
             else:
                 uuid = uuid.split("/")[0]
 
-        valuuidalbum = run_script("_album_exists", id_)
+        valuuidalbum = run_script("albumExists", id_)
         if valuuidalbum:
             self.id = id_
             self._uuid = uuid
@@ -575,41 +571,41 @@ class Album:
 
     @property
     def uuid(self):
-        """ UUID of Album (read only)"""
+        """UUID of Album (read only)"""
         return self._uuid
 
     @property
     def name(self):
-        """ name of album (read/write) """
-        name = run_script("_album_name", self.id)
+        """name of album (read/write)"""
+        name = run_script("albumName", self.id)
         return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
-        """ set name of album """
+        """set name of album"""
         name = "" if name is None else name
-        return run_script("_album_set_name", self.id, name)
+        return run_script("albumSetName", self.id, name)
 
     @property
     def title(self):
-        """ title of album (alias for Album.name) """
+        """title of album (alias for Album.name)"""
         return self.name
 
     @title.setter
     def title(self, title):
-        """ set title of album (alias for name) """
+        """set title of album (alias for name)"""
         name = "" if title is None else title
-        return run_script("_album_set_name", self.id, name)
+        return run_script("albumSetName", self.id, name)
 
     @property
     def parent_id(self):
-        """ parent container id """
-        return run_script("_album_parent", self.id)
+        """parent container id"""
+        return run_script("albumParent", self.id)
 
     # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums
     @property
     def parent(self):
-        """ Return parent Folder object """
+        """Return parent Folder object"""
         parent_id = self.parent_id
         if parent_id != 0:
             return Folder(parent_id)
@@ -629,11 +625,11 @@ class Album:
         if len(delim) > 1:
             raise ValueError("delim must be single character")
 
-        return run_script("_album_get_path", self.id, delim)
+        return run_script("albumGetPath", self.id, delim)
 
     def photos(self):
-        """ list of Photo objects for photos contained in album """
-        photo_ids = run_script("_album_photos", self.id)
+        """list of Photo objects for photos contained in album"""
+        photo_ids = run_script("albumPhotes", self.id)
         return [Photo(uuid) for uuid in photo_ids]
 
     def add(self, photos):
@@ -646,7 +642,7 @@ class Album:
             list of Photo objects for added photos
         """
         uuids = [p.id for p in photos]
-        added_ids = run_script("_album_add", self.id, uuids)
+        added_ids = run_script("albumAdd", self.id, uuids)
         return [Photo(uuid) for uuid in added_ids]
 
     def import_photos(self, photo_paths, skip_duplicate_check=False):
@@ -681,19 +677,19 @@ class Album:
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export (for each photo) before timing out; default = 120
             reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
- 
+
         Returns:
-            List of full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due
             to live images and burst images.
-        
+
         Raises:
             ValueError if export_path is not a valid directory
 
-        Note: Photos always exports as high-quality JPEG unless original=True. 
-        If original=True, will export all burst images for burst photos and 
-        live movie for live photos.  If original=False, only the primary image from a 
-        burst set will be exported for burst photos and the live movie component of a 
-        live image will not be exported, only the JPEG component. 
+        Note: Photos always exports as high-quality JPEG unless original=True.
+        If original=True, will export all burst images for burst photos and
+        live movie for live photos.  If original=False, only the primary image from a
+        burst set will be exported for burst photos and the live movie component of a
+        live image will not be exported, only the JPEG component.
         """
         exported_photos = []
         for photo in self.photos():
@@ -706,11 +702,11 @@ class Album:
                 )
             )
         if reveal_in_finder and exported_photos:
-            run_script("_reveal_in_finder", exported_photos)
+            run_script("revealInFinder", exported_photos)
         return exported_photos
 
     def remove_by_id(self, photo_ids):
-        """Remove photos from album. 
+        """Remove photos from album.
             Note: Photos does not provide a way to remove photos from an album via AppleScript.
             This method actually creates a new Album with the same name as the original album and
             copies all photos from original album with exception of those to remove to the new album
@@ -757,11 +753,11 @@ class Album:
         return self.remove_by_id(photo_uuids)
 
     def spotlight(self):
-        """ spotlight the album in Photos """
-        run_script("_album_spotlight", self.id)
+        """spotlight the album in Photos"""
+        run_script("albumSpotlight", self.id)
 
     def __len__(self):
-        return run_script("_album_len", self.id)
+        return run_script("albumCount", self.id)
 
 
 class Folder:
@@ -775,7 +771,7 @@ class Folder:
             else:
                 uuid = uuid.split("/")[0]
 
-        valid_folder = run_script("_folder_exists", id_)
+        valid_folder = run_script("folderExists", id_)
         if valid_folder:
             self.id = id_
             self._uuid = uuid
@@ -784,41 +780,41 @@ class Folder:
 
     @property
     def uuid(self):
-        """ UUID of folder"""
+        """UUID of folder"""
         return self._uuid
 
     @property
     def name(self):
-        """ name of folder (read/write) """
-        name = run_script("_folder_name", self.id)
+        """name of folder (read/write)"""
+        name = run_script("folderName", self.id)
         return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
-        """ set name of photo """
+        """set name of photo"""
         name = "" if name is None else name
-        return run_script("_folder_set_name", self.id, name)
+        return run_script("folderSetName", self.id, name)
 
     @property
     def title(self):
-        """ title of folder (alias for Folder.name) """
+        """title of folder (alias for Folder.name)"""
         return self.name
 
     @title.setter
     def title(self, title):
-        """ set title of folder (alias for name) """
+        """set title of folder (alias for name)"""
         name = "" if title is None else title
-        return run_script("_folder_set_name", self.id, name)
+        return run_script("folderSetName", self.id, name)
 
     @property
     def parent_id(self):
-        """ parent container id """
-        return run_script("_folder_parent", self.id)
+        """parent container id"""
+        return run_script("folderParent", self.id)
 
     # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums?
     @property
     def parent(self):
-        """ Return parent Folder object """
+        """Return parent Folder object"""
         parent_id = self.parent_id
         if parent_id != 0:
             return Folder(parent_id)
@@ -838,7 +834,7 @@ class Folder:
         if len(delim) > 1:
             raise ValueError("delim must be single character")
 
-        return run_script("_folder_get_path", self.id, delim)
+        return run_script("folderGetPath", self.id, delim)
 
     def path(self):
         """Return list of Folder objects this folder is contained in.
@@ -846,13 +842,13 @@ class Folder:
         path()[-1] is the immediate parent of this folder.  Returns empty
         list if folder is not contained in another folders.
         """
-        folder_path = run_script("_folder_path_ids", self.id)
+        folder_path = run_script("folderPathIDs", self.id)
         return [Folder(folder) for folder in folder_path]
 
     @property
     def albums(self):
-        """ list of Album objects for albums contained in folder """
-        album_ids = run_script("_folder_albums", self.id)
+        """list of Album objects for albums contained in folder"""
+        album_ids = run_script("folderAlbums", self.id)
         return [Album(uuid) for uuid in album_ids]
 
     def album(self, name):
@@ -866,8 +862,8 @@ class Folder:
 
     @property
     def subfolders(self):
-        """ list of Folder objects for immediate sub-folders contained in folder """
-        folder_ids = run_script("_folder_folders", self.id)
+        """list of Folder objects for immediate sub-folders contained in folder"""
+        folder_ids = run_script("folderFolders", self.id)
         return [Folder(uuid) for uuid in folder_ids]
 
     def folder(self, name):
@@ -904,11 +900,11 @@ class Folder:
         return PhotosLibrary().create_folder(name, folder=self)
 
     def spotlight(self):
-        """ spotlight the folder in Photos """
-        run_script("_folder_spotlight", self.id)
+        """spotlight the folder in Photos"""
+        run_script("folderSpotlight", self.id)
 
     def __len__(self):
-        return run_script("_folder_len", self.id)
+        return run_script("folderCount", self.id)
 
 
 class Photo:
@@ -921,7 +917,7 @@ class Photo:
                 id_ = f"{uuid}{UUID_SUFFIX_PHOTO}"
             else:
                 uuid = uuid.split("/")[0]
-        valid = run_script("_photo_exists", uuid)
+        valid = run_script("photoExists", uuid)
         if valid:
             self.id = id_
             self._uuid = uuid
@@ -930,83 +926,83 @@ class Photo:
 
     @property
     def uuid(self):
-        """ UUID of Photo """
+        """UUID of Photo"""
         return self._uuid
 
     @property
     def name(self):
-        """ name of photo (read/write) """
-        name = run_script("_photo_name", self.id)
+        """name of photo (read/write)"""
+        name = run_script("photoName", self.id)
         return name if name not in [kMissingValue, ""] else ""
 
     @name.setter
     def name(self, name):
-        """ set name of photo """
+        """set name of photo"""
         name = "" if name is None else name
-        return run_script("_photo_set_name", self.id, name)
+        return run_script("photoSetName", self.id, name)
 
     @property
     def title(self):
-        """ title of photo (alias for name) """
+        """title of photo (alias for name)"""
         return self.name
 
     @title.setter
     def title(self, title):
-        """ set title of photo (alias for name) """
+        """set title of photo (alias for name)"""
         name = "" if title is None else title
-        return run_script("_photo_set_name", self.id, name)
+        return run_script("photoSetName", self.id, name)
 
     @property
     def description(self):
-        """ description of photo """
-        descr = run_script("_photo_description", self.id)
+        """description of photo"""
+        descr = run_script("photoDescription", self.id)
         return descr if descr != kMissingValue else ""
 
     @description.setter
     def description(self, descr):
-        """ set description of photo """
+        """set description of photo"""
         descr = "" if descr is None else descr
-        return run_script("_photo_set_description", self.id, descr)
+        return run_script("photoSetDescription", self.id, descr)
 
     @property
     def keywords(self):
-        """ list of keywords for photo """
-        keywords = run_script("_photo_keywords", self.id)
+        """list of keywords for photo"""
+        keywords = run_script("photoKeywords", self.id)
         if not isinstance(keywords, list):
             keywords = [keywords] if keywords != kMissingValue else []
         return keywords
 
     @keywords.setter
     def keywords(self, keywords):
-        """ set keywords to list """
+        """set keywords to list"""
         keywords = [] if keywords is None else keywords
-        return run_script("_photo_set_keywords", self.id, keywords)
+        return run_script("photoSetKeywords", self.id, keywords)
 
     @property
     def favorite(self):
-        """ return favorite status (boolean) """
-        return run_script("_photo_favorite", self.id)
+        """return favorite status (boolean)"""
+        return run_script("photoFavorite", self.id)
 
     @favorite.setter
     def favorite(self, favorite):
-        """ set favorite status (boolean) """
+        """set favorite status (boolean)"""
         favorite = bool(favorite)
-        return run_script("_photo_set_favorite", self.id, favorite)
+        return run_script("photoSetFavorite", self.id, favorite)
 
     @property
     def height(self):
-        """ height of photo in pixels """
-        return run_script("_photo_height", self.id)
+        """height of photo in pixels"""
+        return run_script("photoHeight", self.id)
 
     @property
     def width(self):
-        """ width of photo in pixels """
-        return run_script("_photo_width", self.id)
+        """width of photo in pixels"""
+        return run_script("photoWidth", self.id)
 
     @property
     def altitude(self):
-        """ GPS altitude of photo in meters """
-        altitude = run_script("_photo_altitude", self.id)
+        """GPS altitude of photo in meters"""
+        altitude = run_script("photoAltitude", self.id)
         return altitude if altitude != kMissingValue else None
 
     @property
@@ -1014,7 +1010,7 @@ class Photo:
         """The GPS latitude and longitude, in a tuple of 2 numbers or None.
         Latitude in range -90.0 to 90.0, longitude in range -180.0 to 180.0.
         """
-        location = run_script("_photo_location", self.id)
+        location = run_script("photoLocation", self.id)
         location[0] = None if location[0] == kMissingValue else location[0]
         location[1] = None if location[1] == kMissingValue else location[1]
         return tuple(location)
@@ -1041,31 +1037,31 @@ class Photo:
             kMissingValue if location[1] is None else location[1],
         )
 
-        return run_script("_photo_set_location", self.id, location)
+        return run_script("photoSetLocation", self.id, location)
 
     @property
     def date(self):
-        """ date of photo as timezone-naive datetime.datetime object """
-        return run_script("_photo_date", self.id)
+        """date of photo as timezone-naive datetime.datetime object"""
+        return run_script("photoDate", self.id)
 
     @date.setter
     def date(self, date):
-        """ Set date of photo as timezone-naive datetime.datetime object
-        
+        """Set date of photo as timezone-naive datetime.datetime object
+
         Args:
             date: timezone-naive datetime.datetime object
         """
-        return run_script("_photo_set_date", self.id, date)
+        return run_script("photoSetDate", self.id, date)
 
     @property
     def filename(self):
-        """ filename of photo """
-        return run_script("_photo_filename", self.id)
+        """filename of photo"""
+        return run_script("photoFilename", self.id)
 
     @property
     def albums(self):
-        """ list of Album objects for albums photo is contained in """
-        albums = run_script("_photo_albums", self.id)
+        """list of Album objects for albums photo is contained in"""
+        albums = run_script("photoAlbums", self.id)
         return [Album(album) for album in albums]
 
     def export(
@@ -1085,19 +1081,19 @@ class Photo:
             overwrite: if True, export will overwrite a file of same name as photo in export_path; default = False
             timeout: number of seconds to wait for Photos to complete export before timing out; default = 120
             reveal_in_finder: if True, will open Finder with exported items selected when done; default = False
-        
+
         Returns:
-            List of full paths of exported photos.  There may be more than one photo exported due 
+            List of full paths of exported photos.  There may be more than one photo exported due
             to live images and burst images.
-        
+
         Raises:
             ValueError if export_path is not a valid directory
 
-        Note: Photos always exports as high-quality JPEG unless original=True. 
-        If original=True, will export all burst images for burst photos and 
-        live movie for live photos.  If original=False, only the primary image from a 
-        burst set will be exported for burst photos and the live movie component of a 
-        live image will not be exported, only the JPEG component. 
+        Note: Photos always exports as high-quality JPEG unless original=True.
+        If original=True, will export all burst images for burst photos and
+        live movie for live photos.  If original=False, only the primary image from a
+        burst set will be exported for burst photos and the live movie component of a
+        live image will not be exported, only the JPEG component.
         """
         return PhotosLibrary()._export_photo(
             self,
@@ -1109,10 +1105,10 @@ class Photo:
         )
 
     def duplicate(self):
-        """ duplicates the photo and returns Photo object for the duplicate """
-        dup_id = run_script("_photo_duplicate", self.id)
+        """duplicates the photo and returns Photo object for the duplicate"""
+        dup_id = run_script("photoDuplicate", self.id)
         return Photo(dup_id)
 
     def spotlight(self):
-        """ spotlight the photo in Photos """
-        run_script("_photo_spotlight", self.id)
+        """spotlight the photo in Photos"""
+        run_script("photoSpotlight", self.id)
