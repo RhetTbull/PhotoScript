@@ -23,3 +23,11 @@ To build the project:
 
 - `rm -rf dist; rm -rf build`
 - `poetry build`
+
+## Change Log
+
+The `CHANGELOG.md` is created with [auto-changelog](https://github.com/cookpete/auto-changelog):
+
+- `git pull`
+- `auto-changelog --ignore-commit-pattern CHANGELOG -l 5`
+- `git add CHANGELOG.md; git commit -m"Updated CHANGELOG.md [skip ci]"; git push`
