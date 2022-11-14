@@ -1,14 +1,16 @@
+(* AppleScript methods used by PhotoScript (https://github.com/RhetTbull/PhotoScript) *)
+
 -- TODO: Variable names are not very consistent throughout this, some use leading _ some trailing_ 
--- underscore is used because some variable names (like folder) would clash with AppleScript nouns
--- but this won't be maintainable if naming scheme isn't consistent
+-- Naming scheme is classNameMethodName
 
--- Naming scheme is _classname_methodname
+---------- Constants ----------
 
-(* 	max number of times to retry in case of error
-	some AppleScript calls appear to be flaky and don't always execute
-	so retry those up to MAX_RETRY if not succesful
-*)
+-- max number of times to retry in case of error
+-- some AppleScript calls appear to be flaky and don't always execute
+-- so retry those up to MAX_RETRY if not succesful
 property MAX_RETRY : 5
+
+-- max time in seconds to wait for Photos to respond
 property WAIT_FOR_PHOTOS : 300
 
 
@@ -770,7 +772,8 @@ end folderGetFolderForID
 on folderExists(_id)
 	(* return true if folder with _id exists otherwise false *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set version_ to photosLibraryVersion() as number
+	set versionString to photosLibraryVersion()
+	set version_ to stringToNumber(versionString)
 	if version_ < 5 then
 		tell application "Photos"
 			try
@@ -1209,7 +1212,7 @@ on photoSpotlight(id_)
 	end tell
 end photoSpotlight
 
---------- Utilities ----------
+---------- Utilities ----------
 
 use framework "Foundation"
 
@@ -1220,6 +1223,48 @@ on revealInFinder(itemList)
 	tell current application's NSWorkspace to set theWorkspace to sharedWorkspace()
 	tell theWorkspace to activateFileViewerSelectingURLs:itemList
 end revealInFinder
+
+on replaceChars(stringValue, findChars, replaceChars)
+	(* replace findChars in stringValue with replaceChars
+	
+		Args:
+			stringValue: a string to search
+			findChars: string of one or more characters to find in stringValue
+			replaceChars: string of one of more characters to use as replacement for findChars
+		
+		Returns:
+			string with replacements made
+		*)
+	set oldDelimiters to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to the findChars
+	set the itemList to every text item of stringValue
+	set AppleScript's text item delimiters to the replaceChars
+	set newString to the itemList as string
+	set AppleScript's text item delimiters to oldDelimiters
+	return newString
+end replaceChars
+
+on stringToNumber(strValue)
+	(* Converts a string representation of real number in form x.y or x,y into a number 
+	
+	This is required because AppleScript throws in error with " "7.0" as number " 
+	in locales that use "," as the decimal separator, expecting "7,0"
+
+	Args:
+		strValue: string value to return
+	
+	Returns:
+		number
+
+	*)
+	
+	try
+		return strValue as number
+	on error
+		-- assume we're in a locale that uses , as decimal separator and try again
+		return replaceChars(strValue, ".", ",") as number
+	end try
+end stringToNumber
 
 --------- Test ----------
 (* tell application "Photos"
