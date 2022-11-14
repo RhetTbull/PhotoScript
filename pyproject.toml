@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "photoscript"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python wrapper around Apple Photos applescript interface"
 authors = ["Rhet Turnbull <rturnbull+git@gmail.com>"]
 license = "MIT License"
