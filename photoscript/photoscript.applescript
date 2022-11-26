@@ -1194,7 +1194,18 @@ on folderGetPath(folderIDScript, pathDelimiter)
 end folderGetPath
 
 set theFolder to folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
---folderGetPath(theFolder, "/")
+
+on folderGetPathFolderIDScript(folderIDScript)
+	(* Return list of folder ID scripts for the folder and it's parents *)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set thePath to {folderIDScript}
+	set theParent to folderParent(folderIDScript)
+	repeat while theParent is not missing value
+		set thePath to {theParent} & thePath
+		set theParent to folderParent(theParent)
+	end repeat
+	return thePath
+end folderGetPathFolderIDScript
 
 on folderPathIDs(id_)
 	(* return path to folder as a string *)
@@ -1619,7 +1630,8 @@ end albumRunScript
 --set theFolderID to "5CD975DA-BF14-4600-853B-C248F9BE8112/L0/020" --3rd level
 --set theFolderID to "CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020" -- 2nd level
 --set theFolderID to "88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020" --top level
---photosLibraryGetFolderIDScriptForID(theFolderID)
+--set theFolder to photosLibraryGetFolderIDScriptForID(theFolderID)
+--folderGetPathFolderIDScript(theFolder)
 --photosLibraryGetFolderIDScriptForName("SubSubFolder1")
 --photosLibraryGetAlbumsFolders()
 --folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
