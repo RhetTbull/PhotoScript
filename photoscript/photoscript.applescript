@@ -1,6 +1,5 @@
 (* AppleScript methods used by PhotoScript (https://github.com/RhetTbull/PhotoScript) *)
 
--- TODO: Variable names are not very consistent throughout this, some use leading _ some trailing_ 
 -- Naming scheme is classNameMethodName
 
 ---------- Imports ----------
@@ -17,6 +16,7 @@ property MAX_RETRY : 5
 
 -- max time in seconds to wait for Photos to respond
 property WAIT_FOR_PHOTOS : 300
+
 
 
 ---------- PhotoLibrary ----------
@@ -256,7 +256,7 @@ on photosLibraryGetAlbumsFolders()
 	return albums_folders
 end photosLibraryGetAlbumsFolders
 
-on _walkFoldersLookingForID(folderID, theFolder, folderScript)
+on _walkFoldersLookingForID(theFolderID, theFolder, folderScript)
 	(* Recursively walk through folders finding the folder that matched folderID 
 	
 	Args:
@@ -276,28 +276,28 @@ on _walkFoldersLookingForID(folderID, theFolder, folderScript)
 		set subFolders to theFolder's folders
 		repeat with aFolder in subFolders
 			set folderScript to "folder (\"" & (id of aFolder as text) & "\") of " & folderScript
-			if id of aFolder is equal to folderID then
+			if id of aFolder is equal to theFolderID then
 				return folderScript
 			end if
-			return my _walkFoldersLookingForID(folderID, aFolder, folderScript)
+			return my _walkFoldersLookingForID(theFolderID, aFolder, folderScript)
 		end repeat
 	end tell
 	return originalFolderScript
 end _walkFoldersLookingForID
 
-on photosLibraryGetFolderIDScriptForID(folderID)
+on photosLibraryGetFolderIDScriptForID(theFolderID)
 	(* return AppleScript snippet for folder with ID folderID *)
 	# see https://discussions.apple.com/docs/DOC-250002459
 	tell application "Photos"
 		set theFolders to folders
 		repeat with aFolder in theFolders
 			set folderScript to "folder (\"" & (id of aFolder as text) & "\")"
-			if id of aFolder is equal to folderID then
+			if id of aFolder is equal to theFolderID then
 				return folderScript
 			end if
 			-- my is required due to scope as this is inside a tell block
 			-- if my is not used, Photos will look for the function _walkFolders which does not exist in its namespace
-			set returnValue to my _walkFoldersLookingForID(folderID, aFolder, folderScript)
+			set returnValue to my _walkFoldersLookingForID(theFolderID, aFolder, folderScript)
 			if returnValue is not equal to "" then
 				return returnValue
 			end if
@@ -306,7 +306,7 @@ on photosLibraryGetFolderIDScriptForID(folderID)
 	
 end photosLibraryGetFolderIDScriptForID
 
-on _walkFoldersLookingForName(folderName, theFolder, folderScript)
+on _walkFoldersLookingForName(theFolderName, theFolder, folderScript)
 	(* Recursively walk through folders finding the folder that matched folderName; returns the first matching folder
 	
 	Args:
@@ -327,28 +327,28 @@ on _walkFoldersLookingForName(folderName, theFolder, folderScript)
 		set subFolders to theFolder's folders
 		repeat with aFolder in subFolders
 			set folderScript to "folder (\"" & (id of aFolder as text) & "\") of " & folderScript
-			if aFolder's name is equal to folderName then
+			if aFolder's name is equal to theFolderName then
 				return folderScript
 			end if
-			return my _walkFoldersLookingForName(folderName, aFolder, folderScript)
+			return my _walkFoldersLookingForName(theFolderName, aFolder, folderScript)
 		end repeat
 	end tell
 	return originalFolderScript
 end _walkFoldersLookingForName
 
-on photosLibraryGetFolderIDScriptForName(folderName)
+on photosLibraryGetFolderIDScriptForName(theFolderName)
 	(* return AppleScript snippet for folder with name folderName *)
 	# see https://discussions.apple.com/docs/DOC-250002459
 	tell application "Photos"
 		set theFolders to folders
 		repeat with aFolder in theFolders
 			set folderScript to "folder (\"" & (id of aFolder as text) & "\")"
-			if aFolder's name is equal to folderName then
+			if aFolder's name is equal to theFolderName then
 				return folderScript
 			end if
 			-- my is required due to scope as this is inside a tell block
 			-- if my is not used, Photos will look for the function _walkFolders which does not exist in its namespace
-			set returnValue to my _walkFoldersLookingForName(folderName, aFolder, folderScript)
+			set returnValue to my _walkFoldersLookingForName(theFolderName, aFolder, folderScript)
 			if returnValue is not equal to "" then
 				return returnValue
 			end if
@@ -744,10 +744,10 @@ on albumByPath(albumPath)
 	return folderGetAlbumID(folderIDScript, theAlbum)
 end albumByPath
 
-on albumName(_id)
-	(* return name of album with id _id *)
+on albumName(theID)
+	(* return name of album with id theID *)
 	tell application "Photos"
-		return name of album id (_id)
+		return name of album id (theID)
 	end tell
 end albumName
 
@@ -979,7 +979,7 @@ on folderRunScript(folderIDScript, theScript)
 	end run
 	"
 	
-	-- display dialog theScript
+	--display dialog theScript
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	return run script theScript
 end folderRunScript
@@ -1083,12 +1083,14 @@ on folderParent(folderIDScript)
 		parent folder path of folder at folderPath or missing value if no parent
 	*)
 	set folderParts to folderSplitFolderPath(folderIDScript)
-	if length of folderParts > 1 then
-		set folderParentPath to item 1 of folderParts
-		repeat with i from 2 to (length of folderParts) - 1
+	if length of folderParts > 2 then
+		set folderParentPath to item 2 of folderParts
+		repeat with i from 3 to (length of folderParts)
 			set folderParentPath to folderParentPath & " of " & {item i of folderParts}
 		end repeat
 		return folderParentPath
+	else if length of folderParts = 2 then
+		return item 2 of folderParts
 	else
 		return missing value
 	end if
@@ -1162,9 +1164,6 @@ on folderIDByName(theName, topLevel)
 	return missing value
 end folderIDByName
 
---ZZZ Need way to get folder Path from Name
---ZZZ need way to get folder path from ID
-
 on folderIDByPath(folderPath)
 	(* return folder id for folder by path
 	Args:
@@ -1182,16 +1181,20 @@ on folderIDByPath(folderPath)
 	end if
 end folderIDByPath
 
-on folderGetPath(id_, path_delimiter_)
-	(* return path to folder as a string *)
-	set folder_ to folderGetFolderForID(id_)
-	try
-		set path_ to photosLibraryInternalPathToAlbumFolder(folder_, path_delimiter_)
-	on error
-		set path_ to ""
-	end try
-	return path_
+on folderGetPath(folderIDScript, pathDelimiter)
+	(* Return path to folder as a string, delimited by pathDelimiter *)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set thePath to folderName(folderIDScript)
+	set theParent to folderParent(folderIDScript)
+	repeat while theParent is not missing value
+		set thePath to folderName(theParent) & pathDelimiter & thePath
+		set theParent to folderParent(theParent)
+	end repeat
+	return thePath
 end folderGetPath
+
+set theFolder to folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
+--folderGetPath(theFolder, "/")
 
 on folderPathIDs(id_)
 	(* return path to folder as a string *)
@@ -1204,15 +1207,16 @@ on folderPathIDs(id_)
 	return path_ids_
 end folderPathIDs
 
-
-on folderSpotlight(id_)
+on folderSpotlight(folderIDScript)
 	(* spotlight folder *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
+	set theScript to "
 		activate
-		spotlight folder id (id_)
-	end tell
+		spotlight theFolder
+	"
+	return folderRunScript(folderIDScript, theScript)
 end folderSpotlight
+
 
 ---------- Photo ----------
 on photoExists(_id)
