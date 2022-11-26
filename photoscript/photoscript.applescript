@@ -948,13 +948,6 @@ on folderName(folderIDScript)
 	return folderRunScript(folderIDScript, "return name of theFolder")
 end folderName
 
-on folderNameFromPath(folderPath)
-	(* return name of folder at folderPath *)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set theFolderID to folderGetIDScriptFromPath(folderPath)
-	return folderName(theFolderID)
-end folderNameFromPath
-
 on folderSetName(folderIDScript, theName)
 	(* set name of folder identified by folderIDScript to theName
 	
@@ -976,44 +969,16 @@ on folderSetName(folderIDScript, theName)
 	return folderName(folderIDScript) = theName
 end folderSetName
 
-on folderSetNameFromPath(folderPath, theName)
-	(* set name of folder at folderPath to theName
-	
-	Returns:
-		true if folder name changed successfully, otherwise false
-	*)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set theFolder to folderGetIDScriptFromPath(folderPath)
-	if length of folderPath > 1 then
-		set newFolderPath to items 1 through -2 of folderPath & {theName}
-	else
-		set newFolderPath to {theName}
-	end if
-	set retryCount to 0
-	repeat while retryCount < MAX_RETRY
-		folderRunScript(theFolder, "set name of theFolder to \"" & theName & "\"")
-		-- If there was already a folder with the same name and
-		-- we renamed a folder to the match the existing name, 
-		-- then test for success will be ambiguous as it will be true
-		-- even if the rename failed
-		if folderExists(newFolderPath) then
-			return true
-		end if
-		set retryCount to retryCount + 1
-	end repeat
-	return folderExists(newFolderPath)
-end folderSetNameFromPath
-
-on folderParent(folderID)
+on folderParent(folderIDScript)
 	(* return folder script for parent path of folder at folderID
 	
 	Args:
-		folderID: script snippet as returned by folderGetIDScriptFromPath
+		folderIDScript: script snippet as returned by folderGetIDScriptFromPath
 	
 	Returns:
 		parent folder path of folder at folderPath or missing value if no parent
 	*)
-	set folderParts to folderSplitFolderPath(folderID)
+	set folderParts to folderSplitFolderPath(folderIDScript)
 	if length of folderParts > 1 then
 		set folderParentPath to item 1 of folderParts
 		repeat with i from 2 to (length of folderParts) - 1
@@ -1025,8 +990,8 @@ on folderParent(folderID)
 	end if
 end folderParent
 
-on folderAlbums(folderPath)
-	(* return list of album IDs in folder at folderPath *)
+on folderAlbums(folderIDScript)
+	(* return list of album IDs in folder *)
 	set theScript to "
 		set theIDs to {}
 		repeat with theAlbum in albums of theFolder
@@ -1035,22 +1000,30 @@ on folderAlbums(folderPath)
 		return theIDs
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderGetIDScriptFromPath(folderPath), theScript)
+	return folderRunScript(folderIDScript, theScript)
 end folderAlbums
 
-on folderFolders(folderPath)
-	(* return list of folder paths for folders in folder at folderPath *)
-	-- ZZZ	
-	set ids to {}
-	set _folder to folderGetFolderForID(id_)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set _folders to folders of _folder
-		repeat with _f in _folders
-			copy id of _f to end of ids
+on folderFolders(folderIDScript)
+	(* return list of folder IDs in folder *)
+	set theScript to "
+		set theIDs to {}
+		repeat with theFolder in folders of theFolder
+			set end of theIDs to id of theFolder
 		end repeat
-	end tell
-	return ids
+		return theIDs
+	"
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
+	set subFolderIDs to folderRunScript(folderIDScript, theScript)
+	if length of subFolderIDs = 0 then
+		return {}
+	end if
+
+	set subFolders to {}
+	repeat with subFolderID in subFolderIDs
+		set subFolderIDScript to "folder id(\"" & subFolderID & "\") of " & folderIDScript
+		set end of subFolders to subFolderIDScript
+	end repeat
+	return subFolders
 end folderFolders
 
 on folderCount(id_)
