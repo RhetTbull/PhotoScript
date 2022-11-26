@@ -256,8 +256,21 @@ on photosLibraryGetAlbumsFolders()
 	return albums_folders
 end photosLibraryGetAlbumsFolders
 
-on _walkFolders(folderID, theFolder, folderScript)
-	(* Recursively walk through folders finding the folder that matched folderID *)
+on _walkFoldersLookingForID(folderID, theFolder, folderScript)
+	(* Recursively walk through folders finding the folder that matched folderID 
+	
+	Args:
+		folderID: the folder ID to look for
+		theFolder: a Photos folder object representing the current folder
+		folderScript: the script snippet for the folder
+		
+	Returns:
+		folderScript: the matching script snippet or the current snippet if not found
+		
+	Note:
+		This is intended to be called only from photosLibraryGetFolderIDScriptForID
+		The initial folderScript should be set to ""
+	*)
 	set originalFolderScript to folderScript
 	tell application "Photos"
 		set subFolders to theFolder's folders
@@ -266,11 +279,11 @@ on _walkFolders(folderID, theFolder, folderScript)
 			if id of aFolder is equal to folderID then
 				return folderScript
 			end if
-			return my _walkFolders(folderID, aFolder, folderScript)
+			return my _walkFoldersLookingForID(folderID, aFolder, folderScript)
 		end repeat
 	end tell
 	return originalFolderScript
-end _walkFolders
+end _walkFoldersLookingForID
 
 on photosLibraryGetFolderIDScriptForID(folderID)
 	(* return AppleScript snippet for folder with ID folderID *)
@@ -279,24 +292,70 @@ on photosLibraryGetFolderIDScriptForID(folderID)
 		set theFolders to folders
 		repeat with aFolder in theFolders
 			set folderScript to "folder (\"" & (id of aFolder as text) & "\")"
-			set retVal to my _walkFolders(folderID, aFolder, folderScript)
-			if retVal is not equal to "" then
-				return retVal
+			if id of aFolder is equal to folderID then
+				return folderScript
+			end if
+			-- my is required due to scope as this is inside a tell block
+			-- if my is not used, Photos will look for the function _walkFolders which does not exist in its namespace
+			set returnValue to my _walkFoldersLookingForID(folderID, aFolder, folderScript)
+			if returnValue is not equal to "" then
+				return returnValue
 			end if
 		end repeat
 	end tell
 	
 end photosLibraryGetFolderIDScriptForID
 
+on _walkFoldersLookingForName(folderName, theFolder, folderScript)
+	(* Recursively walk through folders finding the folder that matched folderName; returns the first matching folder
+	
+	Args:
+		folderName: the folder name to look for
+		theFolder: a Photos folder object representing the current folder
+		folderScript: the script snippet for the folder
+		
+	Returns:
+		folderScript: the matching script snippet or the current snippet if not found
+		
+	Note:
+		This is intended to be called only from photosLibraryGetFolderIDScriptForName
+		The initial folderScript should be set to ""
+		There may be more than one folder with the same name; this will return the first folder found with a matching name
+	*)
+	set originalFolderScript to folderScript
+	tell application "Photos"
+		set subFolders to theFolder's folders
+		repeat with aFolder in subFolders
+			set folderScript to "folder (\"" & (id of aFolder as text) & "\") of " & folderScript
+			if aFolder's name is equal to folderName then
+				return folderScript
+			end if
+			return my _walkFoldersLookingForName(folderName, aFolder, folderScript)
+		end repeat
+	end tell
+	return originalFolderScript
+end _walkFoldersLookingForName
 
-
--- ZZZ
-set theFolderID to "5CD975DA-BF14-4600-853B-C248F9BE8112/L0/020" --3rd level
---set theFolderID to "88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020" --top level
-photosLibraryGetFolderIDScriptForID(theFolderID)
---photosLibraryGetAlbumsFolders()
---folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
-
+on photosLibraryGetFolderIDScriptForName(folderName)
+	(* return AppleScript snippet for folder with name folderName *)
+	# see https://discussions.apple.com/docs/DOC-250002459
+	tell application "Photos"
+		set theFolders to folders
+		repeat with aFolder in theFolders
+			set folderScript to "folder (\"" & (id of aFolder as text) & "\")"
+			if aFolder's name is equal to folderName then
+				return folderScript
+			end if
+			-- my is required due to scope as this is inside a tell block
+			-- if my is not used, Photos will look for the function _walkFolders which does not exist in its namespace
+			set returnValue to my _walkFoldersLookingForName(folderName, aFolder, folderScript)
+			if returnValue is not equal to "" then
+				return returnValue
+			end if
+		end repeat
+	end tell
+	
+end photosLibraryGetFolderIDScriptForName
 
 on photosLibraryGetTopLevelAlbumsFolders()
 	(* return record containing album names and folder names in the library
@@ -1549,3 +1608,14 @@ end albumRunScript
 --folderName({"Folder1", "FolderFoo"})
 --folderSetName({"Folder1", "FolderFoo"}, "SubFolder1")
 --set result to folderParent({"Folder1", "SubFolder2"})
+
+
+
+-- ZZZ
+--set theFolderID to "5CD975DA-BF14-4600-853B-C248F9BE8112/L0/020" --3rd level
+--set theFolderID to "CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020" -- 2nd level
+--set theFolderID to "88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020" --top level
+--photosLibraryGetFolderIDScriptForID(theFolderID)
+--photosLibraryGetFolderIDScriptForName("SubSubFolder1")
+--photosLibraryGetAlbumsFolders()
+--folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
