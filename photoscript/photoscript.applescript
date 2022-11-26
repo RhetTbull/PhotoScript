@@ -256,6 +256,47 @@ on photosLibraryGetAlbumsFolders()
 	return albums_folders
 end photosLibraryGetAlbumsFolders
 
+on _walkFolders(folderID, theFolder, folderScript)
+	(* Recursively walk through folders finding the folder that matched folderID *)
+	set originalFolderScript to folderScript
+	tell application "Photos"
+		set subFolders to theFolder's folders
+		repeat with aFolder in subFolders
+			set folderScript to "folder (\"" & (id of aFolder as text) & "\") of " & folderScript
+			if id of aFolder is equal to folderID then
+				return folderScript
+			end if
+			return my _walkFolders(folderID, aFolder, folderScript)
+		end repeat
+	end tell
+	return originalFolderScript
+end _walkFolders
+
+on photosLibraryGetFolderIDScriptForID(folderID)
+	(* return AppleScript snippet for folder with ID folderID *)
+	# see https://discussions.apple.com/docs/DOC-250002459
+	tell application "Photos"
+		set theFolders to folders
+		repeat with aFolder in theFolders
+			set folderScript to "folder (\"" & (id of aFolder as text) & "\")"
+			set retVal to my _walkFolders(folderID, aFolder, folderScript)
+			if retVal is not equal to "" then
+				return retVal
+			end if
+		end repeat
+	end tell
+	
+end photosLibraryGetFolderIDScriptForID
+
+
+
+-- ZZZ
+set theFolderID to "5CD975DA-BF14-4600-853B-C248F9BE8112/L0/020" --3rd level
+--set theFolderID to "88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020" --top level
+photosLibraryGetFolderIDScriptForID(theFolderID)
+--photosLibraryGetAlbumsFolders()
+--folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
+
 
 on photosLibraryGetTopLevelAlbumsFolders()
 	(* return record containing album names and folder names in the library
@@ -829,19 +870,24 @@ on folderGetIDScriptFromPath(folderPath)
 	set preamble to "
 	on run(folderName)
 		tell application \"Photos\"
-		set theFolder to "
+			set theFolder to "
 	
 	set postamble to "
-		 repeat with subFolder in folders of theFolder
-		 	if name of subFolder as text is equal to folderName as text then
-				return id of subFolder
-			end if
-		end repeat
+		 	repeat with subFolder in folders of theFolder
+		 		if name of subFolder as text is equal to folderName as text then
+					return id of subFolder
+				end if
+			end repeat
 		end tell
 		return missing value
 	end run
 "
 	set folderID to photosLibraryGetTopLevelFolderID(item 1 of folderPath)
+	
+	if folderID is missing value then
+		return missing value
+	end if
+	
 	set folderScript to ("folder id(\"" & folderID as text) & "\")"
 	set folderList to items 2 through folderCount of folderPath
 	repeat with folderName in folderList
@@ -907,7 +953,6 @@ on folderGetAlbumID(folderIDScript, albumName)
 	set albumID to folderRunScript(folderIDScript, theScript)
 	return albumID
 end folderGetAlbumID
-
 
 on folderGetFolderForID(_id)
 	(* return folder for _id *)
@@ -1017,7 +1062,7 @@ on folderFolders(folderIDScript)
 	if length of subFolderIDs = 0 then
 		return {}
 	end if
-
+	
 	set subFolders to {}
 	repeat with subFolderID in subFolderIDs
 		set subFolderIDScript to "folder id(\"" & subFolderID & "\") of " & folderIDScript
@@ -1038,11 +1083,12 @@ on folderCount(folderIDScript)
 	return folderRunScript(folderIDScript, theScript)
 end folderCount
 
-on folderByName(name_, topLevel)
-	(* return folder id of folder named name_ or 0 if no folder found with name_
-	    if more than one folder named name_, returns the first one found 
-	  if topLevel = true, returns only top level folder
+on folderIDByName(theName, topLevel)
+	(* return folder ID for folder named theName or missing value if no folder found
+	    if more than one folder named theName, returns the first one found 
+	  	if topLevel = true, returns only top level folder
 	*)
+	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	if topLevel then
 		set albums_folders_ to the photosLibraryGetTopLevelAlbumsFolders()
 	else
@@ -1050,46 +1096,32 @@ on folderByName(name_, topLevel)
 	end if
 	set _folders to _folders of albums_folders_
 	repeat with _f in _folders
-		if name of _f = name_ then
+		if name of _f = theName then
 			return id of _f
 		end if
 	end repeat
-	return 0
-end folderByName
+	return missing value
+end folderIDByName
 
-on folderByPath(folder_path_)
+--ZZZ Need way to get folder Path from Name
+--ZZZ need way to get folder path from ID
+
+on folderIDByPath(folderPath)
 	(* return folder id for folder by path
 	Args:
-		folder_path_: list of folder names, e.g. {"Folder","SubFolder", "SubSubFolder"}
+		folderPath: list of folder names, e.g. {"Folder","SubFolder", "SubSubFolder"}
 		
 	Returns: 
-		folder id or 0 if not found
+		folder id or missing value if not found
 	*)
-	set topLevelfolders to _folders of photosLibraryGetTopLevelAlbumsFolders()
-	set folder_ to missing value
-	repeat with f_ in topLevelfolders
-		if name of f_ = item 1 of folder_path_ then
-			set folder_ to f_
-		end if
-	end repeat
-	if folder_ = missing value then
-		return 0
-	end if
-	set folder_path_ to rest of folder_path_
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		try
-			repeat with folder_name_ in folder_path_
-				set subfolder_ to get folder folder_name_ of folder_
-				set subfolder_id_ to id of subfolder_
-				set folder_ to folder id (subfolder_id_) of folder_
-			end repeat
-		on error
-			return 0
-		end try
-	end tell
-	return id of folder_
-end folderByPath
+	set folderScript to folderGetIDScriptFromPath(folderPath)
+	if folderScript is not missing value then
+		return folderRunScript(folderScript, "return id of theFolder")
+	else
+		return missing value
+	end if
+end folderIDByPath
 
 on folderGetPath(id_, path_delimiter_)
 	(* return path to folder as a string *)

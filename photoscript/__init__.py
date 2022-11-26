@@ -333,7 +333,7 @@ class PhotosLibrary:
             raise ValueError("Must pass only name or uuid but not both")
 
         if name:
-            uuid = run_script("folderByName", name[0], top_level)
+            uuid = run_script("folderIDByName", name[0], top_level)
             if uuid != 0:
                 return Folder(uuid)
             else:
@@ -350,7 +350,7 @@ class PhotosLibrary:
         Returns:
             Folder object for folder at folder_path or None if not found
         """
-        folder_id = run_script("folderByPath", folder_path)
+        folder_id = run_script("folderIDByPath", folder_path)
         if folder_id != 0:
             return Folder(folder_id)
         else:
