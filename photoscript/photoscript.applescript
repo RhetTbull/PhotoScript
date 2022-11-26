@@ -1026,16 +1026,16 @@ on folderFolders(folderIDScript)
 	return subFolders
 end folderFolders
 
-on folderCount(id_)
-	(* return count of items (albums and folders) in folder id_*)
-	set folder_ to folderGetFolderForID(id_)
+on folderCount(folderIDScript)
+	(* return count of items (albums and folders) in folder *)
+	set theScript to "
+		set albumsCount_ to (count of albums in theFolder)
+		set foldersCount_ to (count of folders in theFolder)
+		set theLength to albumsCount_ + foldersCount_
+		return theLength
+	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		set _albums_count to (count of albums in folder_)
-		set _folders_count to (count of folders in folder_)
-		set _len to _albums_count + _folders_count
-		return _len
-	end tell
+	return folderRunScript(folderIDScript, theScript)
 end folderCount
 
 on folderByName(name_, topLevel)
