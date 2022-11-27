@@ -275,7 +275,7 @@ on _walkFoldersLookingForID(theFolderID, theFolder, folderString)
 	tell application "Photos"
 		set subFolders to theFolder's folders
 		repeat with aFolder in subFolders
-			set folderString to "folder (\"" & (id of aFolder as text) & "\") of " & folderString
+			set folderString to "folder id(\"" & (id of aFolder as text) & "\") of " & folderString
 			if id of aFolder is equal to theFolderID then
 				return folderString
 			end if
@@ -291,7 +291,7 @@ on photosLibraryGetFolderIDStringForID(theFolderID)
 	tell application "Photos"
 		set theFolders to folders
 		repeat with aFolder in theFolders
-			set folderString to "folder (\"" & (id of aFolder as text) & "\")"
+			set folderString to "folder id(\"" & (id of aFolder as text) & "\")"
 			if id of aFolder is equal to theFolderID then
 				return folderString
 			end if
@@ -326,7 +326,7 @@ on _walkFoldersLookingForName(theFolderName, theFolder, folderString)
 	tell application "Photos"
 		set subFolders to theFolder's folders
 		repeat with aFolder in subFolders
-			set folderString to "folder (\"" & (id of aFolder as text) & "\") of " & folderString
+			set folderString to "folder id(\"" & (id of aFolder as text) & "\") of " & folderString
 			if aFolder's name is equal to theFolderName then
 				return folderString
 			end if
@@ -342,7 +342,7 @@ on photosLibraryGetFolderIDStringForName(theFolderName)
 	tell application "Photos"
 		set theFolders to folders
 		repeat with aFolder in theFolders
-			set folderString to "folder (\"" & (id of aFolder as text) & "\")"
+			set folderString to "folder id(\"" & (id of aFolder as text) & "\")"
 			if aFolder's name is equal to theFolderName then
 				return folderString
 			end if

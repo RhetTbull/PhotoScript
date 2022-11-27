@@ -1,5 +1,7 @@
 """ Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
 
+from __future__ import annotations
+
 import datetime
 import glob
 import os
@@ -14,6 +16,9 @@ from applescript import AppleScript, kMissingValue
 from photoscript.utils import ditto, findfiles
 
 from .script_loader import run_script
+from .utils import get_os_version
+
+MACOS_VERSION = get_os_version()
 
 """ In Catalina / Photos 5+, UUIDs in AppleScript have suffix that doesn't 
     appear in actual database value.  These need to be dropped to be compatible
@@ -21,6 +26,29 @@ from .script_loader import run_script
 UUID_SUFFIX_PHOTO = "/L0/001"
 UUID_SUFFIX_ALBUM = "/L0/040"
 UUID_SUFFIX_FOLDER = "/L0/020"
+
+
+def uuid_to_id(uuid: str, suffix: str) -> tuple[str, str]:
+    """Converts UUID betweens formats used by osxphotos and Photos app
+
+    Args:
+        uuid: UUID as string
+        suffix: suffix to add to UUID if needed to form id
+
+    Returns:
+        tuple of (uuid, id)
+    """
+    id_ = uuid
+    if MACOS_VERSION >= (10, 15, 0):
+        # In Photos 5+ (Catalina/10.15), UUIDs in AppleScript have suffix that doesn't
+        # appear in actual database value. Suffix needs to be added to be compatible
+        # with AppleScript (id_) and dropped for osxphotos (uuid)
+        if len(uuid.split("/")) == 1:
+            # osxphotos style UUID without the suffix
+            id_ = f"{uuid}{suffix}"
+        else:
+            uuid = uuid.split("/")[0]
+    return uuid, id_
 
 
 class AppleScriptError(Exception):
@@ -553,17 +581,9 @@ class PhotosLibrary:
 
 class Album:
     def __init__(self, uuid):
-        id_ = uuid
         # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_ALBUM}"
-            else:
-                uuid = uuid.split("/")[0]
-
-        valuuidalbum = run_script("albumExists", id_)
-        if valuuidalbum:
+        uuid, id_ = uuid_to_id(uuid, UUID_SUFFIX_ALBUM)
+        if valuuidalbum := run_script("albumExists", id_):
             self.id = id_
             self._uuid = uuid
         else:
@@ -761,39 +781,76 @@ class Album:
 
 
 class Folder:
-    def __init__(self, uuid):
-        id_ = uuid
-        # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
-            else:
-                uuid = uuid.split("/")[0]
+    def __init__(
+        self,
+        path: list[str] | None = None,
+        uuid: str | None = None,
+        idstring: str | None = None,
+    ):
+        """Create a Folder object; only one of path, uuid, or idstring should be specified
 
-        valid_folder = run_script("folderExists", id_)
-        if valid_folder:
-            self.id = id_
-            self._uuid = uuid
+        Args:
+            path: list of folder names in descending order from parent to child: ["Folder", "SubFolder"]
+            uuid: uuid of folder: "E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020" or "E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D"
+            idstring: idstring of folder:
+                "folder id(\"E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020\") of folder id(\"CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020\")"
+        """
+
+        if sum(bool(x) for x in (path, uuid, idstring)) != 1:
+            raise ValueError(
+                "One (and only one) of path, uuid, or idstring must be specified"
+            )
+
+        if uuid is not None:
+            uuid, _id = uuid_to_id(uuid, UUID_SUFFIX_FOLDER)
         else:
-            raise ValueError(f"Invalid folder id: {uuid}")
+            _id = None
+
+        self._path, self._uuid, self._id, self._idstring = path, uuid, _id, idstring
+
+        # if initialized with path or uuid, need to initialize idstring
+        if self._path is not None:
+            self._idstring = run_script("folderGetIDStringFromPath", self._path)
+        elif self._id is not None:
+            # if uuid was passed, _id will have been initialized above
+            self._idstring = run_script("photosLibraryGetFolderIDStringForID", self._id)
+
+    @property
+    def idstring(self) -> str:
+        """idstring of folder"""
+        return self._idstring
 
     @property
     def uuid(self):
         """UUID of folder"""
+        if self._uuid is not None:
+            return self._uuid
+        self._uuid, self._id = uuid_to_id(
+            run_script("folderUUID", self._idstring), UUID_SUFFIX_FOLDER
+        )
         return self._uuid
+
+    @property
+    def id(self):
+        """ID of folder"""
+        if self._id is not None:
+            return self._id
+        self._uuid, self._id = uuid_to_id(
+            run_script("folderUUID", self._idstring), UUID_SUFFIX_FOLDER
+        )
+        return self._id
 
     @property
     def name(self):
         """name of folder (read/write)"""
-        name = run_script("folderName", self.id)
+        name = run_script("folderName", self._idstring)
         return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
         """set name of photo"""
         name = "" if name is None else name
-        return run_script("folderSetName", self.id, name)
+        return run_script("folderSetName", self._idstring, name)
 
     @property
     def title(self):
@@ -804,17 +861,18 @@ class Folder:
     def title(self, title):
         """set title of folder (alias for name)"""
         name = "" if title is None else title
-        return run_script("folderSetName", self.id, name)
+        return run_script("folderSetName", self._idstring, name)
 
     @property
     def parent_id(self):
         """parent container id"""
-        return run_script("folderParent", self.id)
+        return run_script("folderParent", self._idstring)
 
     # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums?
     @property
     def parent(self):
         """Return parent Folder object"""
+        # ZZZ
         parent_id = self.parent_id
         if parent_id != 0:
             return Folder(parent_id)
@@ -909,16 +967,9 @@ class Folder:
 
 class Photo:
     def __init__(self, uuid):
-        id_ = uuid
         # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_PHOTO}"
-            else:
-                uuid = uuid.split("/")[0]
-        valid = run_script("photoExists", uuid)
-        if valid:
+        uuid, id_ = uuid_to_id(uuid, UUID_SUFFIX_PHOTO)
+        if valid := run_script("photoExists", uuid):
             self.id = id_
             self._uuid = uuid
         else:
