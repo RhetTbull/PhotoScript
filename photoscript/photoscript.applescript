@@ -526,19 +526,18 @@ on photosLibraryCreateAlbum(albumName)
 	end tell
 end photosLibraryCreateAlbum
 
-on photosLibraryCreateAlbumAtFolder(albumName, folder_id_)
+on photosLibraryCreateAlbumAtFolder(albumName, folderIDScript)
 	(*  creates album named albumName inside folder folder_id_
 	     does not check for duplicate album
            Returns:
 		    UUID of newly created album or 0 if error
 	*)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set folder_ to folderGetFolderForID(folder_id_)
-	tell application "Photos"
+	set theScript to "
 		set count_ to 0
-		repeat while count_ < MAX_RETRY
+		repeat while count_ < " & MAX_RETRY & "
 			try
-				set theAlbum to make new album named albumName at folder_
+				set theAlbum to make new album named \"" & albumName & "\" at theFolder
 				set theID to ((id of theAlbum) as text)
 				return theID
 			on error
@@ -546,7 +545,8 @@ on photosLibraryCreateAlbumAtFolder(albumName, folder_id_)
 			end try
 		end repeat
 		return 0
-	end tell
+	"
+	return folderRunScript(folderIDScript, theScript)
 end photosLibraryCreateAlbumAtFolder
 
 on photosLibraryGetSelection()
@@ -1192,8 +1192,6 @@ on folderGetPath(folderIDScript, pathDelimiter)
 	end repeat
 	return thePath
 end folderGetPath
-
-set theFolder to folderGetIDScriptFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
 
 on folderGetPathFolderIDScript(folderIDScript)
 	(* Return list of folder ID scripts for the folder and it's parents *)
