@@ -1,17 +1,17 @@
 (* mock photoscript applescript functions for testing AppleScriptError *)
 
 on photosLibraryCreateFolder(folderName)
-	return 0
+	return missing value 
 end photosLibraryCreateFolder
 
 on photosLibraryCreateFolderAtFolder(folderName, folder_id_)
-	return 0
+	return missing value
 end photosLibraryCreateFolderAtFolder
 
 on photosLibraryCreateAlbum(albumName)
-	return 0
+	return missing value
 end photosLibraryCreateAlbum
 
 on photosLibraryCreateAlbumAtFolder(albumName, folder_id_)
-	return 0
+	return missing value
 end photosLibraryCreateAlbumAtFolder

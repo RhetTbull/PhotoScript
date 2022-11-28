@@ -1,30 +1,29 @@
 """ Test Folder class """
 
-from tests.photoscript_config_catalina import ALBUM_1_NAME, FOLDER_1_SUBFOLDERS
 import pytest
 from applescript import AppleScript
-from tests.conftest import photoslib, suspend_capture, get_os_version
 
+import photoscript
+from tests.conftest import get_os_version, photoslib, suspend_capture
+from tests.photoscript_config_catalina import ALBUM_1_NAME, FOLDER_1_SUBFOLDERS
 
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
     from tests.photoscript_config_catalina import (
-        FOLDER_NAMES_ALL,
-        FOLDER_NAMES_TOP,
         FOLDER_1_LEN,
         FOLDER_1_NAME,
+        FOLDER_1_SUBFOLDERS,
         FOLDER_1_UUID,
         FOLDER_1_UUID_OSXPHOTOS,
-        FOLDER_1_SUBFOLDERS,
         FOLDER_2_LEN,
         FOLDER_2_NAME,
-        FOLDER_2_UUID,
         FOLDER_2_PATH,
         FOLDER_2_PATH_STR,
         FOLDER_2_PATH_STR_COLON,
+        FOLDER_2_UUID,
+        FOLDER_3_ALBUMS,
         FOLDER_3_LEN,
         FOLDER_3_NAME,
-        FOLDER_3_ALBUMS,
         FOLDER_3_UUID,
         FOLDER_NAME,
         FOLDER_NAMES_ALL,
@@ -53,17 +52,14 @@ else:
 ########## Non-interactive tests ##########
 
 
-def test_folder_init():
-    import photoscript
-
+def test_folder_init_uuid():
+    """Test init with UUID"""
     folder = photoscript.Folder(FOLDER_1_UUID)
     assert isinstance(folder, photoscript.Folder)
 
 
 def test_folder_init_osxphotos_uuid():
-    """ test Folder() with osxphotos style UUID """
-    import photoscript
-
+    """test Folder() with osxphotos style UUID"""
     folder = photoscript.Folder(FOLDER_1_UUID_OSXPHOTOS)
     assert isinstance(folder, photoscript.Folder)
     assert folder.id == FOLDER_1_UUID
@@ -71,33 +67,44 @@ def test_folder_init_osxphotos_uuid():
 
 
 def test_folder_init_bad_uuid():
-    import photoscript
-
+    """Test init with bad UUID"""
     with pytest.raises(ValueError):
         assert photoscript.Folder("BAD_UUID")
 
 
-def test_folder_id():
-    import photoscript
+def test_folder_init_bad_path():
+    """Test init with bad path"""
+    with pytest.raises(ValueError):
+        assert photoscript.Folder(path="BAD_PATH")
 
+
+def test_folder_init_bad_idstring():
+    """Test init with bad idstring"""
+    with pytest.raises(ValueError):
+        assert photoscript.Folder(idstring="BAD_IDSTRING")
+
+
+def test_folder_id():
+    """Test folder id"""
     folder = photoscript.Folder(FOLDER_1_UUID)
     assert folder.id == FOLDER_1_UUID
 
 
 def test_folder_uuid():
-    import photoscript
-
+    """Test folder uuid"""
     folder = photoscript.Folder(FOLDER_1_UUID)
     assert folder.uuid == FOLDER_1_UUID_OSXPHOTOS
 
 
 def test_folder_name_title(photoslib):
+    """Test folder name/title"""
     folder = photoslib.folder(FOLDER_1_NAME)
     assert folder.name == FOLDER_1_NAME
     assert folder.title == FOLDER_1_NAME
 
 
 def test_folder_name_setter(photoslib):
+    """ "Test setter for name"""
     folder = photoslib.folder(FOLDER_1_NAME)
     new_name = "My New Folder Name"
     folder.name = new_name
@@ -106,6 +113,7 @@ def test_folder_name_setter(photoslib):
 
 
 def test_folder_title_setter(photoslib):
+    """Test setter for title"""
     folder = photoslib.folder(FOLDER_1_NAME)
     new_name = "My New Folder Name"
     folder.title = new_name
@@ -114,18 +122,19 @@ def test_folder_title_setter(photoslib):
 
 
 def test_folder_parent_id(photoslib):
+    """ "Test parent_id top_level folder"""
     folder = photoslib.folder(FOLDER_1_NAME)
     assert folder.parent_id is None
 
 
-def test_folder_parent_id(photoslib):
+def test_folder_parent_id_not_toplevel(photoslib):
+    """Test parent id with non-top-level folder"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     assert folder.parent_id == FOLDER_1_UUID
 
 
 def test_folder_parent(photoslib):
-    import photoscript
-
+    """Test folder parent"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     parent = folder.parent
     assert isinstance(parent, photoscript.Folder)
@@ -133,11 +142,13 @@ def test_folder_parent(photoslib):
 
 
 def test_folder_parent_top_level(photoslib):
+    """Test folder parent with top-level folder"""
     folder = photoslib.folder(FOLDER_NAMES_TOP[0])
     assert folder.parent is None
 
 
 def test_folder_path_str(photoslib):
+    """Test folder path_str"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     assert folder.path_str() == FOLDER_2_PATH_STR
     assert folder.path_str(":") == FOLDER_2_PATH_STR_COLON
@@ -146,8 +157,7 @@ def test_folder_path_str(photoslib):
 
 
 def test_folder_path(photoslib):
-    import photoscript
-
+    """Test folder path"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     path = folder.path()
     assert len(path) == len(FOLDER_2_PATH)
@@ -157,50 +167,56 @@ def test_folder_path(photoslib):
 
 
 def test_folder_albums(photoslib):
+    """Test folder albums"""
     folder = photoslib.folder(FOLDER_3_NAME)
     albums = folder.albums
     assert sorted(album.name for album in albums) == sorted(FOLDER_3_ALBUMS)
 
 
 def test_folder_album(photoslib):
+    """Test folder album"""
     folder = photoslib.folder(FOLDER_3_NAME)
     album = folder.album(ALBUM_1_NAME)
     assert album.name == ALBUM_1_NAME
 
 
 def test_folder_album_bad_name(photoslib):
+    """Test folder album with bad name"""
     folder = photoslib.folder(FOLDER_3_NAME)
     album = folder.album("FOOBAR")
     assert album is None
 
 
 def test_folder_subfolders(photoslib):
+    """Test folder subfolders"""
     folder = photoslib.folder(FOLDER_1_NAME)
     subfolders = folder.subfolders
     assert sorted(f.name for f in subfolders) == sorted(FOLDER_1_SUBFOLDERS)
 
 
 def test_folder_subfolders_none(photoslib):
+    """Test folder subfolders with no subfolders"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     subfolders = folder.subfolders
     assert subfolders == []
 
 
 def test_folder_folder(photoslib):
+    """Test folder folder"""
     folder = photoslib.folder(FOLDER_1_NAME)
     subfolder = folder.folder(FOLDER_2_NAME)
     assert subfolder.name == FOLDER_2_NAME
 
 
 def test_folder_folder_none(photoslib):
+    """Test folder folder with no subfolder"""
     folder = photoslib.folder(FOLDER_1_NAME)
     subfolder = folder.folder("FOOBAR")
     assert subfolder is None
 
 
 def test_folder_create_album(photoslib):
-    import photoscript
-
+    """Test folder create_album"""
     folder = photoslib.folder(FOLDER_1_NAME)
     album = folder.create_album("New Album")
     assert isinstance(album, photoscript.Album)
@@ -209,8 +225,7 @@ def test_folder_create_album(photoslib):
 
 
 def test_folder_create_folder(photoslib):
-    import photoscript
-
+    """Test folder create_folder"""
     folder = photoslib.folder(FOLDER_1_NAME)
     subfolder = folder.create_folder("New Folder")
     assert isinstance(subfolder, photoscript.Folder)
@@ -219,18 +234,18 @@ def test_folder_create_folder(photoslib):
 
 
 def test_len_1(photoslib):
-    """ test Album.__len__ """
+    """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_1_NAME)
     assert len(folder) == FOLDER_1_LEN
 
 
 def test_len_2(photoslib):
-    """ test Album.__len__ """
+    """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
     assert len(folder) == FOLDER_2_LEN
 
 
 def test_len_3(photoslib):
-    """ test Album.__len__ """
+    """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_3_NAME)
     assert len(folder) == FOLDER_3_LEN
