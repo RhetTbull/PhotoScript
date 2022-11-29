@@ -61,4 +61,4 @@ def get_os_version() -> tuple[int, int, int]:
                 f"Could not parse version string: {platform.mac_ver()} {version}"
             )
         )
-    return tuple(int(x) for x in (ver, major, minor))
+    return int(ver), int(major), int(minor)

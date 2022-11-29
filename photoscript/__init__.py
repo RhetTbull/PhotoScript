@@ -151,14 +151,14 @@ class PhotosLibrary:
         Args:
             search: optional text string to search for (returns matching items)
             uuid: optional list of UUIDs to get
-            range\_: optional list of [start, stop] sequence of photos to get
+            range: optional list of [start, stop] sequence of photos to get
 
         Returns:
             Generator that yields Photo objects
 
         Raises:
-            ValueError if more than one of search, uuid, range\_ passed or invalid range\_
-            TypeError if list not passed for range\_
+            ValueError if more than one of search, uuid, range passed or invalid range
+            TypeError if list not passed for range
 
         Note: photos() returns a generator instead of a list because retrieving all the photos
         from a large Photos library can take a very long time--on my system, the rate is about 1
@@ -166,14 +166,13 @@ class PhotosLibrary:
         anyway to speed it up.  Using a generator allows you process photos individually rather
         than waiting, possibly hours, for Photos to return the results.
 
-        range\_ works like python's range function.  Thus range\_=[0,4] will return
-        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library;
-        range\_ start must be in range 0 to len(PhotosLibrary())-1,
+        range works like python's range function.  Thus range=[0,4] will return
+        Photos 0, 1, 2, 3; range=[10] returns the first 10 photos in the library;
+        range start must be in range 0 to len(PhotosLibrary())-1,
         stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
-        photos are return by chunking up requests in batches of photos using range\_,
+        photos are return by chunking up requests in batches of photos using range,
         e.g. request 10 photos at a time.
         """
-
         if len([x for x in [search, uuid, range_] if x]) > 1:
             raise ValueError("Cannot pass more than one of search, uuid, range_")
 
@@ -211,10 +210,7 @@ class PhotosLibrary:
 
             photo_ids = run_script("photosLibraryGetPhotoByRange", start + 1, stop)
 
-        if photo_ids:
-            return self._iterphotos(uuids=photo_ids)
-        else:
-            return []
+        return self._iterphotos(uuids=photo_ids) if photo_ids else []
 
     def _iterphotos(self, uuids=None):
         if uuids:
@@ -413,7 +409,7 @@ class PhotosLibrary:
         folder_ids = run_script("photosLibraryFolderIDs", top_level)
         return [Folder(uuid) for uuid in folder_ids]
 
-    def create_folder(self, name, folder: "Folder" = None) -> "Folder":
+    def create_folder(self, name: str, folder: "Folder" = None) -> "Folder":
         """creates a folder
 
         Args:
@@ -435,7 +431,7 @@ class PhotosLibrary:
             )
 
         if folder_id != kMissingValue:
-            return Folder(folder_id)
+            return Folder(idstring=folder_id)
         else:
             raise AppleScriptError(f"Could not create folder {name}")
 
@@ -501,10 +497,15 @@ class PhotosLibrary:
         return album
 
     def delete_folder(self, folder: "Folder"):
-        """Deletes folder
+        """Deletes folder (and all its sub-folders and albums)
 
         Args:
             folder: a Folder object for folder to delete
+
+        Notes:
+            On macOS 10.15 & above, only top-level folders can be deleted.
+            Sub-folders cannot be deleted due to a bug in Photos' AppleScript
+            implementation.
         """
         return run_script("photosLibraryDeleteFolder", folder.idstring)
 
@@ -826,7 +827,6 @@ class Folder:
             idstring: idstring of folder:
                 "folder id(\"E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020\") of folder id(\"CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020\")"
         """
-
         if sum(bool(x) for x in (path, uuid, idstring)) != 1:
             raise ValueError(
                 "One (and only one) of path, uuid, or idstring must be specified"
@@ -847,7 +847,9 @@ class Folder:
         elif self._id is not None:
             # if uuid was passed, _id will have been initialized above
             # second argument is False so search is not limited to top-level folders
-            self._idstring = run_script("photosLibraryGetFolderIDStringForID", self._id, False)
+            self._idstring = run_script(
+                "photosLibraryGetFolderIDStringForID", self._id, False
+            )
             if self._idstring == kMissingValue:
                 raise ValueError(f"Folder id {self._id} does not exist")
 
@@ -913,11 +915,7 @@ class Folder:
     def parent(self):
         """Return parent Folder object"""
         parent_idstring = self.parent_id
-        return (
-            Folder(idstring=parent_idstring)
-            if parent_idstring != kMissingValue
-            else None
-        )
+        return Folder(idstring=parent_idstring) if parent_idstring is not None else None
 
     def path_str(self, delim="/"):
         """Return internal library path to folder as string.
@@ -972,7 +970,7 @@ class Folder:
         """
         return next((folder for folder in self.subfolders if folder.name == name), None)
 
-    def create_album(self, name):
+    def create_album(self, name: str) -> "Album":
         """Creates an album in this folder
 
         Args:
@@ -981,22 +979,22 @@ class Folder:
         Returns:
             Album object for newly created album
         """
-        return PhotosLibrary().create_album(name, folder=self)
+        return PhotosLibrary().create_album(name=name, folder=self)
 
-    def create_folder(self, name):
+    def create_folder(self, name: str) -> "Folder":
         """creates a folder in this folder
 
         Returns:
             Folder object for newly created folder
         """
-        return PhotosLibrary().create_folder(name, folder=self)
+        return PhotosLibrary().create_folder(name=name, folder=self)
 
     def spotlight(self):
         """spotlight the folder in Photos"""
-        run_script("folderSpotlight", self.id)
+        run_script("folderSpotlight", self._idstring)
 
     def __len__(self):
-        return run_script("folderCount", self.id)
+        return run_script("folderCount", self._idstring)
 
 
 class Photo:

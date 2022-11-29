@@ -647,13 +647,13 @@ on photosLibraryCreateFolder(folderName)
 	end tell
 end photosLibraryCreateFolder
 
-on photosLibraryCreateFolderAtFolder(folderIDString, folderName)
+on photosLibraryCreateFolderAtFolder(folderName, folderIDString)
 	(*  Creates folder named folderName inside folder folderIDString
 		does not check for duplicate folder
 
 		Args:
-			folderIDString: string; id of folder to create folder in
 			folderName: string; name of folder to create
+			folderIDString: string; id of folder to create folder in
 
 		Returns:
 			folder id string of newly created folder or missing value if error
@@ -1255,7 +1255,7 @@ end folderGetPath
 on folderGetPathFolderIDScript(folderIDString)
 	(* Return list of folder ID scripts for the folder and it's parents *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set thePath to {folderIDString}
+	set thePath to {}
 	set theParent to folderParent(folderIDString)
 	repeat while theParent is not missing value
 		set thePath to {theParent} & thePath

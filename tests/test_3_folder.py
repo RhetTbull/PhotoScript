@@ -10,6 +10,7 @@ from tests.photoscript_config_catalina import ALBUM_1_NAME, FOLDER_1_SUBFOLDERS
 OS_VER = get_os_version()[1]
 if OS_VER == "15":
     from tests.photoscript_config_catalina import (
+        FOLDER_1_IDSTRING,
         FOLDER_1_LEN,
         FOLDER_1_NAME,
         FOLDER_1_SUBFOLDERS,
@@ -64,6 +65,32 @@ def test_folder_init_osxphotos_uuid():
     assert isinstance(folder, photoscript.Folder)
     assert folder.id == FOLDER_1_UUID
     assert folder.uuid == FOLDER_1_UUID_OSXPHOTOS
+
+
+def test_folder_init_path():
+    """Test init with path"""
+    folder = photoscript.Folder(path=[FOLDER_1_NAME])
+    assert isinstance(folder, photoscript.Folder)
+    assert folder.id == FOLDER_1_UUID
+
+
+def test_folder_init_idstring():
+    """Test init with idstring"""
+    folder = photoscript.Folder(idstring=FOLDER_1_IDSTRING)
+    assert isinstance(folder, photoscript.Folder)
+    assert folder.id == FOLDER_1_UUID
+
+
+def test_folder_init_too_many_1():
+    """Test init with too many args"""
+    with pytest.raises(ValueError):
+        assert photoscript.Folder(uuid=FOLDER_1_UUID, idstring=FOLDER_1_IDSTRING)
+
+
+def test_folder_init_too_many_2():
+    """Test init with too many args"""
+    with pytest.raises(ValueError):
+        assert photoscript.Folder(path=[FOLDER_1_NAME], idstring=FOLDER_1_IDSTRING)
 
 
 def test_folder_init_bad_uuid():
@@ -130,7 +157,7 @@ def test_folder_parent_id(photoslib):
 def test_folder_parent_id_not_toplevel(photoslib):
     """Test parent id with non-top-level folder"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
-    assert folder.parent_id == FOLDER_1_UUID
+    assert folder.parent_id == FOLDER_1_IDSTRING
 
 
 def test_folder_parent(photoslib):
@@ -143,7 +170,7 @@ def test_folder_parent(photoslib):
 
 def test_folder_parent_top_level(photoslib):
     """Test folder parent with top-level folder"""
-    folder = photoslib.folder(FOLDER_NAMES_TOP[0])
+    folder = photoslib.folder(name=FOLDER_NAMES_TOP[0])
     assert folder.parent is None
 
 
@@ -158,7 +185,7 @@ def test_folder_path_str(photoslib):
 
 def test_folder_path(photoslib):
     """Test folder path"""
-    folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
+    folder = photoslib.folder(name=FOLDER_2_NAME, top_level=False)
     path = folder.path()
     assert len(path) == len(FOLDER_2_PATH)
     for i, p in enumerate(path):
