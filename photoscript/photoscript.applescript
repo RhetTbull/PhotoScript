@@ -17,8 +17,6 @@ property MAX_RETRY : 5
 -- max time in seconds to wait for Photos to respond
 property WAIT_FOR_PHOTOS : 300
 
-
-
 ---------- PhotoLibrary ----------
 
 on photosLibraryWaitForPhotos(timeoutDurationInSeconds)
@@ -211,17 +209,17 @@ end photosLibraryImportToAlbum
 
 on photosLibraryAlbumNames(topLevel)
 	(* return list of album names found in Photos *)
-	set albums_folders to photosLibraryGetAlbumFolderNames(topLevel)
+	set albums_folders to _photosLibraryGetAlbumFolderNames(topLevel)
 	return album_names of albums_folders
 end photosLibraryAlbumNames
 
 on photosLibraryFolderNames(topLevel)
 	(* return list of folder names found in Photos *)
-	set albums_folders to photosLibraryGetAlbumFolderNames(topLevel)
+	set albums_folders to _photosLibraryGetAlbumFolderNames(topLevel)
 	return folder_names of albums_folders
 end photosLibraryFolderNames
 
-on photosLibraryGetAlbumsFolders()
+on _photosLibraryGetAlbumsFolders()
 	(* return record containing album names and folder names in the library
 	
 	    Returns: {album_names:list of album names, folder_names:list of folder names}
@@ -254,7 +252,7 @@ on photosLibraryGetAlbumsFolders()
 	
 	set albums_folders to {_albums:allAlbums, _folders:allFolders}
 	return albums_folders
-end photosLibraryGetAlbumsFolders
+end _photosLibraryGetAlbumsFolders
 
 on _walkFoldersLookingForID(theFolderID, theFolder, folderString)
 	(* Recursively walk through folders finding the folder that matched folderID 
@@ -390,7 +388,7 @@ on photosLibraryGetFolderIDStringForName(theFolderName, topLevel)
 	
 end photosLibraryGetFolderIDStringForName
 
-on photosLibraryGetTopLevelAlbumsFolders()
+on _photosLibraryGetTopLevelAlbumsFolders()
 	(* return record containing album names and folder names in the library
 	
 	    Returns: {album_names:list of album names, folder_names:list of folder names}
@@ -425,14 +423,14 @@ on photosLibraryGetTopLevelAlbumsFolders()
 	
 	set albums_folders to {_albums:allAlbumsFiltered, _folders:allFoldersFiltered}
 	return albums_folders
-end photosLibraryGetTopLevelAlbumsFolders
+end _photosLibraryGetTopLevelAlbumsFolders
 
-on photosLibraryGetAlbumFolderNames(topLevel)
+on _photosLibraryGetAlbumFolderNames(topLevel)
 	(* return names of albums and folders *)
 	if topLevel then
-		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
+		set albums_folders to _photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders to photosLibraryGetAlbumsFolders()
+		set albums_folders to _photosLibraryGetAlbumsFolders()
 	end if
 	set allAlbums to _albums of albums_folders
 	set allFolders to _folders of albums_folders
@@ -451,7 +449,7 @@ on photosLibraryGetAlbumFolderNames(topLevel)
 	end tell
 	set albumfolderNames to {album_names:allAlbumNames, folder_names:allFolderNames}
 	return albumfolderNames
-end photosLibraryGetAlbumFolderNames
+end _photosLibraryGetAlbumFolderNames
 
 on photosLibraryAlbumIDs(topLevel)
 	(* return list of album ids found in Photos 
@@ -463,7 +461,7 @@ on photosLibraryAlbumIDs(topLevel)
 			return id of every album
 		end tell
 	else
-		set albums_folders to photosLibraryGetAlbumsFolders()
+		set albums_folders to _photosLibraryGetAlbumsFolders()
 		set _albums to _albums of albums_folders
 		set _ids to {}
 		repeat with _a in _albums
@@ -480,9 +478,9 @@ on photosLibraryFolderIDs(topLevel)
 	      topLevel: boolean; if true returns only top-level folders otherwise all folders
 	*)
 	if topLevel then
-		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
+		set albums_folders to _photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders to photosLibraryGetAlbumsFolders()
+		set albums_folders to _photosLibraryGetAlbumsFolders()
 	end if
 	set _folders to _folders of albums_folders
 	set _ids to {}
@@ -493,34 +491,7 @@ on photosLibraryFolderIDs(topLevel)
 end photosLibraryFolderIDs
 
 
-on photosLibraryFolderIDLists(topLevel)
-	(* return list of folder ids found in Photos as list of ids
-	  Args:
-	      topLevel: boolean; if true returns only top-level folders otherwise all folders
-	*)
-	if topLevel then
-		set albums_folders to photosLibraryGetTopLevelAlbumsFolders()
-	else
-		set albums_folders to photosLibraryGetAlbumsFolders()
-	end if
-	set _folders to _folders of albums_folders
-	set _id_list to {}
-	repeat with _f in _folders
-		set folder_ids_ to {id of _f}
-		try
-			repeat
-				set parentID to id of parent of _f
-				copy parentID to end of folder_ids_
-				set _f to parent of _f
-			end repeat
-		on error
-			copy folder_ids_ to end of _id_list
-		end try
-	end repeat
-	return _id_list
-end photosLibraryFolderIDLists
-
-on photosLibraryGetTopLevelFolderID(folderName)
+on _photosLibraryGetTopLevelFolderID(folderName)
 	(*	Returns the ID for a top level folder in Photos or missing value if not found 
 	
 		Args:
@@ -535,7 +506,7 @@ on photosLibraryGetTopLevelFolderID(folderName)
 		end repeat
 	end tell
 	return missing value
-end photosLibraryGetTopLevelFolderID
+end _photosLibraryGetTopLevelFolderID
 
 on photosLibraryCreateAlbum(albumName)
 	(*  creates album named albumName
@@ -584,7 +555,7 @@ on photosLibraryCreateAlbumAtFolder(albumName, folderIDString)
 		return missing value
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, theScript)
+	return _folderRunScript(folderIDString, theScript)
 end photosLibraryCreateAlbumAtFolder
 
 on photosLibraryGetSelection()
@@ -674,7 +645,7 @@ on photosLibraryCreateFolderAtFolder(folderName, folderIDString)
 		return missing value
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set newFolderID to folderRunScript(folderIDString, theScript)
+	set newFolderID to _folderRunScript(folderIDString, theScript)
 	if newFolderID is equal to missing value then
 		return missing value
 	end if
@@ -687,18 +658,18 @@ on photosLibraryDeleteFolder(folderIDString)
 		NOTE: Since Catalina/10.15, does not work for sub folders
 	*)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, "delete theFolder")
+	return _folderRunScript(folderIDString, "delete theFolder")
 end photosLibraryDeleteFolder
 
 (*
 on photosLibraryDeleteFolder(_id)
 	--TODO: doesn't currently work 
-	set _folder_ids to photosLibraryInternalPathIDsToAlbumFolder(folderGetFolderForID(_id))
+	set _folder_ids to photosLibraryInternalPathIDsToAlbumFolder(_folderGetFolderForID(_id))
 	tell application "Photos"
 		set folder_ to folder id (item 1 of _folder_ids)
 		set _folder_ids to rest of _folder_ids
 		repeat with _folder_id in _folder_ids
-			set folder_ to folderGetFolderForID(_folder_id)
+			set folder_ to _folderGetFolderForID(_folder_id)
 		end repeat
 		say (name of folder_ as text)
 		delete (folder_)
@@ -707,7 +678,7 @@ on photosLibraryDeleteFolder(_id)
 end photosLibraryDeleteFolder
 *)
 
-on photosLibraryInternalPathToAlbumFolder(targetObject, pathItemDelimiter)
+on _photosLibraryInternalPathToAlbumFolder(targetObject, pathItemDelimiter)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
 		if not (exists targetObject) then
@@ -727,42 +698,15 @@ on photosLibraryInternalPathToAlbumFolder(targetObject, pathItemDelimiter)
 			set folderName to name of parent of targetObject
 			set parentID to id of parent of targetObject
 			set pathToObject to folderName & pathItemDelimiter & pathToObject
-			set targetObject to folderGetFolderForID(parentID)
+			set targetObject to _folderGetFolderForID(parentID)
 		on error
 			return pathToObject
 		end try
 		
 	end repeat
-end photosLibraryInternalPathToAlbumFolder
+end _photosLibraryInternalPathToAlbumFolder
 
 
-on photosLibraryInternalPathIDsToAlbumFolder(targetObject)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	tell application "Photos"
-		if not (exists targetObject) then
-			error "The indicated item does not exist."
-		end if
-		if class of targetObject is album then
-			set targetObjectName to the name of targetObject
-		else if class of targetObject is folder then
-			set targetObjectName to the name of targetObject
-		else
-			error "The indicated item must be a folder or album."
-		end if
-		set pathToObject to {}
-	end tell
-	repeat
-		try
-			set folderID to id of parent of targetObject
-			set parentID to id of parent of targetObject
-			copy folderID to beginning of pathToObject
-			set targetObject to folderGetFolderForID(parentID)
-		on error
-			return pathToObject
-		end try
-		
-	end repeat
-end photosLibraryInternalPathIDsToAlbumFolder
 
 ---------- Album ----------
 
@@ -795,7 +739,7 @@ on albumByPath(albumPath)
 	set theAlbum to item theLen of albumPath
 	set folderPath to items 1 thru (theLen - 1) of albumPath
 	set folderIDString to folderGetIDStringFromPath(folderPath)
-	return folderGetAlbumID(folderIDString, theAlbum)
+	return _folderGetAlbumID(folderIDString, theAlbum)
 end albumByPath
 
 on albumName(theID)
@@ -811,9 +755,9 @@ on albumByName(name_, topLevel)
 	  if topLevel = true, returns only top level albums
 	*)
 	if topLevel then
-		set albums_folders_ to photosLibraryGetTopLevelAlbumsFolders()
+		set albums_folders_ to _photosLibraryGetTopLevelAlbumsFolders()
 	else
-		set albums_folders_ to photosLibraryGetAlbumsFolders()
+		set albums_folders_ to _photosLibraryGetAlbumsFolders()
 	end if
 	set _albums to _albums of albums_folders_
 	repeat with _a in _albums
@@ -940,7 +884,7 @@ on albumGetPath(id_, path_delimiter_)
 		set album_ to album id (id_)
 	end tell
 	try
-		set path_ to photosLibraryInternalPathToAlbumFolder(album_, path_delimiter_)
+		set path_ to _photosLibraryInternalPathToAlbumFolder(album_, path_delimiter_)
 	on error
 		set path_ to ""
 	end try
@@ -971,7 +915,7 @@ on folderGetIDStringFromPath(folderPath)
 	*)
 	set folderCount to count of folderPath
 	if folderCount = 1 then
-		set folderID to photosLibraryGetTopLevelFolderID(item 1 of folderPath)
+		set folderID to _photosLibraryGetTopLevelFolderID(item 1 of folderPath)
 		if folderID is missing value then
 			return missing value
 		else
@@ -994,7 +938,7 @@ on folderGetIDStringFromPath(folderPath)
 		return missing value
 	end run
 "
-	set folderID to photosLibraryGetTopLevelFolderID(item 1 of folderPath)
+	set folderID to _photosLibraryGetTopLevelFolderID(item 1 of folderPath)
 	
 	if folderID is missing value then
 		return missing value
@@ -1013,7 +957,7 @@ on folderGetIDStringFromPath(folderPath)
 	return folderString
 end folderGetIDStringFromPath
 
-on folderRunScript(folderIDString, theScript)
+on _folderRunScript(folderIDString, theScript)
 	(*	Gets a folder identified by folderIDString then runs theScript on this folder
 	
 		Args:
@@ -1021,7 +965,7 @@ on folderRunScript(folderIDString, theScript)
 			theScript: script snippet to run; folder will be referenced as "theFolder"
 			
 		Example:
-			To get name of folder: folderRunScript(folderIDString, "return name of theFolder")
+			To get name of folder: _folderRunScript(folderIDString, "return name of theFolder")
 	*)
 	set theScript to "
 	on run()
@@ -1035,18 +979,18 @@ on folderRunScript(folderIDString, theScript)
 	--display dialog theScript
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	return run script theScript
-end folderRunScript
+end _folderRunScript
 
-on folderSplitFolderPath(folderPath)
+on _folderSplitFolderPath(folderPath)
 	(* split folderPath string into list of folder IDs *)
 	set oldDelimiters to AppleScript's text item delimiters
 	set AppleScript's text item delimiters to " of "
 	set folderPathList to every text item of folderPath
 	set AppleScript's text item delimiters to oldDelimiters
 	return folderPathList
-end folderSplitFolderPath
+end _folderSplitFolderPath
 
-on folderGetAlbumID(folderIDString, albumName)
+on _folderGetAlbumID(folderIDString, albumName)
 	(* Returns album ID of folder's album albumName or missing value if not found
 	
 		Args:
@@ -1062,14 +1006,14 @@ on folderGetAlbumID(folderIDString, albumName)
 	end try
 	"
 	
-	set albumID to folderRunScript(folderIDString, theScript)
+	set albumID to _folderRunScript(folderIDString, theScript)
 	return albumID
-end folderGetAlbumID
+end _folderGetAlbumID
 
-on folderGetFolderForID(_id)
+on _folderGetFolderForID(_id)
 	(* return folder for _id *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set albums_folders to photosLibraryGetAlbumsFolders()
+	set albums_folders to _photosLibraryGetAlbumsFolders()
 	set _folders to _folders of albums_folders
 	tell application "Photos"
 		repeat with _folder in _folders
@@ -1080,35 +1024,28 @@ on folderGetFolderForID(_id)
 		end repeat
 		return missing value
 	end tell
-end folderGetFolderForID
+end _folderGetFolderForID
 
 on folderExists(folderIDString)
 	(* return true if folder identified by folderIDString exists otherwise false *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	try
-		return folderRunScript(folderIDString, "return true")
+		return _folderRunScript(folderIDString, "return true")
 	on error
 		return false
 	end try
 end folderExists
 
-on folderPathExists(folderPath)
-	(* return true if folder at folderPath exists otherwise false *)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set folderPathExists_ to folderGetIDStringFromPath(folderPath)
-	return folderPathExists_ is not missing value
-end folderPathExists
-
 on folderUUID(folderIDString)
 	(* return UUID of folder *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, "return id of theFolder as text")
+	return _folderRunScript(folderIDString, "return id of theFolder as text")
 end folderUUID
 
 on folderName(folderIDString)
 	(* return name of folder identified by folderIDString *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, "return name of theFolder")
+	return _folderRunScript(folderIDString, "return name of theFolder")
 end folderName
 
 on folderSetName(folderIDString, theName)
@@ -1123,7 +1060,7 @@ on folderSetName(folderIDString, theName)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set retryCount to 0
 	repeat while retryCount < MAX_RETRY
-		folderRunScript(folderIDString, "set name of theFolder to \"" & theName & "\"")
+		_folderRunScript(folderIDString, "set name of theFolder to \"" & theName & "\"")
 		if folderName(folderIDString) = theName then
 			return true
 		end if
@@ -1141,7 +1078,7 @@ on folderParent(folderIDString)
 	Returns:
 		parent folder path of folder at folderPath or missing value if no parent
 	*)
-	set folderParts to folderSplitFolderPath(folderIDString)
+	set folderParts to _folderSplitFolderPath(folderIDString)
 	if length of folderParts > 2 then
 		set folderParentPath to item 2 of folderParts
 		repeat with i from 3 to (length of folderParts)
@@ -1165,7 +1102,7 @@ on folderAlbums(folderIDString)
 		return theIDs
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, theScript)
+	return _folderRunScript(folderIDString, theScript)
 end folderAlbums
 
 on folderFolders(folderIDString)
@@ -1178,7 +1115,7 @@ on folderFolders(folderIDString)
 		return theIDs
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set subFolderIDs to folderRunScript(folderIDString, theScript)
+	set subFolderIDs to _folderRunScript(folderIDString, theScript)
 	if length of subFolderIDs = 0 then
 		return {}
 	end if
@@ -1200,28 +1137,8 @@ on folderCount(folderIDString)
 		return theLength
 	"
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return folderRunScript(folderIDString, theScript)
+	return _folderRunScript(folderIDString, theScript)
 end folderCount
-
-on folderIDByName(theName, topLevel)
-	(* return folder ID for folder named theName or missing value if no folder found
-	    if more than one folder named theName, returns the first one found 
-	  	if topLevel = true, returns only top level folder
-	*)
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	if topLevel then
-		set albums_folders_ to the photosLibraryGetTopLevelAlbumsFolders()
-	else
-		set albums_folders_ to photosLibraryGetAlbumsFolders()
-	end if
-	set _folders to _folders of albums_folders_
-	repeat with _f in _folders
-		if name of _f = theName then
-			return id of _f
-		end if
-	end repeat
-	return missing value
-end folderIDByName
 
 on folderIDByPath(folderPath)
 	(* return folder id for folder by path
@@ -1234,7 +1151,7 @@ on folderIDByPath(folderPath)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	set folderString to folderGetIDStringFromPath(folderPath)
 	if folderString is not missing value then
-		return folderRunScript(folderString, "return id of theFolder")
+		return _folderRunScript(folderString, "return id of theFolder")
 	else
 		return missing value
 	end if
@@ -1264,17 +1181,6 @@ on folderGetPathFolderIDScript(folderIDString)
 	return thePath
 end folderGetPathFolderIDScript
 
-on folderPathIDs(id_)
-	(* return path to folder as a string *)
-	set folder_ to folderGetFolderForID(id_)
-	try
-		set path_ids_ to photosLibraryInternalPathIDsToAlbumFolder(folder_)
-	on error
-		set path_ids_ to {}
-	end try
-	return path_ids_
-end folderPathIDs
-
 on folderSpotlight(folderIDString)
 	(* spotlight folder *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
@@ -1282,7 +1188,7 @@ on folderSpotlight(folderIDString)
 		activate
 		spotlight theFolder
 	"
-	return folderRunScript(folderIDString, theScript)
+	return _folderRunScript(folderIDString, theScript)
 end folderSpotlight
 
 
@@ -1470,7 +1376,7 @@ on photoAlbums(id_)
 	    Returns: list of album ids containing photo id_
 	  *)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	set _albums_folders to photosLibraryGetAlbumsFolders()
+	set _albums_folders to _photosLibraryGetAlbumsFolders()
 	set _album_ids to {}
 	tell application "Photos"
 		repeat with _album in _albums of _albums_folders
@@ -1543,7 +1449,6 @@ end photoSpotlight
 
 ---------- Utilities ----------
 
-
 on revealInFinder(itemList)
 	(* reveal list of POSIX paths in itemList in Finder *)
 	if the class of itemList is not list then set itemList to theItemlist as list
@@ -1552,143 +1457,4 @@ on revealInFinder(itemList)
 	tell theWorkspace to activateFileViewerSelectingURLs:itemList
 end revealInFinder
 
-on replaceChars(stringValue, findChars, replaceChars)
-	(* replace findChars in stringValue with replaceChars
-	
-		Args:
-			stringValue: a string to search
-			findChars: string of one or more characters to find in stringValue
-			replaceChars: string of one of more characters to use as replacement for findChars
-		
-		Returns:
-			string with replacements made
-		*)
-	set oldDelimiters to AppleScript's text item delimiters
-	set AppleScript's text item delimiters to the findChars
-	set the itemList to every text item of stringValue
-	set AppleScript's text item delimiters to the replaceChars
-	set newString to the itemList as string
-	set AppleScript's text item delimiters to oldDelimiters
-	return newString
-end replaceChars
-
-on stringToNumber(strValue)
-	(* Converts a string representation of real number in form x.y or x,y into a number 
-	
-	This is required because AppleScript throws in error with " "7.0" as number " 
-	in locales that use "," as the decimal separator, expecting "7,0"
-
-	Args:
-		strValue: string value to return
-	
-	Returns:
-		number
-
-	*)
-	
-	try
-		return strValue as number
-	on error
-		-- assume we're in a locale that uses , as decimal separator and try again
-		return replaceChars(strValue, ".", ",") as number
-	end try
-end stringToNumber
-
 --------- Test ----------
-
-
-on getFolderName(folderIDString)
-	(*	Return name of folder
-	
-		Args:
-			folderIDString: script snippet as returned by folderGetIDStringFromPath
-		
-		Returns:
-			name of folder as text
-	*)
-	return folderRunScript(folderIDString, "return name of theFolder")
-end getFolderName
-
-on setFolderName(folderIDString, theName)
-	(* Set name of folder
-	
-		Args:
-			folderIDString: script snippet as returned by folderGetIDStringFromPath
-			theName: new name for folder as text
-	*)
-	return folderRunScript(folderIDString, "set name of theFolder to \"" & theName & "\"")
-end setFolderName
-
-on getFolderUUID(folderIDString)
-	(*	Return UUID of folder
-	
-		Args:
-			folderIDString: script snippet as returned by folderGetIDStringFromPath
-		
-		Returns:
-			UUID of folder as text
-	*)
-	return folderRunScript(folderIDString, "return id of theFolder")
-end getFolderUUID
-
-on folderGetAlbumIDScript(folderIDString, albumName)
-	(* Returns script snippet identifying the album in Photos or missing value if not found
-	
-		Args:
-			folderIDString: script snippet as returned by folderGetIDStringFromPath for folder path
-	
-		Returns: script snippet in form: 
-			"album id(\"E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020\") of folder id(\"CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020\") of folder id(\"88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020\")"	
-	*)
-	set albumID to folderGetAlbumID(folderIDString, albumName)
-	set albumIDScript to ("album id(\"" & albumID as text) & "\") of " & folderIDString
-	return albumIDScript
-end folderGetAlbumIDScript
-
-on albumRunScript(albumIDScript, theScript)
-	(*	Gets a album identified by albumID then runs theScript on this album
-	
-		Args:
-			albumIDScript: script snippet as returned by folderGetAlbumIDScriptFromPath
-			theScript: script snippet to run; album will be referenced as "theAlbum"
-			
-		Example:
-			To get name of album: albumRunScript(albumIDScript, "return name of theAlbum")
-	*)
-	set theScript to "
-	on run()
-		tell application \"Photos\"
-			set theAlbum to " & albumIDScript & " 
-			" & theScript & "
-		end tell
-	end run
-	"
-	--display dialog theScript
-	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
-	return run script theScript
-end albumRunScript
-
---set subFolder to folderGetIDStringFromPath({"Folder1", "SubFolder2"})
---set theAlbum to folderGetAlbumIDScript(subFolder, "AlbumInFolder")
--- albumRunScript(theAlbum, "return name of theAlbum")
---set theAlbumID to folderGetAlbumID(subFolder, "AlbumInFolder")
---set theAlbumID to albumByPath({"Test Album"})
---set theAlbumID to albumByPath({"Folder1", "SubFolder2", "AlbumInFolder"})
---folderName({"Folder1", "NewName"})
---folderSetName({"Folder1", "NewName"}, "NewName")
---folderGetIDStringFromPath({"Folder1", "NewName"})
---folderName({"Folder1", "FolderFoo"})
---folderSetName({"Folder1", "FolderFoo"}, "SubFolder1")
---set result to folderParent({"Folder1", "SubFolder2"})
-
-
-
--- ZZZ
---set theFolderID to "5CD975DA-BF14-4600-853B-C248F9BE8112/L0/020" --3rd level
---set theFolderID to "CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020" -- 2nd level
---set theFolderID to "88A5F8B8-5B9A-43C7-BB85-3952B81580EB/L0/020" --top level
---set theFolder to photosLibraryGetFolderIDScriptForID(theFolderID)
---folderGetPathFolderIDScript(theFolder)
---photosLibraryGetFolderIDScriptForName("SubSubFolder1")
---photosLibraryGetAlbumsFolders()
---folderGetIDStringFromPath({"Folder1", "SubFolder1", "SubSubFolder1"})
