@@ -24,6 +24,14 @@ To build the project:
 - `rm -rf dist; rm -rf build`
 - `poetry build`
 
+## Versioning
+
+Use [bump2version](https://github.com/c4urself/bump2version):
+
+- `bump2version patch --verbose [--dry-run]`
+- `bump2version minor --verbose [--dry-run]`
+- `bump2version major --verbose [--dry-run]`
+
 ## Change Log
 
 The `CHANGELOG.md` is created with [auto-changelog](https://github.com/cookpete/auto-changelog):
