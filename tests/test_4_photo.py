@@ -1,15 +1,17 @@
 """ Test Photo class """
 
-from tests.photoscript_config_catalina import PHOTO_EXPORT_FILENAME_ORIGINAL
+import datetime
+import os
+import pathlib
+import tempfile
+
 import pytest
 from applescript import AppleScript
-from tests.conftest import photoslib, suspend_capture, get_os_version
 
-OS_VER = get_os_version()[1]
-if OS_VER == "15":
-    from tests.photoscript_config_catalina import PHOTOS_DICT
-else:
-    pytest.exit("This test suite currently only runs on MacOS Catalina ")
+import photoscript
+from tests.conftest import photoslib, suspend_capture
+from tests.photoscript_config_data import PHOTO_EXPORT_FILENAME_ORIGINAL, PHOTOS_DICT
+from tests.utils import stemset
 
 ########## Interactive tests run first ##########
 
@@ -17,9 +19,7 @@ else:
 ########## Non-interactive tests ##########
 
 
-def test_photo_init_uuid_id(photoslib):
-    import photoscript
-
+def test_photo_init_uuid_id(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert isinstance(photo_obj, photoscript.Photo)
@@ -27,9 +27,7 @@ def test_photo_init_uuid_id(photoslib):
         assert photo_obj.uuid == photo["uuid_osxphotos"]
 
 
-def test_photo_init_uuid_osxphotos(photoslib):
-    import photoscript
-
+def test_photo_init_uuid_osxphotos(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid_osxphotos"])
         assert isinstance(photo_obj, photoscript.Photo)
@@ -37,16 +35,12 @@ def test_photo_init_uuid_osxphotos(photoslib):
         assert photo_obj.uuid == photo["uuid_osxphotos"]
 
 
-def test_photo_init_bad_uuid(photoslib):
-    import photoscript
-
+def test_photo_init_bad_uuid(photoslib: photoscript.PhotosLibrary):
     with pytest.raises(ValueError):
         photoscript.Photo("BAD_UUID")
 
 
-def test_photo_name(photoslib):
-    import photoscript
-
+def test_photo_name(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.name == photo["title"]
@@ -73,9 +67,7 @@ def test_photo_name(photoslib):
         assert photo_obj.title == ""
 
 
-def test_photo_description(photoslib):
-    import photoscript
-
+def test_photo_description(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.description == photo["description"]
@@ -85,9 +77,7 @@ def test_photo_description(photoslib):
         assert photo_obj.description == ""
 
 
-def test_photo_keywords(photoslib):
-    import photoscript
-
+def test_photo_keywords(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.keywords == photo["keywords"]
@@ -97,9 +87,7 @@ def test_photo_keywords(photoslib):
         assert photo_obj.keywords == []
 
 
-def test_photo_favorite(photoslib):
-    import photoscript
-
+def test_photo_favorite(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.favorite == photo["favorite"]
@@ -107,26 +95,20 @@ def test_photo_favorite(photoslib):
         assert photo_obj.favorite != photo["favorite"]
 
 
-def test_photo_height_width(photoslib):
-    import photoscript
-
+def test_photo_height_width(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.height == photo["height"]
         assert photo_obj.width == photo["width"]
 
 
-def test_photo_altitude(photoslib):
-    import photoscript
-
+def test_photo_altitude(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.altitude == photo["altitude"]
 
 
-def test_photo_location(photoslib):
-    import photoscript
-
+def test_photo_location(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         lat, lon = photo_obj.location
@@ -137,9 +119,7 @@ def test_photo_location(photoslib):
         assert photo_obj.location == (None, None)
 
 
-def test_photo_location_exception(photoslib):
-    import photoscript
-
+def test_photo_location_exception(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         with pytest.raises(ValueError):
@@ -150,10 +130,7 @@ def test_photo_location_exception(photoslib):
             photo_obj.location = (0.0, 181.0)
 
 
-def test_photo_date(photoslib):
-    import datetime
-    import photoscript
-
+def test_photo_date(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         date = datetime.datetime.fromisoformat(photo["date"])
@@ -162,17 +139,13 @@ def test_photo_date(photoslib):
         assert photo_obj.date == datetime.datetime(2020, 9, 14)
 
 
-def test_photo_filename(photoslib):
-    import photoscript
-
+def test_photo_filename(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert photo_obj.filename == photo["filename"]
 
 
-def test_photo_albums(photoslib):
-    import photoscript
-
+def test_photo_albums(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         assert sorted([album.name for album in photo_obj.albums]) == sorted(
@@ -180,12 +153,7 @@ def test_photo_albums(photoslib):
         )
 
 
-def test_photo_export_basic(photoslib):
-    import os
-    import pathlib
-    import tempfile
-    import photoscript
-
+def test_photo_export_basic(photoslib: photoscript.PhotosLibrary):
     tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
 
     photo = photoscript.Photo(PHOTOS_DICT[0]["uuid"])
@@ -198,14 +166,11 @@ def test_photo_export_basic(photoslib):
     assert files == expected
 
 
-def test_export_photo_original_duplicate_overwrite(photoslib):
-    """ Test calling export twice resulting in 
-        duplicate filenames but use overwrite = true"""
-    import os
-    import pathlib
-    import tempfile
-    import photoscript
-
+def test_export_photo_original_duplicate_overwrite(
+    photoslib: photoscript.PhotosLibrary,
+):
+    """Test calling export twice resulting in
+    duplicate filenames but use overwrite = true"""
     tmpdir = tempfile.TemporaryDirectory(prefix="photoscript_test_")
 
     photo = photoscript.Photo(PHOTOS_DICT[0]["uuid"])
@@ -214,14 +179,15 @@ def test_export_photo_original_duplicate_overwrite(photoslib):
     exported = list({pathlib.Path(filename).name for filename in exported1 + exported2})
 
     expected = [f"{pathlib.Path(PHOTOS_DICT[0]['filename']).stem}.jpeg"]
-    assert exported == expected
+
+    # different versions of Photos may export the same photo as a different extension (.JPG vs .jpeg)
+    # so compare only the stems
+    assert stemset(exported) == stemset(expected)
     files = os.listdir(tmpdir.name)
-    assert files == expected
+    assert stemset(files) == stemset(expected)
 
 
-def test_photo_duplicate(photoslib):
-    import photoscript
-
+def test_photo_duplicate(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         new_photo = photo_obj.duplicate()

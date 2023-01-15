@@ -1,5 +1,7 @@
 """ Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
 
+from __future__ import annotations
+
 import datetime
 import glob
 import os
@@ -14,6 +16,9 @@ from applescript import AppleScript, kMissingValue
 from photoscript.utils import ditto, findfiles
 
 from .script_loader import run_script
+from .utils import get_os_version
+
+MACOS_VERSION = get_os_version()
 
 """ In Catalina / Photos 5+, UUIDs in AppleScript have suffix that doesn't 
     appear in actual database value.  These need to be dropped to be compatible
@@ -21,6 +26,29 @@ from .script_loader import run_script
 UUID_SUFFIX_PHOTO = "/L0/001"
 UUID_SUFFIX_ALBUM = "/L0/040"
 UUID_SUFFIX_FOLDER = "/L0/020"
+
+
+def uuid_to_id(uuid: str, suffix: str) -> tuple[str, str]:
+    """Converts UUID betweens formats used by osxphotos and Photos app
+
+    Args:
+        uuid: UUID as string
+        suffix: suffix to add to UUID if needed to form id
+
+    Returns:
+        tuple of (uuid, id)
+    """
+    id_ = uuid
+    if MACOS_VERSION >= (10, 15, 0):
+        # In Photos 5+ (Catalina/10.15), UUIDs in AppleScript have suffix that doesn't
+        # appear in actual database value. Suffix needs to be added to be compatible
+        # with AppleScript (id_) and dropped for osxphotos (uuid)
+        if len(uuid.split("/")) == 1:
+            # osxphotos style UUID without the suffix
+            id_ = f"{uuid}{suffix}"
+        else:
+            uuid = uuid.split("/")[0]
+    return uuid, id_
 
 
 class AppleScriptError(Exception):
@@ -123,14 +151,14 @@ class PhotosLibrary:
         Args:
             search: optional text string to search for (returns matching items)
             uuid: optional list of UUIDs to get
-            range\_: optional list of [start, stop] sequence of photos to get
+            range: optional list of [start, stop] sequence of photos to get
 
         Returns:
             Generator that yields Photo objects
 
         Raises:
-            ValueError if more than one of search, uuid, range\_ passed or invalid range\_
-            TypeError if list not passed for range\_
+            ValueError if more than one of search, uuid, range passed or invalid range
+            TypeError if list not passed for range
 
         Note: photos() returns a generator instead of a list because retrieving all the photos
         from a large Photos library can take a very long time--on my system, the rate is about 1
@@ -138,14 +166,13 @@ class PhotosLibrary:
         anyway to speed it up.  Using a generator allows you process photos individually rather
         than waiting, possibly hours, for Photos to return the results.
 
-        range\_ works like python's range function.  Thus range\_=[0,4] will return
-        Photos 0, 1, 2, 3; range\_=[10] returns the first 10 photos in the library;
-        range\_ start must be in range 0 to len(PhotosLibrary())-1,
+        range works like python's range function.  Thus range=[0,4] will return
+        Photos 0, 1, 2, 3; range=[10] returns the first 10 photos in the library;
+        range start must be in range 0 to len(PhotosLibrary())-1,
         stop in range 1 to len(PhotosLibrary()).  You may be able to optimize the speed by which
-        photos are return by chunking up requests in batches of photos using range\_,
+        photos are return by chunking up requests in batches of photos using range,
         e.g. request 10 photos at a time.
         """
-
         if len([x for x in [search, uuid, range_] if x]) > 1:
             raise ValueError("Cannot pass more than one of search, uuid, range_")
 
@@ -183,10 +210,7 @@ class PhotosLibrary:
 
             photo_ids = run_script("photosLibraryGetPhotoByRange", start + 1, stop)
 
-        if photo_ids:
-            return self._iterphotos(uuids=photo_ids)
-        else:
-            return []
+        return self._iterphotos(uuids=photo_ids) if photo_ids else []
 
     def _iterphotos(self, uuids=None):
         if uuids:
@@ -280,7 +304,7 @@ class PhotosLibrary:
         album_ids = run_script("photosLibraryAlbumIDs", top_level)
         return [Album(uuid) for uuid in album_ids]
 
-    def create_album(self, name, folder=None):
+    def create_album(self, name, folder: "Folder" = None) -> "Album":
         """creates an album
 
         Args:
@@ -297,14 +321,16 @@ class PhotosLibrary:
         if folder is None:
             album_id = run_script("photosLibraryCreateAlbum", name)
         else:
-            album_id = run_script("photosLibraryCreateAlbumAtFolder", name, folder.id)
+            album_id = run_script(
+                "photosLibraryCreateAlbumAtFolder", name, folder.idstring
+            )
 
-        if album_id != 0:
+        if album_id != kMissingValue:
             return Album(album_id)
         else:
             raise AppleScriptError(f"Could not create album {name}")
 
-    def delete_album(self, album):
+    def delete_album(self, album: "Album"):
         """deletes album (but does not delete photos in the album)
 
         Args:
@@ -312,34 +338,47 @@ class PhotosLibrary:
         """
         return run_script("photosLibraryDeleteAlbum", album.id)
 
-    def folder(self, *name, uuid=None, top_level=True):
+    def folder(
+        self, name: str = None, path: list[str] = None, uuid: str = None, top_level=True
+    ):
         """Folder instance by name or uuid
 
         Args:
-            name: name of folder
-            uuid: id of folder
+            name: name of folder, e.g. "My Folder"
+            path: path of folder as list of strings, e.g. ["My Folder", "Subfolder"]
+            uuid: id of folder, e.g. "F1234567-1234-1234-1234-1234567890AB"
             top_level: if True, only searches top level folders by name; default is True
 
         Returns:
             Folder object or None if folder could not be found
 
         Raises:
-            ValueError if both name and id passed or neither passed.
+            ValueError not one of name, path, or uuid is passed
 
-        Must pass only name or id but not both.
-        If more than one folder with same name, returns first one found.
+        Notes:
+            Must pass one of path, name, or uuid but not more than one
+            If more than one folder with same name, returns first one found.
         """
-        if (not name and uuid is None) or (name and uuid is not None):
-            raise ValueError("Must pass only name or uuid but not both")
+        if sum(bool(x) for x in [name, path, uuid]) != 1:
+            raise ValueError(
+                "Must pass one of name, path, or uuid but not more than one"
+            )
+
+        if path:
+            idstring = run_script("folderGetIDStringFromPath", path)
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
 
         if name:
-            uuid = run_script("folderByName", name[0], top_level)
-            if uuid != 0:
-                return Folder(uuid)
-            else:
-                return None
-        else:
-            return Folder(uuid)
+            idstring = run_script(
+                "photosLibraryGetFolderIDStringForName", name, top_level
+            )
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
+
+        if uuid:
+            idstring = run_script(
+                "photosLibraryGetFolderIDStringForID", uuid, top_level
+            )
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
 
     def folder_by_path(self, folder_path):
         """Return folder in the library by path
@@ -350,18 +389,15 @@ class PhotosLibrary:
         Returns:
             Folder object for folder at folder_path or None if not found
         """
-        folder_id = run_script("folderByPath", folder_path)
-        if folder_id != 0:
-            return Folder(folder_id)
-        else:
-            return None
+        folder_id = run_script("folderIDByPath", folder_path)
+        return Folder(folder_id) if folder_id != kMissingValue else None
 
     def folders(self, top_level=True):
         """list of Folder objects for all folders"""
         folder_ids = run_script("photosLibraryFolderIDs", top_level)
         return [Folder(uuid) for uuid in folder_ids]
 
-    def create_folder(self, name, folder=None):
+    def create_folder(self, name: str, folder: "Folder" = None) -> "Folder":
         """creates a folder
 
         Args:
@@ -378,10 +414,12 @@ class PhotosLibrary:
         if folder is None:
             folder_id = run_script("photosLibraryCreateFolder", name)
         else:
-            folder_id = run_script("photosLibraryCreateFolderAtFolder", name, folder.id)
+            folder_id = run_script(
+                "photosLibraryCreateFolderAtFolder", name, folder.idstring
+            )
 
-        if folder_id != 0:
-            return Folder(folder_id)
+        if folder_id != kMissingValue:
+            return Folder(idstring=folder_id)
         else:
             raise AppleScriptError(f"Could not create folder {name}")
 
@@ -446,17 +484,23 @@ class PhotosLibrary:
             album = folder.create_album(album_name)
         return album
 
-    def delete_folder(self, folder):
-        """Deletes folder
+    def delete_folder(self, folder: "Folder"):
+        """Deletes folder (and all its sub-folders and albums)
 
         Args:
             folder: a Folder object for folder to delete
+
+        Notes:
+            On macOS 10.15 & above, only top-level folders can be deleted.
+            Sub-folders cannot be deleted due to a bug in Photos' AppleScript
+            implementation.
         """
-        return run_script("photosLibraryDeleteFolder", folder.id)
+        return run_script("photosLibraryDeleteFolder", folder.idstring)
 
     def __len__(self):
         return run_script("photosLibraryCount")
 
+    # TODO: add a temp_album() method that creates a temporary album
     def _temp_album_name(self):
         """get a temporary album name that doesn't clash with album in the library"""
         temp_name = self._temp_name()
@@ -553,17 +597,9 @@ class PhotosLibrary:
 
 class Album:
     def __init__(self, uuid):
-        id_ = uuid
         # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_ALBUM}"
-            else:
-                uuid = uuid.split("/")[0]
-
-        valuuidalbum = run_script("albumExists", id_)
-        if valuuidalbum:
+        uuid, id_ = uuid_to_id(uuid, UUID_SUFFIX_ALBUM)
+        if valuuidalbum := run_script("albumExists", id_):
             self.id = id_
             self._uuid = uuid
         else:
@@ -761,39 +797,89 @@ class Album:
 
 
 class Folder:
-    def __init__(self, uuid):
-        id_ = uuid
-        # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_FOLDER}"
-            else:
-                uuid = uuid.split("/")[0]
+    def __init__(
+        self,
+        uuid: str | None = None,
+        path: list[str] | None = None,
+        idstring: str | None = None,
+    ):
+        """Create a Folder object; only one of path, uuid, or idstring should be specified
 
-        valid_folder = run_script("folderExists", id_)
-        if valid_folder:
-            self.id = id_
-            self._uuid = uuid
+        The preferred method is to use the path argument or idstring to specify the folder
+        as this is much faster than using uuid.  The uuid argument is listed first for
+        backwards compatibility.
+
+        Args:
+            path: list of folder names in descending order from parent to child: ["Folder", "SubFolder"]
+            uuid: uuid of folder: "E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020" or "E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D"
+            idstring: idstring of folder:
+                "folder id(\"E0CD4B6C-CB43-46A6-B8A3-67D1FB4D0F3D/L0/020\") of folder id(\"CB051A4C-2CB7-4B90-B59B-08CC4D0C2823/L0/020\")"
+        """
+        if sum(bool(x) for x in (path, uuid, idstring)) != 1:
+            raise ValueError(
+                "One (and only one) of path, uuid, or idstring must be specified"
+            )
+
+        if uuid is not None:
+            uuid, _id = uuid_to_id(uuid, UUID_SUFFIX_FOLDER)
         else:
-            raise ValueError(f"Invalid folder id: {uuid}")
+            _id = None
+
+        self._path, self._uuid, self._id, self._idstring = path, uuid, _id, idstring
+
+        # if initialized with path or uuid, need to initialize idstring
+        if self._path is not None:
+            self._idstring = run_script("folderGetIDStringFromPath", self._path)
+            if self._idstring == kMissingValue:
+                raise ValueError(f"Folder at path {self._path} does not exist")
+        elif self._id is not None:
+            # if uuid was passed, _id will have been initialized above
+            # second argument is False so search is not limited to top-level folders
+            self._idstring = run_script(
+                "photosLibraryGetFolderIDStringForID", self._id, False
+            )
+            if self._idstring == kMissingValue:
+                raise ValueError(f"Folder id {self._id} does not exist")
+
+        if not run_script("folderExists", self._idstring):
+            raise ValueError(f"Folder {self._idstring} does not exist")
+
+    @property
+    def idstring(self) -> str:
+        """idstring of folder"""
+        return self._idstring
 
     @property
     def uuid(self):
         """UUID of folder"""
+        if self._uuid is not None:
+            return self._uuid
+        self._uuid, self._id = uuid_to_id(
+            run_script("folderUUID", self._idstring), UUID_SUFFIX_FOLDER
+        )
         return self._uuid
+
+    @property
+    def id(self):
+        """ID of folder"""
+        if self._id is not None:
+            return self._id
+        self._uuid, self._id = uuid_to_id(
+            run_script("folderUUID", self._idstring), UUID_SUFFIX_FOLDER
+        )
+        return self._id
 
     @property
     def name(self):
         """name of folder (read/write)"""
-        name = run_script("folderName", self.id)
+        name = run_script("folderName", self._idstring)
         return name if name != kMissingValue else ""
 
     @name.setter
     def name(self, name):
         """set name of photo"""
         name = "" if name is None else name
-        return run_script("folderSetName", self.id, name)
+        return run_script("folderSetName", self._idstring, name)
 
     @property
     def title(self):
@@ -804,22 +890,20 @@ class Folder:
     def title(self, title):
         """set title of folder (alias for name)"""
         name = "" if title is None else title
-        return run_script("folderSetName", self.id, name)
+        return run_script("folderSetName", self._idstring, name)
 
     @property
     def parent_id(self):
-        """parent container id"""
-        return run_script("folderParent", self.id)
+        """parent container id string"""
+        parent_id = run_script("folderParent", self._idstring)
+        return parent_id if parent_id != kMissingValue else None
 
     # TODO: if no parent should return a "My Albums" object that contains all top-level folders/albums?
     @property
     def parent(self):
         """Return parent Folder object"""
-        parent_id = self.parent_id
-        if parent_id != 0:
-            return Folder(parent_id)
-        else:
-            return None
+        parent_idstring = self.parent_id
+        return Folder(idstring=parent_idstring) if parent_idstring is not None else None
 
     def path_str(self, delim="/"):
         """Return internal library path to folder as string.
@@ -834,7 +918,7 @@ class Folder:
         if len(delim) > 1:
             raise ValueError("delim must be single character")
 
-        return run_script("folderGetPath", self.id, delim)
+        return run_script("folderGetPath", self._idstring, delim)
 
     def path(self):
         """Return list of Folder objects this folder is contained in.
@@ -842,29 +926,26 @@ class Folder:
         path()[-1] is the immediate parent of this folder.  Returns empty
         list if folder is not contained in another folders.
         """
-        folder_path = run_script("folderPathIDs", self.id)
-        return [Folder(folder) for folder in folder_path]
+        folder_path = run_script("folderGetPathFolderIDScript", self._idstring)
+        return [Folder(idstring=folder) for folder in folder_path]
 
     @property
     def albums(self):
         """list of Album objects for albums contained in folder"""
-        album_ids = run_script("folderAlbums", self.id)
+        album_ids = run_script("folderAlbums", self._idstring)
         return [Album(uuid) for uuid in album_ids]
 
     def album(self, name):
         """Return Album object contained in this folder for album named name
         or None if no matching album
         """
-        for album in self.albums:
-            if album.name == name:
-                return album
-        return None
+        return next((album for album in self.albums if album.name == name), None)
 
     @property
     def subfolders(self):
         """list of Folder objects for immediate sub-folders contained in folder"""
-        folder_ids = run_script("folderFolders", self.id)
-        return [Folder(uuid) for uuid in folder_ids]
+        folder_idstrings = run_script("folderFolders", self._idstring)
+        return [Folder(idstring=ids) for ids in folder_idstrings]
 
     def folder(self, name):
         """Folder object for first subfolder folder named name.
@@ -875,12 +956,9 @@ class Folder:
         Returns:
             Folder object for first subfolder who's name matches name or None if not found
         """
-        for folder in self.subfolders:
-            if folder.name == name:
-                return folder
-        return None
+        return next((folder for folder in self.subfolders if folder.name == name), None)
 
-    def create_album(self, name):
+    def create_album(self, name: str) -> "Album":
         """Creates an album in this folder
 
         Args:
@@ -889,36 +967,29 @@ class Folder:
         Returns:
             Album object for newly created album
         """
-        return PhotosLibrary().create_album(name, folder=self)
+        return PhotosLibrary().create_album(name=name, folder=self)
 
-    def create_folder(self, name):
+    def create_folder(self, name: str) -> "Folder":
         """creates a folder in this folder
 
         Returns:
             Folder object for newly created folder
         """
-        return PhotosLibrary().create_folder(name, folder=self)
+        return PhotosLibrary().create_folder(name=name, folder=self)
 
     def spotlight(self):
         """spotlight the folder in Photos"""
-        run_script("folderSpotlight", self.id)
+        run_script("folderSpotlight", self._idstring)
 
     def __len__(self):
-        return run_script("folderCount", self.id)
+        return run_script("folderCount", self._idstring)
 
 
 class Photo:
     def __init__(self, uuid):
-        id_ = uuid
         # check to see if we need to add UUID suffix
-        if float(PhotosLibrary().version) >= 5.0:
-            if len(uuid.split("/")) == 1:
-                # osxphotos style UUID without the suffix
-                id_ = f"{uuid}{UUID_SUFFIX_PHOTO}"
-            else:
-                uuid = uuid.split("/")[0]
-        valid = run_script("photoExists", uuid)
-        if valid:
+        uuid, id_ = uuid_to_id(uuid, UUID_SUFFIX_PHOTO)
+        if valid := run_script("photoExists", uuid):
             self.id = id_
             self._uuid = uuid
         else:
