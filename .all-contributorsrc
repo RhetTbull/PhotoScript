@@ -13,6 +13,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "anjos",
+      "name": "André Anjos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46305?v=4",
+      "profile": "https://anjos.ai",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -20,5 +30,6 @@
   "projectOwner": "RhetTbull",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }
