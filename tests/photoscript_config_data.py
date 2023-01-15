@@ -22,7 +22,6 @@ if OS_VER[0] == 10 and OS_VER[1] == 15:
         ALBUM_NAMES_ALL,
         ALBUM_NAMES_TOP,
         EMPTY_ALBUM_NAME,
-        EMPTY_ALBUM_LEN,
         FIND_FILES,
         FOLDER_1_IDSTRING,
         FOLDER_1_LEN,
