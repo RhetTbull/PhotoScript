@@ -5,47 +5,42 @@ from applescript import AppleScript
 
 import photoscript
 from tests.conftest import get_os_version, photoslib, suspend_capture
-from tests.photoscript_config_catalina import ALBUM_1_NAME, FOLDER_1_SUBFOLDERS
-
-OS_VER = get_os_version()[1]
-if OS_VER == "15":
-    from tests.photoscript_config_catalina import (
-        FOLDER_1_IDSTRING,
-        FOLDER_1_LEN,
-        FOLDER_1_NAME,
-        FOLDER_1_SUBFOLDERS,
-        FOLDER_1_UUID,
-        FOLDER_1_UUID_OSXPHOTOS,
-        FOLDER_2_LEN,
-        FOLDER_2_NAME,
-        FOLDER_2_PATH,
-        FOLDER_2_PATH_STR,
-        FOLDER_2_PATH_STR_COLON,
-        FOLDER_2_UUID,
-        FOLDER_3_ALBUMS,
-        FOLDER_3_LEN,
-        FOLDER_3_NAME,
-        FOLDER_3_UUID,
-        FOLDER_NAME,
-        FOLDER_NAMES_ALL,
-        FOLDER_NAMES_TOP,
-        FOLDER_UUID,
-        IMPORT_PATHS,
-        IMPORT_PHOTOS,
-        NUM_PHOTOS,
-        PHOTO_ADD_UUID,
-        PHOTO_FAVORITES_SET_UUID,
-        PHOTO_FAVORITES_UNSET_UUID,
-        PHOTOS_FAVORITES,
-        PHOTOS_FAVORITES_SET,
-        PHOTOS_FILENAMES,
-        PHOTOS_PLANTS,
-        PHOTOS_UUID,
-        PHOTOS_UUID_FILENAMES,
-        SELECTION_UUIDS,
-    )
-else:
-    pytest.exit("This test suite currently only runs on MacOS Catalina ")
+from tests.photoscript_config_data import (
+    ALBUM_1_NAME,
+    FOLDER_1_IDSTRING,
+    FOLDER_1_LEN,
+    FOLDER_1_NAME,
+    FOLDER_1_SUBFOLDERS,
+    FOLDER_1_UUID,
+    FOLDER_1_UUID_OSXPHOTOS,
+    FOLDER_2_LEN,
+    FOLDER_2_NAME,
+    FOLDER_2_PATH,
+    FOLDER_2_PATH_STR,
+    FOLDER_2_PATH_STR_COLON,
+    FOLDER_2_UUID,
+    FOLDER_3_ALBUMS,
+    FOLDER_3_LEN,
+    FOLDER_3_NAME,
+    FOLDER_3_UUID,
+    FOLDER_NAME,
+    FOLDER_NAMES_ALL,
+    FOLDER_NAMES_TOP,
+    FOLDER_UUID,
+    IMPORT_PATHS,
+    IMPORT_PHOTOS,
+    NUM_PHOTOS,
+    PHOTO_ADD_UUID,
+    PHOTO_FAVORITES_SET_UUID,
+    PHOTO_FAVORITES_UNSET_UUID,
+    PHOTOS_FAVORITES,
+    PHOTOS_FAVORITES_SET,
+    PHOTOS_FILENAMES,
+    PHOTOS_PLANTS,
+    PHOTOS_UUID,
+    PHOTOS_UUID_FILENAMES,
+    SELECTION_UUIDS,
+)
 
 ########## Interactive tests run first ##########
 
@@ -137,6 +132,7 @@ def test_folder_name_setter(photoslib):
     folder.name = new_name
     assert folder.name == new_name
     assert folder.title == new_name
+    folder.name = FOLDER_1_NAME  # reset
 
 
 def test_folder_title_setter(photoslib):
@@ -146,6 +142,7 @@ def test_folder_title_setter(photoslib):
     folder.title = new_name
     assert folder.name == new_name
     assert folder.title == new_name
+    folder.name = FOLDER_1_NAME  # reset
 
 
 def test_folder_parent_id(photoslib):
@@ -263,7 +260,7 @@ def test_folder_create_folder(photoslib):
 def test_len_1(photoslib):
     """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_1_NAME)
-    assert len(folder) == FOLDER_1_LEN
+    assert len(folder) == FOLDER_1_LEN + 2 # created new album and folder in test above
 
 
 def test_len_2(photoslib):

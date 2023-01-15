@@ -366,28 +366,19 @@ class PhotosLibrary:
 
         if path:
             idstring = run_script("folderGetIDStringFromPath", path)
-            if idstring != kMissingValue:
-                return Folder(idstring=idstring)
-            else:
-                return None
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
 
         if name:
             idstring = run_script(
                 "photosLibraryGetFolderIDStringForName", name, top_level
             )
-            if idstring != kMissingValue:
-                return Folder(idstring=idstring)
-            else:
-                return None
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
 
         if uuid:
             idstring = run_script(
                 "photosLibraryGetFolderIDStringForID", uuid, top_level
             )
-            if idstring != kMissingValue:
-                return Folder(idstring=idstring)
-            else:
-                return None
+            return Folder(idstring=idstring) if idstring != kMissingValue else None
 
     def folder_by_path(self, folder_path):
         """Return folder in the library by path
@@ -399,10 +390,7 @@ class PhotosLibrary:
             Folder object for folder at folder_path or None if not found
         """
         folder_id = run_script("folderIDByPath", folder_path)
-        if folder_id != 0:
-            return Folder(folder_id)
-        else:
-            return None
+        return Folder(folder_id) if folder_id != kMissingValue else None
 
     def folders(self, top_level=True):
         """list of Folder objects for all folders"""
@@ -906,7 +894,7 @@ class Folder:
 
     @property
     def parent_id(self):
-        """parent container id"""
+        """parent container id string"""
         parent_id = run_script("folderParent", self._idstring)
         return parent_id if parent_id != kMissingValue else None
 

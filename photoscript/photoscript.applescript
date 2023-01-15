@@ -512,7 +512,7 @@ on photosLibraryCreateAlbum(albumName)
 	(*  creates album named albumName
 	     does not check for duplicate album
            Returns:
-		    UUID of newly created album or 0 if error
+		    UUID of newly created album or missing value if error
 	*)
 	photosLibraryWaitForPhotos(WAIT_FOR_PHOTOS)
 	tell application "Photos"
@@ -526,7 +526,7 @@ on photosLibraryCreateAlbum(albumName)
 				set count_ to count_ + 1
 			end try
 		end repeat
-		return 0
+		return missing value
 	end tell
 end photosLibraryCreateAlbum
 
