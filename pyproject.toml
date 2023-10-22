@@ -18,15 +18,16 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pyobjc-core = ">=9.0,<10.0"
-pyobjc-framework-Cocoa = ">=9.0,<10.0"
-pyobjc-framework-AppleScriptKit = ">=9.0,<10.0"
-pyobjc-framework-AppleScriptObjC = ">=9.0,<10.0"
+pyobjc-core = ">=9.2,<11.0"
+pyobjc-framework-Cocoa = ">=9.2,<11.0"
+pyobjc-framework-AppleScriptKit = ">=9.2,<11.0"
+pyobjc-framework-AppleScriptObjC = ">=9.2,<11.0"
 py-applescript = "^1.0.3"
 
 [tool.poetry.group.dev.dependencies]
