@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "photoscript"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python wrapper around Apple Photos applescript interface"
 authors = ["Rhet Turnbull <rturnbull+git@gmail.com>"]
 license = "MIT License"
@@ -38,7 +38,7 @@ build = "^0.8.0"
 twine = "^4.0.1"
 Sphinx = "^5.2.3"
 sphinx-rtd-theme = "^1.0.0"
-m2r2 = "^0.3.0"
+m2r2 = "^0.3.1"
 bump2version = "^1.0.1"
 
 [build-system]
