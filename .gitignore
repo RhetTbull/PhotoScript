@@ -11,3 +11,4 @@ cov_html/
 docsrc/_build/
 venv/
 .python-version
+site/

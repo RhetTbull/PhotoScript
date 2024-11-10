@@ -1,6 +1,5 @@
 """ Test data for Ventura / macOS 13.0.1 / Photos 8 """
 
-
 __all__ = [
     "ALBUM_1_NAME",
     "ALBUM_1_PATH_STR",
@@ -156,7 +155,7 @@ PHOTOS_DICT = [
         "height": 4032,
         "width": 3024,
         "location": (33.50126666999999, -117.66378833000002),
-        "date": "2020-08-12 15:43:32",
+        "date": "2020-08-12T15:43:32-07:00",
         "altitude": 29.4,
         "albums": ["San Juan Capistrano"],
     },
@@ -171,7 +170,7 @@ PHOTOS_DICT = [
         "height": 3024,
         "width": 3024,
         "location": (33.501921669999994, -117.66425333000002),
-        "date": "2020-08-12 14:12:15",
+        "date": "2020-08-12T14:12:15-07:00",
         "altitude": 32.9,
         "albums": ["San Juan Capistrano"],
     },
@@ -186,7 +185,7 @@ PHOTOS_DICT = [
         "height": 3024,
         "width": 4032,
         "location": (33.82677, -118.32748332999999),
-        "date": "2020-07-18 12:00:20",
+        "date": "2020-07-18T12:00:20-07:00",
         "altitude": 26.1,
         "albums": ["Farmers Market"],
     },
@@ -201,7 +200,7 @@ PHOTOS_DICT = [
         "height": 3024,
         "width": 3024,
         "location": (33.782425, -118.34803833000001),
-        "date": "2020-07-05 10:07:04",
+        "date": "2020-07-05T10:07:04-07:00",
         "altitude": 130.6,
         "albums": [],
     },
@@ -216,7 +215,7 @@ PHOTOS_DICT = [
         "height": 903,
         "width": 701,
         "location": (None, None),
-        "date": "2020-09-07 07:27:40",
+        "date": "2020-09-07T07:27:40-07:00",
         "altitude": None,
         "albums": [],
     },
