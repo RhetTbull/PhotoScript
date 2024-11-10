@@ -18,11 +18,18 @@ Designed for MacOS Catalina/Photos 5.  Preliminary testing on Big Sur/Photos 6 b
 
 ## Installation
 
-PhotoScript uses [poetry](https://python-poetry.org/) for dependency management.  To install, clone the repo and run `poetry install`. If you don't have poetry already installed, follow the [installation instructions](https://python-poetry.org/docs/#installation). To enter the virtual environment, run `poetry shell`.
-
-Or you can install via pip:
+You can install via pip:
 
 `python3 -m pip install photoscript`
+
+To install via the source code:
+
+- Install [uv](https://github.com/astral-sh/uv) if not already installed
+- Clone the repo: `git clone git@github.com:RhetTbull/PhotoScript.git`
+- Change to the directory: `cd PhotoScript`
+- Run `uv pip install -r pyproject.toml`.
+
+If you want to develop code for PhotoScript, see [README_DEV.md](https://github.com/RhetTbull/PhotoScript/blob/master/README_DEV.md).
 
 ## Example
 
