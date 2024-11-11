@@ -15,6 +15,12 @@ These notes are so that I can remember how to build and test PhotoScript.
 Tests are written with `pytest`. You must use the `-s` flag when running tests to see the interactive prompts requireed for running the tests.
 To test, run `pytest -vv -s`.
 
+The test suite will copy a test Photos library to your `~/Pictures` directory.
+You may be prompted in Photos to allow it to switch libraries. Once the test suite is complete,
+you will need to manually switch back to your original library. To do this, close Photos, then hold
+down the `option` key while clicking on the Photos icon in the dock. You will be prompted to select
+a library; select your original library.
+
 ## Docs
 
 Build docs with `mkdocs build` then deploy to GitHub pages with `mkdocs gh-deploy`
