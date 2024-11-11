@@ -496,9 +496,16 @@
 <h2 id="compatibility">Compatibility</h2>
 <p>Designed for MacOS Catalina/Photos 5.  Preliminary testing on Big Sur/Photos 6 beta shows this should work on Big Sur as well.  Photos' AppleScript interface has changed very little since Photos 2 (the earliest version I have access to).  This package should work with most versions of Photos but some methods may not function correctly on versions earlier than Photos 5.  If you find compatibility issues, open an issue or send a PR.</p>
 <h2 id="installation">Installation</h2>
-<p>PhotoScript uses <a href="https://python-poetry.org/">poetry</a> for dependency management.  To install, clone the repo and run <code>poetry install</code>. If you don't have poetry already installed, follow the <a href="https://python-poetry.org/docs/#installation">installation instructions</a>. To enter the virtual environment, run <code>poetry shell</code>.</p>
-<p>Or you can install via pip:</p>
+<p>You can install via pip:</p>
 <p><code>python3 -m pip install photoscript</code></p>
+<p>To install via the source code:</p>
+<ul>
+<li>Install <a href="https://github.com/astral-sh/uv">uv</a> if not already installed</li>
+<li>Clone the repo: <code>git clone git@github.com:RhetTbull/PhotoScript.git</code></li>
+<li>Change to the directory: <code>cd PhotoScript</code></li>
+<li>Run <code>uv pip install -r pyproject.toml</code>.</li>
+</ul>
+<p>If you want to develop code for PhotoScript, see <a href="https://github.com/RhetTbull/PhotoScript/blob/master/README_DEV.md">README_DEV.md</a>.</p>
 <h2 id="example">Example</h2>
 <pre><code class="language-python">&quot;&quot;&quot; Simple example showing use of photoscript &quot;&quot;&quot;
 
