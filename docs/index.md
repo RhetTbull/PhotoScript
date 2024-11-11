@@ -2,7 +2,7 @@
 
 ## Source Code
 
-The source code for this project is available on [GitHub](https://github.com/RhetTbull/photokit).
+The source code for this project is available on [GitHub](https://github.com/RhetTbull/photoscript).
 
 ## What is PhotoScript
 
