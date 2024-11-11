@@ -13,6 +13,8 @@ from tests.conftest import photoslib, suspend_capture
 from tests.photoscript_config_data import PHOTO_EXPORT_FILENAME_ORIGINAL, PHOTOS_DICT
 from tests.utils import stemset
 
+from .datetime_utils import datetime_remove_tz, datetime_to_new_tz, get_local_tz
+
 ########## Interactive tests run first ##########
 
 
@@ -134,9 +136,16 @@ def test_photo_date(photoslib: photoscript.PhotosLibrary):
     for photo in PHOTOS_DICT:
         photo_obj = photoscript.Photo(photo["uuid"])
         date = datetime.datetime.fromisoformat(photo["date"])
+        local_tz = get_local_tz(datetime_remove_tz(date))
+        date = datetime_remove_tz(date.astimezone(tz=local_tz))
         assert photo_obj.date == date
-        photo_obj.date = datetime.datetime(2020, 9, 14)
-        assert photo_obj.date == datetime.datetime(2020, 9, 14)
+
+
+def test_photo_date_setter(photoslib: photoscript.PhotosLibrary):
+    photo = PHOTOS_DICT[0]
+    photo_obj = photoscript.Photo(photo["uuid"])
+    photo_obj.date = datetime.datetime(2020, 9, 14, 1, 2, 3)
+    assert photo_obj.date == datetime.datetime(2020, 9, 14, 1, 2, 3)
 
 
 def test_photo_filename(photoslib: photoscript.PhotosLibrary):

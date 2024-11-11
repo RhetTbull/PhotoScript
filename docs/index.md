@@ -1,10 +1,8 @@
-# PhotoScript
+# Welcome to PhotoScript's Documentation
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+## Source Code
+
+The source code for this project is available on [GitHub](https://github.com/RhetTbull/photokit).
 
 ## What is PhotoScript
 
@@ -74,37 +72,11 @@ Where possible, PhotoScript attempts to provide work-arounds to Photos' limitati
 
 ## Related Projects
 
-- [osxphotos](https://github.com/RhetTbull/osxphotos): Python package that provides read-only access to the Photos library including all associated metadata.
+- [OSXPhotos](https://github.com/RhetTbull/osxphotos): Python app to work with pictures and associated metadata from Apple Photos on macOS. Also includes a package to provide programmatic access to the Photos library, pictures, and metadata.
+- [PhotoKit](https://github.com/RhetTbull/photokit): Experimental Python package for accessing the macOS Photos.app library via Apple's native PhotoKit framework.
+
 
 ## Dependencies
 
 - [py-applescript](https://github.com/rdhyee/py-applescript)
 - [PyObjC](https://github.com/ronaldoussoren/pyobjc)
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="http://davidhaberthür.ch"><img src="https://avatars.githubusercontent.com/u/1651235?v=4?s=100" width="100px;" alt="David Haberthür"/><br /><sub><b>David Haberthür</b></sub></a><br /><a href="https://github.com/RhetTbull/PhotoScript/commits?author=habi" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://anjos.ai"><img src="https://avatars.githubusercontent.com/u/46305?v=4?s=100" width="100px;" alt="André Anjos"/><br /><sub><b>André Anjos</b></sub></a><br /><a href="#ideas-anjos" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/RhetTbull/PhotoScript/issues?q=author%3Aanjos" title="Bug reports">🐛</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
-## See Also
-
-For a more comprehensive python interface for Mac automation, see [PyXA](https://github.com/SKaplanOfficial/PyXA)
-which provides a python interface to Photos and many other Mac applications.

@@ -1,28 +1,37 @@
-# Developer Notes for photoscript
+# Developer Notes for PhotoScript
 
-These notes are so that I can remember how to build and test photoscript.
+These notes are so that I can remember how to build and test PhotoScript.
 
 ## Setup the environment
 
-- Install poetry: `pip install poetry`
-- Run `poetry install` to install the dependencies
-- Run `poetry shell` to enter the virtual environment
+- Change to the project directory
+- Install [uv](https://github.com/astral-sh/uv): `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- Create the virtual environment: `uv venv` or `uv venv --python 3.13` to specify a specific version
+- Activate the virtual environment: `source .venv/bin/activate`
+- Install package dependencies: `uv pip install -r pyproject.toml --extra dev`
 
 ## Testing
 
-To test, run `poetry run pytest`.
+Tests are written with `pytest`. You must use the `-s` flag when running tests to see the interactive prompts requireed for running the tests.
+To test, run `pytest -vv -s`.
 
-## Building Docs
+The test suite will copy a test Photos library to your `~/Pictures` directory.
+You may be prompted in Photos to allow it to switch libraries. Once the test suite is complete,
+you will need to manually switch back to your original library. To do this, close Photos, then hold
+down the `option` key while clicking on the Photos icon in the dock. You will be prompted to select
+a library; select your original library.
 
-- `cd docsrc`
-- `make github`
+## Docs
+
+Build docs with `mkdocs build` then deploy to GitHub pages with `mkdocs gh-deploy`
+
 
 ## Building
 
 To build the project:
 
 - `rm -rf dist; rm -rf build`
-- `poetry build`
+- `uv build`
 
 ## Versioning
 
@@ -39,3 +48,9 @@ The `CHANGELOG.md` is created with [auto-changelog](https://github.com/cookpete/
 - `git pull`
 - `auto-changelog --ignore-commit-pattern CHANGELOG -l 5`
 - `git add CHANGELOG.md; git commit -m"Updated CHANGELOG.md [skip ci]"; git push`
+
+## Publishing
+
+To publish to PyPI:
+
+- `uv publish`

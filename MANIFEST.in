@@ -1,2 +1,3 @@
 include README.md
 include photoscript/photoscript.applescript
+exclude tests/*
