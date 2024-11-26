@@ -12,3 +12,4 @@ docsrc/_build/
 venv/
 .python-version
 site/
+pyrightconfig.json
