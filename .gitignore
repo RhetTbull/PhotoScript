@@ -13,3 +13,4 @@ venv/
 .python-version
 site/
 pyrightconfig.json
+.envrc
