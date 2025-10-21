@@ -59,7 +59,7 @@ def run_script(name, *args):
     except ScriptError as e:
         if "timed out" in str(e):
             # Best-effort reset of Photos; ignore the boolean result
-            kill_photos_app():
+            kill_photos_app()
             # Retry once; let any exception from this call bubble up
             return SCRIPT_OBJ.call(name, *args)
         raise
