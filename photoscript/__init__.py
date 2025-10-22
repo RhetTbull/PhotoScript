@@ -74,28 +74,30 @@ class PhotosLibrary:
         """open a library and wait for delay for user to acknowledge in Photos"""
         # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
         # because, for reasons I cannot explain, it fails to run if included there
+        # Note: Script changed to Quit Photos and use 'do shell script "open -a Photos <library path>"' 
+        # to open Library.
         if not pathlib.Path(library_path).is_dir():
             raise ValueError(f"{library_path} does not appear to be a Photos library")
         self.activate()
         script = AppleScript(
             f"""
             set tries to 0
+            set libraryPath to "{library_path}"
             repeat while tries < 5
                 try
-                    tell application "Photos"
-                        activate
-                        delay 3 
-                        open POSIX file "{library_path}"
-                        delay {delay}
-                    end tell
-                    set tries to 5
+                    tell application "Photos" to quit
+                    delay 2
+                    do shell script "open -a Photos " & quoted form of libraryPath
+                    delay {delay}
+                    set tries to 99
                 on error
                     set tries to tries + 1
                 end try
             end repeat
+            return tries
         """
         )
-        script.run()
+        xtries = script.run()
 
     @property
     def running(self):

@@ -63,8 +63,6 @@ def copy_photos_library(photos_library=TEST_LIBRARY, delay=0, open=True):
     # open Photos
     if open:
         photoslib.open(str(dest))
-        photoslib.open(str(dest))
-
     return dest
 
 
