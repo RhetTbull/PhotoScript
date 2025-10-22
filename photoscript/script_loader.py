@@ -10,7 +10,6 @@ from .exceptions import AppleScriptError
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
 class RunScriptError(Exception):
