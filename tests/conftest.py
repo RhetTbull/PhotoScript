@@ -20,9 +20,12 @@ elif OS_VER[0] == 13:
 elif OS_VER[0] == 15:
     # Sequoia
     from tests.photoscript_config_sequoia import TEST_LIBRARY
+elif OS_VER[0] == 26:
+    # Tahoe (Beta)
+    from tests.photoscript_config_tahoe import TEST_LIBRARY    
 else:
     TEST_LIBRARY = None
-    pytest.exit("This test suite currently only runs on MacOS Catalina ")
+    pytest.exit("This test suite currently only runs on MacOS Catalina, Ventura, or Sequoia. Tahoe under Beta.")
 
 
 def copy_photos_library(photos_library=TEST_LIBRARY, delay=0, open=True):
