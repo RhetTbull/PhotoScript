@@ -35,7 +35,7 @@ jobs:
         while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
           echo "Test attempt $ATTEMPT of $MAX_ATTEMPTS"
 
-          if ./.venv/bin/python -m pytest -v --ignore=tests/test_0_interactive.py .py tests/ ; then
+          if ./.venv/bin/python -m pytest -v --ignore=tests/test_0_interactive.py tests/ ; then
             echo "Tests passed on attempt $ATTEMPT"
             exit 0
           else
