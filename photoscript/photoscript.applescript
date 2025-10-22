@@ -46,11 +46,7 @@ on photosLibraryIsRunning()
 	(* return true if Photos is running, otherwise false *)
 	set theApp to "Photos"
 	
-	if application theApp is running then
-		return true
-	else
-		return false
-	end if
+	return application "Photos" is running
 end photosLibraryIsRunning
 
 on photosLibraryHide()
@@ -84,9 +80,7 @@ end photosLibraryActivate
 
 on photosLibraryQuit()
 	(* quit Photos app *)
-	tell application "Photos"
-		quit
-	end tell
+	tell application "Photos" to quit
 end photosLibraryQuit
 
 on photosLibraryName()

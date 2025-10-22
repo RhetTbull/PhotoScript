@@ -62,7 +62,7 @@ def test_photoslibrary_quit(photoslib: photoscript.PhotosLibrary):
     )
     assert not script.call("is_running", "Photos")
 
-
+@pytest.mark.skip(reason="test runs on itws own ok but not after test_photoslibrary_quit. Photos is active but not visible.")
 def test_photoslibrary_running(photoslib: photoscript.PhotosLibrary):
 
     assert photoslib.running
