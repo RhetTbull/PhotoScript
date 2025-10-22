@@ -25,7 +25,8 @@ jobs:
     - name: Install dependencies (uv)
       run: |
         uv venv
-        uv pip install -r pyproject.toml .
+        # uv pip install -r pyproject.toml .
+        uv pip install -r pyproject.toml --extra dev
     - name: Test with pytest
       run: |
         MAX_ATTEMPTS=3
