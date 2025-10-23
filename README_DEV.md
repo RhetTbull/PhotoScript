@@ -25,7 +25,6 @@ a library; select your original library.
 
 Build docs with `mkdocs build` then deploy to GitHub pages with `mkdocs gh-deploy`
 
-
 ## Building
 
 To build the project:
