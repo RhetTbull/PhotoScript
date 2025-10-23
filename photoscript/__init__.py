@@ -15,6 +15,7 @@ from applescript import AppleScript, kMissingValue
 
 from photoscript.utils import ditto, findfiles
 
+from .exceptions import AppleScriptError
 from .script_loader import run_script
 from .utils import get_os_version
 
@@ -49,11 +50,6 @@ def uuid_to_id(uuid: str, suffix: str) -> tuple[str, str]:
         else:
             uuid = uuid.split("/")[0]
     return uuid, id_
-
-
-class AppleScriptError(Exception):
-    def __init__(self, *message):
-        super().__init__(*message)
 
 
 class PhotosLibrary:
