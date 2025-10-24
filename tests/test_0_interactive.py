@@ -44,9 +44,9 @@ from tests.photoscript_config_data import (
 
 
 def test_photoslibrary_open(photoslib, suspend_capture):
-    test_library = copy_photos_library(photos_library=TEST_LIBRARY_OPEN, open=False)
-    prompt = "Click Switch in Photos after the drop down sheet appears."
-    os.system(f'say "{prompt}"')
+    """Test opening a different Photos Library."""
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY_OPEN, delay=5, open=False)
+
     with suspend_capture:
         photoslib.open(test_library)
         prompt = (
@@ -56,8 +56,16 @@ def test_photoslibrary_open(photoslib, suspend_capture):
         os.system(f'say "{prompt}"')
         answer = input(f"\n{prompt}")
         assert answer.lower() == "y"
+
     # re-copy main test library
-    test_library = copy_photos_library(photos_library=TEST_LIBRARY)
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY, delay=10, open=True)
+    prompt = (
+        "Press 'y' if Photos Library contains multiple images, "
+        "otherwise press 'n' "
+    )
+    os.system(f'say "{prompt}"')
+    answer = input(f"\n{prompt}")
+    assert answer.lower() == "y"
 
 
 def test_photoslibrary_import_photos_dup_check(photoslib):
