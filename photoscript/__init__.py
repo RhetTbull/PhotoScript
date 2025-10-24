@@ -21,7 +21,7 @@ from .utils import get_os_version
 
 MACOS_VERSION = get_os_version()
 
-""" In Catalina / Photos 5+, UUIDs in AppleScript have suffix that doesn't 
+""" In Catalina / Photos 5+, UUIDs in AppleScript have suffix that doesn't
     appear in actual database value.  These need to be dropped to be compatible
     with osxphotos """
 UUID_SUFFIX_PHOTO = "/L0/001"
@@ -70,7 +70,7 @@ class PhotosLibrary:
         """open a library and wait for delay for user to acknowledge in Photos"""
         # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
         # because, for reasons I cannot explain, it fails to run if included there
-        # Note: Script changed to Quit Photos and use 'do shell script "open -a Photos <library path>"' 
+        # Note: Script changed to Quit Photos and use 'do shell script "open -a Photos <library path>"'
         # to open Library.
         if not pathlib.Path(library_path).is_dir():
             raise ValueError(f"{library_path} does not appear to be a Photos library")
@@ -93,7 +93,9 @@ class PhotosLibrary:
             return tries
         """
         )
-        xtries = script.run()
+        tries = script.run()
+        if tries != 99:
+            raise RuntimeError(f"Photos failed to open {library_path} after {tries} tries")
 
     @property
     def running(self):
