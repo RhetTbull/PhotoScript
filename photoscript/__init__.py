@@ -804,7 +804,7 @@ class Album:
         if folder is not None and self.parent_id == folder.id:
             # already in the right folder
             return self
-        elif folder is None and self.parent_id is 0:  # already at top level
+        elif folder is None and self.parent_id == 0:  # already at top level
             # already at top level
             return self
 
