@@ -1,4 +1,4 @@
-""" Provides PhotosLibrary, Photo, Album classes to interact with Photos App """
+"""Provides PhotosLibrary, Photo, Album classes to interact with Photos App"""
 
 from __future__ import annotations
 
@@ -70,7 +70,7 @@ class PhotosLibrary:
         """open a library and wait for delay for user to acknowledge in Photos"""
         # Note: Unlike the other AppleScript scripts, this one is not included in photoscript.applescript
         # because, for reasons I cannot explain, it fails to run if included there
-        # Note: Script changed to Quit Photos and use 'do shell script "open -a Photos <library path>"' 
+        # Note: Script changed to Quit Photos and use 'do shell script "open -a Photos <library path>"'
         # to open Library.
         if not pathlib.Path(library_path).is_dir():
             raise ValueError(f"{library_path} does not appear to be a Photos library")
@@ -785,6 +785,39 @@ class Album:
         """
         photo_uuids = [photo.id for photo in photos]
         return self.remove_by_id(photo_uuids)
+
+    def move(self, folder):
+        """Move photos from album.
+            Note: Photos does not provide a way to move an album via AppleScript.
+            This method actually creates a new Album with the same name as the original album and
+            copies all photos from original album to the new folder and deletes the old album.
+            Does not move it if album is already in the specified folder.
+
+        Args:
+            folder: new destination folder. If None, it moves the album to the Top Level.
+
+        Returns:
+            new Album: object for the new album moved to the folder.
+        """
+        photoslib = PhotosLibrary()
+
+        if folder is not None and self.parent_id == folder.id:
+            # already in the right folder
+            return self
+        elif folder is None and self.parent_id is 0:  # already at top level
+            # already at top level
+            return self
+
+        new_album = photoslib.create_album(photoslib._temp_album_name(), folder=folder)
+        new_album.add(self.photos())
+
+        name = self.name
+        photoslib.delete_album(self)
+
+        new_album.name = name
+        self.id = new_album.id
+        self._uuid = new_album.uuid
+        return new_album
 
     def spotlight(self):
         """spotlight the album in Photos"""
