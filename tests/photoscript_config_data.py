@@ -1,4 +1,4 @@
-""" Test configuration data for the test suite; returns data specific to the macOS version under test. """
+"""Test configuration data for the test suite; returns data specific to the macOS version under test."""
 
 import pytest
 
@@ -235,10 +235,11 @@ elif OS_VER[0] == 26:
         SELECTION_UUIDS,
         TEST_LIBRARY,
         TEST_LIBRARY_OPEN,
-    )    
+    )
 else:
     pytest.exit("This test suite does not run on this version of MacOS")
 
+SLEEP_DELAY = 1
 
 __all__ = [
     "ALBUM_1_NAME",
@@ -296,4 +297,5 @@ __all__ = [
     "SELECTION_UUIDS",
     "TEST_LIBRARY",
     "TEST_LIBRARY_OPEN",
+    "SLEEP_DELAY",
 ]
