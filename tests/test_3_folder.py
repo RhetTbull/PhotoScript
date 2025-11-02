@@ -260,16 +260,19 @@ def test_folder_create_folder(photoslib):
 def test_len_1(photoslib):
     """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_1_NAME)
+    assert isinstance(folder, photoscript.Folder)
     assert len(folder) == FOLDER_1_LEN + 2 # created new album and folder in test above
 
 
 def test_len_2(photoslib):
     """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_2_NAME, top_level=False)
+    assert isinstance(folder, photoscript.Folder)
     assert len(folder) == FOLDER_2_LEN
 
 
 def test_len_3(photoslib):
     """test Folder.__len__"""
     folder = photoslib.folder(FOLDER_3_NAME)
+    assert isinstance(folder, photoscript.Folder)
     assert len(folder) == FOLDER_3_LEN
