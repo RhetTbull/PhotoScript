@@ -1,4 +1,4 @@
-""" Test PhotosLibrary class """
+"""Test PhotosLibrary class"""
 
 import os
 import pathlib
@@ -10,8 +10,6 @@ from applescript import AppleScript
 from flaky import flaky
 
 import photoscript
-from photoscript.utils import get_os_version
-from tests.conftest import photoslib, suspend_capture
 from tests.photoscript_config_catalina import PHOTO_EXPORT_FILENAME_ORIGINAL
 from tests.photoscript_config_data import (
     ALBUM_1_NAME,
@@ -38,6 +36,7 @@ from tests.photoscript_config_data import (
     PHOTOS_UUID,
     PHOTOS_UUID_FILENAMES,
     SELECTION_UUIDS,
+    SLEEP_DELAY,
     TEST_LIBRARY,
     TEST_LIBRARY_OPEN,
 )
@@ -50,7 +49,9 @@ def test_photoslibrary_activate(photoslib: photoscript.PhotosLibrary):
     assert photoslib.frontmost
 
 
-@pytest.mark.skip(reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible.")
+@pytest.mark.skip(
+    reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible."
+)
 def test_photoslibrary_quit(photoslib: photoscript.PhotosLibrary):
 
     photoslib.quit()
@@ -63,7 +64,10 @@ def test_photoslibrary_quit(photoslib: photoscript.PhotosLibrary):
     )
     assert not script.call("is_running", "Photos")
 
-@pytest.mark.skip(reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible.")
+
+@pytest.mark.skip(
+    reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible."
+)
 def test_photoslibrary_running(photoslib: photoscript.PhotosLibrary):
 
     assert photoslib.running
@@ -83,9 +87,9 @@ def test_photoslibrary_hide(photoslib: photoscript.PhotosLibrary):
     photoslib.quit()
     photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
-    time.sleep(1)
+    time.sleep(SLEEP_DELAY)
     photoslib.hide()
-    time.sleep(1)
+    time.sleep(SLEEP_DELAY)
     assert not photoslib.frontmost
     assert photoslib.hidden
 
@@ -101,13 +105,16 @@ def test_photoslibrary_hidden(photoslib: photoscript.PhotosLibrary):
     photoslib.quit()
     photoslib = photoscript.PhotosLibrary()
     photoslib.activate()
-    time.sleep(1)
+    time.sleep(SLEEP_DELAY)
     assert not photoslib.hidden
     photoslib.hide()
-    time.sleep(1)
+    time.sleep(SLEEP_DELAY)
     assert photoslib.hidden
 
-@pytest.mark.skip(reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible.")
+
+@pytest.mark.skip(
+    reason="run test isolated works, but not after test_photoslibrary_quit. Photos shows up as active but not visible."
+)
 def test_photoslibrary_name(photoslib: photoscript.PhotosLibrary):
     assert photoslib.name == "Photos"
 
@@ -523,6 +530,7 @@ def test_photoslibrary_make_folders_new(photoslib: photoscript.PhotosLibrary):
     global FOLDER_NAMES_ALL, FOLDER_NAMES_TOP
 
     folder = photoslib.make_folders(["Folder2", "SubFolder2"])
+    time.sleep(SLEEP_DELAY)
     assert isinstance(folder, photoscript.Folder)
     assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL) + 2
 
@@ -538,6 +546,7 @@ def test_photoslibrary_make_folders_new_exist(photoslib: photoscript.PhotosLibra
 
     subfolder = photoslib.folder("SubFolder1", top_level=False)
     folder = photoslib.make_folders(["Folder1", "SubFolder1", "New Sub Folder"])
+    time.sleep(SLEEP_DELAY)
     assert isinstance(folder, photoscript.Folder)
     assert len(photoslib.folders(top_level=False)) == len(FOLDER_NAMES_ALL) + 1
     assert folder.parent.id == subfolder.id
