@@ -7,6 +7,7 @@ import photoscript
 from tests.conftest import get_os_version, photoslib, suspend_capture
 from tests.photoscript_config_data import (
     ALBUM_1_NAME,
+    ALBUM_1_UUID,
     FOLDER_1_IDSTRING,
     FOLDER_1_LEN,
     FOLDER_1_NAME,
@@ -48,11 +49,20 @@ from tests.photoscript_config_data import (
 ########## Non-interactive tests ##########
 
 
+def test_folders_top_level(photoslib):
+    """test PhotosLibrary.folders with top_level=True"""
+    folders = photoslib.folders(top_level=True)
+    assert sorted(f.name for f in folders) == sorted(FOLDER_NAMES_TOP)
+
+def test_folders_all_levels(photoslib):
+    """test PhotosLibrary.folders with top_level=False"""
+    folders = photoslib.folders(top_level=False)
+    assert sorted(f.name for f in folders) == sorted(FOLDER_NAMES_ALL)
+
 def test_folder_init_uuid():
     """Test init with UUID"""
     folder = photoscript.Folder(FOLDER_1_UUID)
     assert isinstance(folder, photoscript.Folder)
-
 
 def test_folder_init_osxphotos_uuid():
     """test Folder() with osxphotos style UUID"""
@@ -276,3 +286,58 @@ def test_len_3(photoslib):
     folder = photoslib.folder(FOLDER_3_NAME)
     assert isinstance(folder, photoscript.Folder)
     assert len(folder) == FOLDER_3_LEN
+
+def test_move_album_to_folder(photoslib):
+    """test moving album to folder"""
+    album = photoslib.album(ALBUM_1_NAME)  # album 'San Juan Capistrano' in folder 'Travel'
+    # album = photoslib.album(uuid=ALBUM_1_UUID)
+
+    # preserve album data for comparison after album move
+    metadata_before = {}
+    parent_folder = album.parent  # save aprent_fodler to move album back to
+    metadata_before = {
+        "name": album.name,
+        "photos_count": len(album),
+        "photos_uuids": sorted([ph.uuid for ph in album.photos()]),
+    }
+
+    # move album to new folder
+    folder = photoslib.folder(FOLDER_2_NAME, top_level=False)  # move to 'SubFolder1'
+    album.move(folder)
+
+    # verify album is now in folder
+    moved_album = folder.album(ALBUM_1_NAME)
+
+    assert moved_album is not None
+    assert moved_album.parent_id == folder.id
+    assert moved_album.name == metadata_before["name"]
+    assert len(moved_album) == metadata_before["photos_count"]
+    assert sorted([ph.uuid for ph in moved_album.photos()]) == metadata_before["photos_uuids"]
+
+    # move it back
+    album.move(parent_folder)
+
+def test_move_album_to_root(photoslib):
+    """test moving album to folder"""
+    album = photoslib.album(ALBUM_1_NAME)  # album 'San Juan Capistrano' in folder 'Travel'
+
+    # preserve album data for comparison after album move
+    metadata_before = {}
+    parent_folder = album.parent  # save aprent_fodler to move album back to
+    metadata_before = {
+        "name": album.name,
+        "photos_count": len(album),
+        "photos_uuids": sorted([ph.uuid for ph in album.photos()]),
+    }
+
+    # move album to new folder
+    moved_album = album.move(None)  # move to root
+
+    assert moved_album is not None
+    assert moved_album.parent_id == 0  # 0 is root
+    assert moved_album.name == metadata_before["name"]
+    assert len(moved_album) == metadata_before["photos_count"]
+    assert sorted([ph.uuid for ph in moved_album.photos()]) == metadata_before["photos_uuids"]
+
+    # move it back
+    album.move(parent_folder)
