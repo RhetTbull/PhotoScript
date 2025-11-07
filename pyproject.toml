@@ -1,6 +1,6 @@
 [project]
 name = "photoscript"
-version = "0.5.1"
+version = "0.5.2"
 description = "Python wrapper around Apple Photos applescript interface"
 authors = [{ name = "Rhet Turnbull", email = "rturnbull+git@gmail.com" }]
 license = { text = "MIT License" }
