@@ -95,7 +95,9 @@ class PhotosLibrary:
         )
         tries = script.run()
         if tries != 99:
-            raise RuntimeError(f"Photos failed to open {library_path} after {tries} tries")
+            raise RuntimeError(
+                f"Photos failed to open {library_path} after {tries} tries"
+            )
 
     @property
     def running(self):
@@ -789,7 +791,7 @@ class Album:
         return self.remove_by_id(photo_uuids)
 
     def move(self, folder):
-        """Move photos from album.
+        """Move album to folder.
             Note: Photos does not provide a way to move an album via AppleScript.
             This method actually creates a new Album with the same name as the original album and
             copies all photos from original album to the new folder and deletes the old album.

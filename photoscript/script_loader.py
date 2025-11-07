@@ -3,7 +3,13 @@
 import pathlib
 import subprocess
 import logging
-from tenacity import RetryCallState, retry, stop_after_attempt, wait_fixed, retry_if_exception
+from tenacity import (
+    RetryCallState,
+    retry,
+    stop_after_attempt,
+    wait_fixed,
+    retry_if_exception,
+)
 
 from applescript import AppleScript
 from .exceptions import AppleScriptError
