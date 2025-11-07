@@ -1,4 +1,4 @@
-""" Utility functions for photoscript """
+"""Utility functions for photoscript"""
 
 from __future__ import annotations
 

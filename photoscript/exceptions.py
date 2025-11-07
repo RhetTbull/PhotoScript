@@ -1,4 +1,5 @@
-""" Custom exceptions for PhotoScript."""
+"""Custom exceptions for PhotoScript."""
+
 
 class AppleScriptError(Exception):
     def __init__(self, *message):
