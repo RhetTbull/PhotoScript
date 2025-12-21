@@ -62,3 +62,19 @@ def get_os_version() -> tuple[int, int, int]:
             )
         )
     return int(ver), int(major), int(minor)
+
+
+def uuid_from_error_str(error: str) -> str | None:
+    """Return UUID for a photo from an AppleScript error string"""
+    # Sometimes AppleScript generates an error like:
+    # photoscript.exceptions.AppleScriptError: run_script 'photosLibraryGetSelection' failed: Photos got an error: Can’t get media item id "EC19EA1A-FC91-449C-8925-B13D863E2EDB/L0/001" of album id "4DE59C3F-2D8A-4E3F-AFA0-0C48BCDB75DD/L0/040". (-1728) app='Photos' range=22182-22235
+    # In these cases, try to get the UUID from the error string using regex matching, otherwise return None
+    match = re.search(r'media item id "(.*?)"', error)
+    if match:
+        try:
+            # return only the UUID part before /L0/001
+            uuid = match.group(1).split("/")[0]
+            return uuid
+        except IndexError:
+            return None
+    return None
