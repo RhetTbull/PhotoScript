@@ -17,7 +17,7 @@ from photoscript.utils import ditto, findfiles
 
 from .exceptions import AppleScriptError
 from .script_loader import run_script
-from .utils import get_os_version
+from .utils import get_os_version, uuid_from_error_str
 
 MACOS_VERSION = get_os_version()
 
@@ -131,8 +131,19 @@ class PhotosLibrary:
     @property
     def selection(self):
         """List of Photo objects for currently selected photos or [] if no selection"""
-        uuids = run_script("photosLibraryGetSelection")
-        return [Photo(uuid) for uuid in uuids]
+        try:
+            uuids = run_script("photosLibraryGetSelection")
+            return [Photo(uuid) for uuid in uuids]
+        except AppleScriptError as e:
+            # if photo is in full-screen viewing mode, will generate an error like:
+            # photoscript.exceptions.AppleScriptError: run_script 'photosLibraryGetSelection' failed: Photos got an error: Can’t get media item id "EC19EA1A-FC91-449C-8925-B13D863E2EDB/L0/001" of album id "4DE59C3F-2D8A-4E3F-AFA0-0C48BCDB75DD/L0/040". (-1728) app='Photos' range=22182-22235
+            # # try to parse the UUID from the error and return that
+            if uuid := uuid_from_error_str(str(e)):
+                try:
+                    return [Photo(uuid)]
+                except Exception as e:
+                    return []
+        return []
 
     @property
     def favorites(self):
