@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import datetime
 import glob
+import logging
 import os
 import pathlib
 import random
 import string
 import tempfile
-from subprocess import run
 
 from applescript import AppleScript, kMissingValue
 
@@ -18,6 +18,8 @@ from photoscript.utils import ditto, findfiles
 from .exceptions import AppleScriptError
 from .script_loader import run_script
 from .utils import get_os_version, uuid_from_error_str
+
+logger = logging.getLogger(__name__)
 
 MACOS_VERSION = get_os_version()
 
@@ -142,6 +144,7 @@ class PhotosLibrary:
                 try:
                     return [Photo(uuid)]
                 except Exception as e:
+                    logger.warning(f"Error getting selection: {e}")
                     return []
         return []
 
