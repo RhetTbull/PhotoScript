@@ -17,24 +17,37 @@ property MAX_RETRY : 5
 -- max time in seconds to wait for Photos to respond
 property WAIT_FOR_PHOTOS : 600
 
+-- number of consecutive responses reporting 0 media items (1 second apart) before
+-- treating the library as empty rather than still loading
+property WAIT_FOR_EMPTY_LIBRARY : 5
+
 ---------- PhotoLibrary ----------
 
 on photosLibraryWaitForPhotos(timeoutDurationInSeconds)
+	(* launch Photos if not running and wait until it responds to AppleScript;
+	   an empty library is ready once Photos has consistently reported 0 media items
+	   for WAIT_FOR_EMPTY_LIBRARY seconds (the count may read 0 while the library is still loading) *)
 	if running of application "Photos" is false then
 		tell application "Photos" to launch
 		tell current application
-			set currentTimeInSeconds to (time of (current date))
-			repeat until (time of (current date)) is greater than (currentTimeInSeconds + timeoutDurationInSeconds)
+			set timeoutDate to (current date) + timeoutDurationInSeconds
+			set emptyLibraryCount to 0
+			repeat while (current date) < timeoutDate
 				try
 					tell application "Photos"
 						set mediaItemCount to (count of media items)
 					end tell
 					if mediaItemCount is not 0 then
 						return true
-					else
-						delay 1
 					end if
+					set emptyLibraryCount to emptyLibraryCount + 1
+					if emptyLibraryCount is greater than or equal to WAIT_FOR_EMPTY_LIBRARY then
+						return true
+					end if
+				on error
+					set emptyLibraryCount to 0
 				end try
+				delay 1
 			end repeat
 		end tell
 		error number -128
