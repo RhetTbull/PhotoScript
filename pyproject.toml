@@ -47,6 +47,10 @@ dev = [
 Homepage = "https://github.com/RhetTbull/photoscript"
 Repository = "https://github.com/RhetTbull/photoscript"
 
+[tool.pytest.ini_options]
+# interactive tests prompt for input so output capture must be disabled
+addopts = "-s"
+
 [tool.setuptools]
 packages = ["photoscript"]
 
