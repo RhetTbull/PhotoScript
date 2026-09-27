@@ -59,13 +59,14 @@ def test_photoslibrary_open(photoslib, suspend_capture):
 
     # re-copy main test library
     test_library = copy_photos_library(photos_library=TEST_LIBRARY, open=True)
-    prompt = (
-        "Press 'y' if Photos Library contains multiple images, "
-        "otherwise press 'n' "
-    )
-    os.system(f'say "{prompt}"')
-    answer = input(f"\n{prompt}")
-    assert answer.lower() == "y"
+    with suspend_capture:
+        prompt = (
+            "Press 'y' if Photos Library contains multiple images, "
+            "otherwise press 'n' "
+        )
+        os.system(f'say "{prompt}"')
+        answer = input(f"\n{prompt}")
+        assert answer.lower() == "y"
 
 
 def test_photoslibrary_import_photos_dup_check(photoslib):
