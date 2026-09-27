@@ -15,6 +15,7 @@ from applescript import AppleScript, kMissingValue
 
 from photoscript.utils import ditto, findfiles
 
+from ._version import __version__
 from .exceptions import AppleScriptError
 from .script_loader import run_script
 from .utils import get_os_version, uuid_from_error_str

@@ -804,10 +804,11 @@ def test_export_photo_original_duplicate_overwrite(
 
 
 def test_version():
-    """test photoscript/_version.py"""
+    """test photoscript.__version__"""
     from photoscript._version import __version__
 
     assert __version__
+    assert photoscript.__version__ == __version__
 
 
 def test_script_loader_load_applescript():
