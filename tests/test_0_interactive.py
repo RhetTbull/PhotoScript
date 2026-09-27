@@ -45,7 +45,7 @@ from tests.photoscript_config_data import (
 
 def test_photoslibrary_open(photoslib, suspend_capture):
     """Test opening a different Photos Library."""
-    test_library = copy_photos_library(photos_library=TEST_LIBRARY_OPEN, delay=5, open=False)
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY_OPEN, open=False)
 
     with suspend_capture:
         photoslib.open(test_library)
@@ -58,7 +58,7 @@ def test_photoslibrary_open(photoslib, suspend_capture):
         assert answer.lower() == "y"
 
     # re-copy main test library
-    test_library = copy_photos_library(photos_library=TEST_LIBRARY, delay=10, open=True)
+    test_library = copy_photos_library(photos_library=TEST_LIBRARY, open=True)
     prompt = (
         "Press 'y' if Photos Library contains multiple images, "
         "otherwise press 'n' "

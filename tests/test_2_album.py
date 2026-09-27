@@ -8,7 +8,7 @@ import pytest
 from applescript import AppleScript
 
 import photoscript
-from tests.conftest import get_os_version, photoslib, suspend_capture
+from tests.conftest import photoslib, suspend_capture
 from tests.photoscript_config_data import (
     ALBUM_1_NAME,
     ALBUM_1_PATH_STR,
