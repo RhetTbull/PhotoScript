@@ -42,6 +42,14 @@ from tests.photoscript_config_data import (
 )
 from tests.utils import stemset
 
+# Tests in this module add to these lists as they create albums and folders;
+# copy them so the changes don't leak into other test modules, which each start
+# with a fresh copy of the test library
+ALBUM_NAMES_ALL = list(ALBUM_NAMES_ALL)
+ALBUM_NAMES_TOP = list(ALBUM_NAMES_TOP)
+FOLDER_NAMES_ALL = list(FOLDER_NAMES_ALL)
+FOLDER_NAMES_TOP = list(FOLDER_NAMES_TOP)
+
 
 def test_photoslibrary_activate(photoslib: photoscript.PhotosLibrary):
 

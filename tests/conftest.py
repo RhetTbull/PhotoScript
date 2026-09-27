@@ -6,29 +6,12 @@ import pytest
 from applescript import AppleScript
 
 import photoscript
-from photoscript.utils import ditto, get_os_version
-
-# Tests can currently run only on macOS Catalina (tested on 10.15.7) or Ventura (tested on 13.0.1)
-# as those are the two test machines I have access to
-OS_VER = get_os_version()
-if OS_VER[0] == 10 and OS_VER[1] == 15:
-    # catalina
-    from tests.photoscript_config_catalina import TEST_LIBRARY
-elif OS_VER[0] == 13:
-    # ventura
-    from tests.photoscript_config_ventura import TEST_LIBRARY
-elif OS_VER[0] == 15:
-    # Sequoia
-    from tests.photoscript_config_sequoia import TEST_LIBRARY
-elif OS_VER[0] == 26:
-    # Tahoe (Beta)
-    from tests.photoscript_config_tahoe import TEST_LIBRARY    
-else:
-    TEST_LIBRARY = None
-    pytest.exit("This test suite currently only runs on MacOS Catalina, Ventura, or Sequoia. Tahoe under Beta.")
+# photoscript_config_data selects the test data (and library) for the running
+# version of macOS and exits pytest if that version isn't supported
+from tests.photoscript_config_data import TEST_LIBRARY
 
 
-def copy_photos_library(photos_library=TEST_LIBRARY, delay=0, open=True):
+def copy_photos_library(photos_library=TEST_LIBRARY, open=True):
     """copy the test library and open Photos, returns path to copied library"""
 
     # quit Photos if it's running
@@ -71,7 +54,7 @@ def copy_photos_library(photos_library=TEST_LIBRARY, delay=0, open=True):
 
 @pytest.fixture(scope="module", autouse=True)
 def setup_photos():
-    copy_photos_library(delay=10)
+    copy_photos_library()
 
 
 @pytest.fixture
